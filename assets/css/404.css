@@ -1,0 +1,90 @@
+/* HEADER / PAGE 404 */
+body {
+    background-color: var(--body-back);
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    min-height: 50dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+div.error {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+div.error div.mes-404 {
+    font-size: clamp(5rem, 15vw, 8rem);
+    font-weight: bold;
+    color: var(--grey555);
+    font-family: var(--error-font);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+div.error div.mes-404 span {
+    display: inline-block;
+    transform: rotate(15deg);
+    color: var(--a-hover-color);
+}
+
+div.error-message {
+    width: 100%;
+}
+
+div.error-message p.principal-mes {
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: var(--font-light-2);
+    color: var(--black);
+    margin-bottom: 0.75rem;
+}
+
+div.error-message p.futher-mes {
+    font-family: var(--font-light-2);
+    font-size: 0.95rem;
+    color: var(--grey555);
+    width: 90%;
+    line-height: 1.5;
+    margin: 0 auto;
+}
+
+div.return {
+    margin-top: 2rem;
+}
+
+div.return a {
+    text-decoration: none;
+    color: var(--black);
+    display: inline-block;
+    cursor: pointer;
+    padding: 12px 24px;
+    border-radius: 8px;
+    /* Un arrondi un peu plus moderne que 3px */
+    font-family: var(--font-light-2);
+    font-weight: bold;
+    background-color: var(--greyddd);
+    transition: background-color 0.2s ease-in-out,
+        color 0.2s ease-in-out,
+        transform 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
+
+    &:hover {
+        background-color: var(--grey222);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+}

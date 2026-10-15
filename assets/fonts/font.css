@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'Goldman-Bold';
+  src: url(./Goldman-Bold.woff) format('woff'),
+       url(./Goldman-Bold.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Rubik Storm';
+    src: url('RubikStorm-Regular.woff2') format('woff2'),
+        url('RubikStorm-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('Montserrat-ExtraLight.woff2') format('woff2'),
+        url('Montserrat-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('Montserrat-Light.woff2') format('woff2'),
+        url('Montserrat-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('Raleway-ExtraLight.woff2') format('woff2'),
+        url('Raleway-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('Raleway-Light.woff2') format('woff2'),
+        url('Raleway-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}

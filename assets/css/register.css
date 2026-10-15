@@ -1,0 +1,182 @@
+body {
+    background-color: var(--body-back);
+    position: relative;
+    background-image: url("../images/ico/background/f1f1f1Bg/f1f1f1-back2.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: scroll;
+}
+
+/*php-register-error*/
+div.php-register-error {
+    position: absolute;
+    top: 0;
+    margin: auto;
+    width: fit-content;
+    padding: 10px 20px;
+    background-color: var(--php-error-bg);
+    color: var(--grey222);
+    z-index: 1001;
+    font-size: 1.1rem;
+}
+
+div.php-register-error p span {
+    color: var(--maroon);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.register {
+    margin: 20px auto;
+    padding-bottom: 20px;
+    width: 700px;
+    height: max-content;
+    max-width: 700px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 5px 10px 20px var(--greyddd);
+}
+
+.head {
+    margin-bottom: 50px;
+    padding-top: 20px;
+}
+
+.head>h1 {
+    margin: auto;
+    font-variant: small-caps;
+    font-family: var(--bold-font);
+    position: relative;
+    width: max-content;
+    font-size: 1.5rem !important;
+
+
+    &::after {
+        position: absolute;
+        content: '';
+        bottom: -10px;
+        border-radius: 10px;
+        left: 0;
+        width: 150px;
+        height: 5px;
+        background-color: var(--a-hover-color);
+
+    }
+}
+
+.form-container {
+    width: 80%;
+    margin: auto;
+}
+
+.register-form {
+    width: 100%;
+}
+
+.register-form>div {
+    margin: 20px 0;
+    width: 100%;
+    height: max-content;
+}
+
+label {
+    font-weight: 900;
+    font-family: var(--font-light-2);
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: var(--label-color);
+}
+
+div.label {
+    margin-bottom: 10px;
+    max-width: 350px;
+}
+
+.input-container {
+    position: relative;
+    padding: 10px 0;
+}
+
+.input-container>input.enter {
+    width: 100%;
+    height: 1cm;
+    border: none;
+    font-size: 1rem;
+    font-family: var(--font-light-2);
+    padding-left: 20px;
+    border-bottom: 2px solid var(--grey999);
+
+    &:focus {
+        outline: 1px solid var(--grey555);
+        border: none;
+    }
+
+    &::placeholder {
+        text-transform: capitalize;
+    }
+}
+
+div.input-container>i.ico {
+    position: absolute;
+    right: 20px;
+    top: 50px;
+
+}
+
+i#togglePassword {
+    cursor: pointer;
+}
+
+.important {
+    font-size: 1.1rem;
+    color: var(--red);
+}
+
+.valider {
+    display: flex;
+}
+
+.valider input {
+    padding: 10px 25px;
+    font-family: var(--font-light-2);
+    font-weight: bold;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--greyeee);
+    font-weight: 600;
+    position: relative;
+    font-size: 1.01rem;
+    transition: background .4s ease-in-out;
+
+    &:hover {
+        background-color: var(--a-hover-color);
+        color: var(--white);
+    }
+}
+
+div.log {
+    text-align: center;
+    font-family: var(--font-light-2);
+}
+
+@media (max-width:700px) {
+    .register {
+        max-width: 100%;
+        width: 95%;
+    }
+}
+
+/*JS VERIFICATION DES INFOS DE L'UTILISATEUR*/
+.wrong {
+    border-bottom: 1px solid var(--red) !important;
+}
+
+.mdpConf-inval {
+    color: var(--red) !important;
+}
+
+.mdpConf-val {
+    color: var(--green) !important;
+}

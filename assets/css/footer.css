@@ -1,0 +1,234 @@
+/*FOOTER*/
+footer {
+    background-color: var(--footer-bg);
+    margin-top: 100px;
+    width: 100vw;
+}
+
+.page-foot {
+    width: 100%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 20px;
+    gap: 20px;
+}
+
+
+.copyright {
+    justify-items: center;
+    text-align: center;
+    background-color: var(--greyddd);
+}
+
+.copyright h2 {
+    font-size: 1.8rem;
+    font-family: var(--logo-font);
+    margin-bottom: 10px;
+}
+
+.copyright h2 span {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.copyright img {
+    width: 70%;
+    height: 200px;
+    transition: transform .5s cubic-bezier(0.19, 1, 0.22, 1);
+    border-radius: 10px;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.copyright div.adresse {
+    margin: auto;
+    width: fit-content;
+    margin-top: 20px;
+    display: grid;
+    font-size: 0.9rem;
+    grid-template-columns: 1fr;
+    gap: 10px 0;
+    text-align: start;
+}
+
+div.adresse address {
+    font-family: var(--font-light-2);
+    font-weight: bold;
+}
+
+address a {
+    text-decoration: none;
+    color: var(--black);
+}
+
+address i {
+    font-size: 1.4rem;
+    color: var(--maroon);
+}
+
+ul.foot-ul {
+    padding: 10px 60px;
+    border-radius: 10px;
+    justify-self: center;
+    transition: transform .5s cubic-bezier(0.19, 1, 0.22, 1);
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.foot-ul>li {
+    list-style: none;
+    line-height: 2.1rem;
+    font-variant: small-caps;
+    font-family: var(--font-light-2);
+}
+
+.foot-ul>li a {
+    font-family: serif;
+    text-decoration: none;
+    color: var(--black);
+    font-variant: small-caps;
+    font-size: 1.02rem;
+    transition: color .3s ease, border 2s ease;
+
+    &:hover {
+        color: var(--maroon);
+        border-bottom: 5px solid var(--maroon);
+    }
+}
+
+
+hr.foot-hr {
+    width: 100%;
+    margin: 10px auto;
+}
+
+form.foot-form {
+    height: fit-content;
+    padding: 20px;
+}
+
+form.foot-form h3 {
+    font-family: var(--bold-font);
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    position: relative;
+
+    &::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 5px;
+        background-color: var(--maroon);
+        content: '';
+        animation: bottom 2s infinite forwards;
+    }
+}
+
+form.foot-form div {
+    margin: 10px 0;
+}
+
+form.foot-form div input {
+    width: 100%;
+    height: 1cm;
+    padding-left: 10px;
+}
+
+form.foot-form div input,
+form.foot-form div textarea {
+    border: none;
+    outline: none;
+    font-family: var(--font-light-1);
+    font-size: 1.05rem;
+    border-radius: 5px;
+    background-color: var(--white-f5f5f5);
+    color: var(--grey333);
+    border: 1px solid var(--greyddd);
+
+    &:focus {
+        border-color: var(--maroon);
+        background-color: var(--white-f3f3f3);
+    }
+}
+
+form.foot-form div textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px 0 0 10px;
+}
+
+form.foot-form div button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    color: var(--white);
+    background-color: var(--maroon);
+    font-family: var(--font-light-1);
+    font-weight: bold;
+    font-size: 1.05rem;
+    font-variant: small-caps;
+    cursor: pointer;
+    transition: transform .2s ease;
+
+    &:hover {
+        transform: scale(1.07);
+    }
+}
+
+footer div.copy {
+    background-color: var(--greybbb);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 30px;
+    padding: 10px 5px;
+
+}
+
+.droits {
+    font-family: var(--font-light-1);
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: var(--grey222);
+}
+
+.social i {
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+@media (max-width:900px) {
+    .page-foot {
+        grid-template-columns: 400px;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 40px 20px;
+        justify-content: center;
+    }
+
+    .droits {
+        word-break: normal;
+        max-width: 90%;
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--grey333);
+    }
+
+    .copyright,
+    form.foot-form {
+        margin: auto;
+        max-width: 98%;
+    }
+}
+
+@keyframes bottom {
+    to {
+        width: 30%;
+    }
+}

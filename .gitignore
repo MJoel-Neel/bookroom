@@ -1,0 +1,34 @@
+# Config locale (contient mots de passe BDD)
+config.php
+
+#Templates
+!config.example.php
+
+# MOTS DE PASSE / SECRETS
+.env
+.env.*
+
+# SYSTÈME
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak
+*.log
+
+# IDE
+.vscode/
+
+#DOSSIERS SENSIBLES
+open_me/
+pass/
+
+#BROUILLON
+reduction.brouillon.php
+payer.css
+payer.js
+essai.mcd
+payer.php
+reduction.sql
+
+

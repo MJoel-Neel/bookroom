@@ -1,0 +1,67 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+:root {
+  /* COLORS */
+  --black: #000;
+  --white: #fff;
+  --red: red;
+  --orange: #ffbf00;
+  --darkorange: darkorange;
+  --orangered: orangered;
+  --yellow: #ffff00;
+  --blue: #035add;
+  --skyblue: #4c84af;
+  --green: #00cf00;
+  --a-hover-color: #c92929;
+  --maroon: #7c0707;
+  --dark-maroon: #3c0000;
+  --php-error-bg: rgba(119, 119, 119, 0.7);
+  --label-color: #444;
+  --body-back: #f1f1f1;
+  --white-fcfcfc: #fcfcfc;
+  --white-f5f5f5: #f5f5f5;
+  --white-f9f9f9: #f9f9f9;
+  --white-f3f3f3: #f3f3f3;
+  --white-e0e0e0: #e0e0e0;
+  --grey444: #444;
+  --greyddd: #ddd;
+  --grey222: #222;
+  --grey555: #555;
+  --greyeee: #eee;
+  --grey999: #999;
+  --greyaaa: #aaa;
+  --grey333: #333;
+  --greyccc: #ccc;
+  --greybbb: #bbb;
+  --grey: grey;
+  --pagignation-color: #c7c0c05b;
+  --not-allowed-color: #3f3f3fb5;
+  --pagination-bg: rgba(3, 104, 255, 0.147);
+  --yellowgreen: yellowgreen;
+  --darkgreen: rgba(5, 245, 153, 0.5);
+  --div-edit-bg: #00000055;
+  --footer-bg: #e8e8e8;
+  --dashboard-back: #FDFBF7;
+  --dashboard-table: #ffffff;
+  --dashboard-head: #1C2A39;
+  --dashboard-siddebar: ##FFFFFF;
+  --dashboard-siddebar-text: #334155;
+  --dashboard-sidebar-i: #2563EB;
+
+  --table-th: #1C2A39;
+  --table-th-text: #F7F4EF;
+
+
+  /*FONTS*/
+  --logo-font: Rubik Storm;
+  --bold-font: Goldman-Bold;
+  --font-light-1: Montserrat;
+  --font-light-2: Raleway
+}
