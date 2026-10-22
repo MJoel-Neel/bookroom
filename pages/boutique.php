@@ -6,59 +6,64 @@ require_once("../errors/flash.php");
 
 
 //FONCTION EXPLOSER $_GET['AUTEUR']
-function exploser_auteur($auteur)
+// Construit une clause SQL "AND (auteur LIKE ? OR auteur LIKE ? ...)"
+//  à partir d'un tableau d'auteurs
+function exploser_auteur(array $auteur)
 {
     $req = '';
     $k = 0;
     $params = [];
-    $req .= " AND (";
+    $req .= " AND ("; // ouvre le groupe OR
     foreach ($auteur as $key => $value) {
         if ($k == 0) {
-            $req .= " l.auteur_livre LIKE ? ";
+            $req .= " l.auteur_livre LIKE ? "; // premier : pas de OR
         } else {
-            $req .= " OR l.auteur_livre LIKE ? ";
+            $req .= " OR l.auteur_livre LIKE ? "; // suivants : OR
         }
-        $params[] = $value;
+        $params[] = $value; // valeur bindée, jamais concaténée → safe
         $k++;
     }
     $req .= ")";
 
-    $r = [
+    return [
         'param' => $params,
         'requete' => $req
     ];
-    return $r;
 }
 
 /* Ajout produit + gestion quantité */
 if (isset($_POST["produit_id"])) {
 
-    $id = (int) $_POST["produit_id"];
+    $id = (int) $_POST["produit_id"]; // cast pour éviter les valeurs non numériques
 
-    $is_success = cart_add($id, 1);
+    $is_success = cart_add($id, 1); // ajoute 1 exemplaire
 
     if ($is_success) {
-        flash_info("Panier mis à jour ⏲️");
+        flash_info("Panier mis à jour ⏲️"); // message flash
     }
+    // Reconstruit la query string courante (sans le produit_id du POST)
+    $params = $_GET + ['search' => ''];                      // on part des paramètres GET actuels
+    unset($params['produit_id']);         // sécurité : ne pas réinjecter l'id
+    $qs = http_build_query($params);      // encode proprement (tableaux inclus)
+    $redirect = './boutique.php' . ($qs !== '' ? '?' . $qs : '');
 
-    // évite la duplication lors du refresh
-    header("Location: ./boutique.php?search");
+    header("Location: " . $redirect);
     exit();
 }
 
 //PREPARATION SQL
-$search = $_GET['search'] ?? '*';
+$search = $_GET['search'] ?? '*'; // valeur par défaut
 $sql = "SELECT * FROM livre l
     INNER JOIN categorie c
-    ON l.id_categorie = c.id_categorie WHERE 1=1";
+    ON l.id_categorie = c.id_categorie WHERE 1=1"; // 1=1 pour enchaîner les AND facilement
 
 if (!empty($_GET)) {
     $params = [];
-    $types = '';
-    //SI RECHERCHE
+
+    // RECHERCHE (titre)
     if (!empty($_GET['search'])) {
         $sql .= " AND l.titre_livre LIKE ? ";
-        $params[] = '%' . $_GET['search'] . '%';
+        $params[] = '%' . $_GET['search'] . '%'; // recherche "contient"
     }
     //prix min
     if (isset($_GET['min'])) {
@@ -72,9 +77,12 @@ if (!empty($_GET)) {
         $sql .= ' AND l.prix <= ?';
         $params[] = $max;
     }
-    //auteur
+    //auteur (multi-valeurs : auteur[]=...)
     if (isset($_GET['auteur'])) {
-        $auteur = exploser_auteur($_GET['auteur']);
+        // garde-fou : exploser_auteur attend un tableau
+        // pas une chaîne
+        $auteurs_get = is_array($_GET['auteur']) ? $_GET['auteur'] : [$_GET['auteur']];
+        $auteur = exploser_auteur($auteurs_get);
         $sql .= $auteur['requete'];
         foreach ($auteur['param'] as $key => $value) {
             $params[] = $value;
@@ -98,55 +106,75 @@ if (!empty($_GET)) {
         'pertinence' => ' ORDER BY l.id_livre',
         'moins' => ' ORDER BY l.prix ASC',
         'plus' => ' ORDER BY l.prix DESC',
-        'vente' => '',
         'avis' => ''
     ];
-    if (isset($_GET['trier'])) {
-        $tri = $tri_autorise[$_GET['trier']];
-        $sql .= $tri;
+    if (isset($_GET['trier']) && isset($tri_autorise[$_GET['trier']])) {
+        $sql .= $tri_autorise[$_GET['trier']];
     }
 } else {
     header("location: ../index.php");
     exit;
 }
 
-/*REQUETE FINAL*/
-$query1 = $conn->prepare($sql);
-if (!empty($params)) {
-    $types = '';
-    foreach ($params as $param) {
-        $types .= is_int($param) ? 'i' : 's';
+
+/*REQUETE FINAL (final) */
+$res1 = null; // null = échec ; la vue teste `if ($res1)`
+try {
+    $query1 = $conn->prepare($sql); // requête préparée (throws si SQL invalide)
+    if (!empty($params)) {
+        $types = '';
+        foreach ($params as $param) {
+            $types .= is_int($param) ? 'i' : 's'; // type mysqli : entier ou chaîne
+        }
+        $query1->bind_param($types, ...$params); // bind par référence via spread 
     }
-    $query1->bind_param($types, ...$params);
+    $query1->execute();
+    $res1 = $query1->get_result();
+    $query1->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("boutique.php recherche: " . $e->getMessage()); // page reste affichable
 }
-$query1->execute();
-$res1 = $query1->get_result();
 
 
-/*FILTRE AUTEURS*/
-$query2 = $conn->prepare("SELECT auteur_livre FROM `livre` GROUP BY auteur_livre;");
-$query2->execute();
-$res2 = $query2->get_result();
-$auteurs = $res2->fetch_all();
-$query2->close();
+/* AUTEURS (sidebar) */
+$auteurs = []; // fallback vide
+try {
+    $query2 = $conn->prepare("SELECT auteur_livre FROM `livre` GROUP BY auteur_livre;");
+    $query2->execute();
+    $res2 = $query2->get_result();
+    $auteurs = $res2->fetch_all(); // tableau de tableaux
+    $query2->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("boutique.php filtres auteurs: " . $e->getMessage());
+}
 
 /*FILTRE LANGUES*/
-$query3 = $conn->prepare("SELECT langue FROM `livre` GROUP BY langue;");
-$query3->execute();
-$res3 = $query3->get_result();
-$langues = $res3->fetch_all();
-$query3->close();
-/*FILTRE CATEGORIES*/
-$query4 = $conn->prepare("SELECT nom_categorie FROM categorie;");
-$query4->execute();
-$res4 = $query4->get_result();
-$categories = $res4->fetch_all();
-$query4->close();
+$langues = [];
+try {
+    $query3 = $conn->prepare("SELECT langue FROM `livre` GROUP BY langue;");
+    $query3->execute();
+    $res3 = $query3->get_result();
+    $langues = $res3->fetch_all();
+    $query3->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("boutique.php filtres langues: " . $e->getMessage());
+}
 
-/*FILTRE PROMO*/
+/*FILTRE CATEGORIES*/
+$categories = [];
+try {
+    $query4 = $conn->prepare("SELECT nom_categorie FROM categorie;");
+    $query4->execute();
+    $res4 = $query4->get_result();
+    $categories = $res4->fetch_all();
+    $query4->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("boutique.php filtres catégories: " . $e->getMessage());
+}
+
 /*INITIALISATION DE PANIER*/
 if (!isset($_SESSION["panier"])) {
-    $_SESSION["panier"] = [];
+    $_SESSION["panier"] = []; // tableau vide par défaut
 }
 
 
@@ -183,6 +211,7 @@ if (!isset($_SESSION["panier"])) {
     <?php include_once("../includes/header.php"); ?>
     <?php flash_render(); ?>
 
+
     <section class="produit-rechercher">
         <div class="recherche-utilisateur" data-aos="fade-down">
             <p class="nom">
@@ -205,9 +234,6 @@ if (!isset($_SESSION["panier"])) {
                         </option>
                         <option value="plus" <?= (isset($_GET['trier']) && ($_GET['trier'] == 'plus')) ? 'selected' : '' ?>>
                             Plus cher
-                        </option>
-                        <option value="vente" <?= (isset($_GET['trier']) && ($_GET['trier'] == 'vente')) ? 'selected' : '' ?>>
-                            Meilleures Ventes
                         </option>
                         <option value="avis" <?= (isset($_GET['trier']) && ($_GET['trier'] == 'avis')) ? 'selected' : '' ?>>
                             Avis
@@ -278,66 +304,76 @@ if (!isset($_SESSION["panier"])) {
             </form>
 
             <div class="articles">
-                <!--Article 1-->
-                <?php while ($produit = $res1->fetch_assoc()): ?>
+                <!--Articles-->
+                <?php if ($res1 && $res1->num_rows):
+                    // construire URL de action = current page + current filters
+                    $current_action = './boutique.php';
+                    if (!empty($_GET)) {
+                        $current_action .= '?' . http_build_query($_GET);
+                    }
+                    ?>
 
-                    <div class="article not-show" data-aos="zoom-in">
-                        <?php
-                        $prix = 0;
-                        if ($produit['reduction_livre'] > 0) {
-                            echo "<span class='promo'>-$produit[reduction_livre]%</span>";
-                            $prix = $produit['prix'] * (1 - $produit['reduction_livre'] / 100);
-                        }
+                    <?php while ($produit = $res1->fetch_assoc()): ?>
 
-                        //AFFICHER TOTAL AVIS
-                        $id_livre = (int) $produit['id_livre'];
-                        $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
-                        $combien_d_avis->execute([$id_livre]);
-                        $feedback = $combien_d_avis->get_result();
-                        $total_avis = $feedback->num_rows;
-                        $combien_d_avis->close();
-                        ?>
-                        <div class="article-img">
-                            <img loading="lazy" src="../assets/images<?= $produit['image_livre']; ?>" alt="">
-                        </div>
+                        <div class="article not-show" data-aos="zoom-in">
+                            <?php
+                            $prix = 0;
+                            if ($produit['reduction_livre'] > 0) {
+                                echo "<span class='promo'>-$produit[reduction_livre]%</span>";
+                                $prix = $produit['prix'] * (1 - $produit['reduction_livre'] / 100);
+                            }
 
-                        <div class="libelle-article">
-                            <a
-                                href="./produit.php?nom_produit=<?= $produit['titre_livre']; ?>&k=<?= $produit['id_livre']; ?>">
-                                <?= $produit['titre_livre']; ?>
-                            </a>
-                            <p class="categorie"><?= $produit['nom_categorie']; ?></p>
-                            <div class="resume">
-                                <?= $produit['resume_livre']; ?>
-
+                            //AFFICHER TOTAL AVIS
+                            $id_livre = (int) $produit['id_livre'];
+                            $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
+                            $combien_d_avis->execute([$id_livre]);
+                            $feedback = $combien_d_avis->get_result();
+                            $total_avis = $feedback->num_rows;
+                            $combien_d_avis->close();
+                            ?>
+                            <div class="article-img">
+                                <img loading="lazy" src="../assets/images<?= $produit['image_livre']; ?>" alt="">
                             </div>
-                            <div class="avis">
-                                <p><span>★</span> <a
-                                        href="./produit.php?nom_produit=<?= $produit['titre_livre'] ?>&k=<?= $produit['id_livre'] ?>#feedback">
-                                        <?= $total_avis ?>
-                                        Avis</a></p>
-                                <em class="auteur"><a href=""><?= $produit['auteur_livre']; ?></a></em>
+
+                            <div class="libelle-article">
+                                <a
+                                    href="./produit.php?nom_produit=<?= $produit['titre_livre']; ?>&k=<?= $produit['id_livre']; ?>">
+                                    <?= $produit['titre_livre']; ?>
+                                </a>
+                                <p class="categorie"><?= $produit['nom_categorie']; ?></p>
+                                <div class="resume">
+                                    <?= $produit['resume_livre']; ?>
+
+                                </div>
+                                <div class="avis">
+                                    <p><span>★</span> <a
+                                            href="./produit.php?nom_produit=<?= $produit['titre_livre'] ?>&k=<?= $produit['id_livre'] ?>#feedback">
+                                            <?= $total_avis ?>
+                                            Avis</a></p>
+                                    <em class="auteur"><a href=""><?= $produit['auteur_livre']; ?></a></em>
+                                </div>
+                            </div>
+
+                            <div class="price">
+                                <span class="prix">
+                                    <?php
+                                    if ($prix > 0) {
+                                        echo " $prix  <s style='color: #333; font-size: 18px;'>$produit[prix]€</s>";
+                                    } else {
+                                        echo "$produit[prix]€";
+                                    }
+                                    ?>
+                                </span>
+
+                                <form action="<?= $current_action ?>" method="post">
+                                    <input type="hidden" name="produit_id" value="<?= $produit['id_livre'] ?>">
+                                    <button class="ajouter" type="submit">Ajouter au panier</button>
+                                </form>
                             </div>
                         </div>
+                    <?php endwhile; ?>
 
-                        <div class="price">
-                            <span class="prix">
-                                <?php
-                                if ($prix > 0) {
-                                    echo " $prix  <s style='color: #333; font-size: 18px;'>$produit[prix]€</s>";
-                                } else {
-                                    echo "$produit[prix]€";
-                                }
-                                ?>
-                            </span>
-
-                            <form action="./boutique.php" method="post">
-                                <input type="hidden" name="produit_id" value="<?= $produit['id_livre'] ?>">
-                                <button class="ajouter" type="submit">Ajouter au panier</button>
-                            </form>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
+                <?php endif; ?>
             </div>
 
         </div>

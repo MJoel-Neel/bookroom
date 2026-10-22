@@ -35,7 +35,7 @@ try {
     $query1 = $conn->prepare("SELECT * FROM livre LIMIT 8");
     $query1->execute();
     $bests = $query1->get_result();
-    //$query1->close();
+    $query1->close();
 } catch (mysqli_sql_exception $e) {
     error_log("index.php best sellers: " . $e->getMessage());
 }
@@ -46,7 +46,7 @@ try {
     $query2 = $conn->prepare("SELECT * FROM livre ORDER BY id_livre DESC limit 8");
     $query2->execute();
     $news = $query2->get_result();
-    //$query2->close();
+    $query2->close();
 } catch (mysqli_sql_exception $e) {
     error_log("index.php nouveautés: " . $e->getMessage());
 }
@@ -57,7 +57,7 @@ try {
     $query3 = $conn->prepare("SELECT * FROM livre where reduction_livre>0 limit 8");
     $query3->execute();
     $promos = $query3->get_result();
-    //$query3->close();
+    $query3->close();
 } catch (mysqli_sql_exception $e) {
     error_log("index.php promotions: " . $e->getMessage());
 }
