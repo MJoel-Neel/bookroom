@@ -6,45 +6,61 @@ require_once("./includes/cart.php");
 
 /* Initialisation du panier */
 if (!isset($_SESSION["panier"])) {
-    $_SESSION["panier"] = [];
+    $_SESSION["panier"] = []; // tableau vide par défaut
 }
 
 /* Ajout produit + gestion quantité */
 if (isset($_POST["produit_id"])) {
 
-    $id = (int) $_POST["produit_id"];
+    $id = (int) $_POST["produit_id"]; // pour éviter les valeurs non numériques
 
     $is_success = cart_add($id, 1);
     if ($is_success) {
-        flash_info("Panier mis à jour ⏲️");
+        flash_info("Panier mis à jour ⏲️"); // message flash pour l'utilisateur
     }
 
-    // évite la duplication lors du refresh
+    // évite la duplication lors du refresh (POST -> GET)
     header("Location: " . $_SERVER["PHP_SELF"]);
     exit();
 }
 
 /* compteur total panier */
-$_SESSION["nombre_total_produit"] = count($_SESSION["panier"]);
+$_SESSION["nombre_total_produit"] = count($_SESSION["panier"]); // nombre total d'articles
 
 
 /* best sellers */
-$query1 = $conn->prepare("SELECT * FROM livre LIMIT 8");
-$query1->execute();
-$bests = $query1->get_result();
-$query1->close();
+$bests = null; // null = requête échouée ;
+//  la vue teste `if ($bests)`
+try {
+    $query1 = $conn->prepare("SELECT * FROM livre LIMIT 8");
+    $query1->execute();
+    $bests = $query1->get_result();
+    //$query1->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("index.php best sellers: " . $e->getMessage());
+}
 
 /* nouveautés */
-$query2 = $conn->prepare("SELECT * FROM livre ORDER BY id_livre DESC limit 8");
-$query2->execute();
-$news = $query2->get_result();
-$query2->close();
+$news = null;
+try {
+    $query2 = $conn->prepare("SELECT * FROM livre ORDER BY id_livre DESC limit 8");
+    $query2->execute();
+    $news = $query2->get_result();
+    //$query2->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("index.php nouveautés: " . $e->getMessage());
+}
 
 /* promotions */
-$query3 = $conn->prepare("SELECT * FROM livre where reduction_livre>0 limit 8");
-$query3->execute();
-$promos = $query3->get_result();
-$query3->close();
+$promos = null;
+try {
+    $query3 = $conn->prepare("SELECT * FROM livre where reduction_livre>0 limit 8");
+    $query3->execute();
+    $promos = $query3->get_result();
+    //$query3->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("index.php promotions: " . $e->getMessage());
+}
 
 ?>
 
@@ -150,51 +166,52 @@ $query3->close();
 
             <div class="best-sellers-box box">
                 <!--Article -->
-                <?php while ($best = $bests->fetch_assoc()):
-                    $prix = $best["prix"];
-                    if ($best["reduction_livre"] > 0) {
-                        $prix = $prix * (1 - $best["reduction_livre"] / 100);
-                    }
+                <?php if ($bests): ?>
+                    <?php while ($best = $bests->fetch_assoc()):
+                        $prix = $best["prix"];
+                        if ($best["reduction_livre"] > 0) {
+                            $prix = $prix * (1 - $best["reduction_livre"] / 100);
+                        }
 
-                    //AFFICHER TOTAL AVIS
-                    $id_livre = (int) $best['id_livre'];
-                    $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
-                    $combien_d_avis->execute([$id_livre]);
-                    $feedback = $combien_d_avis->get_result();
-                    $total_avis = $feedback->num_rows;
-                    $combien_d_avis->close();
-                    ?>
+                        //AFFICHER TOTAL AVIS
+                        $id_livre = (int) $best['id_livre'];
+                        $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
+                        $combien_d_avis->execute([$id_livre]);
+                        $feedback = $combien_d_avis->get_result();
+                        $total_avis = $feedback->num_rows;
+                        $combien_d_avis->close();
+                        ?>
 
-                    <div class="best-seller" data-aos="zoom-in">
-                        <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
-                            class="product-link-img"><img loading="lazy" src="./assets/images<?= $best["image_livre"] ?>"
-                                alt=""> </a>
-                        <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
-                            class="book-name"><?= $best["titre_livre"] ?></a>
+                        <div class="best-seller" data-aos="zoom-in">
+                            <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
+                                class="product-link-img"><img loading="lazy" src="./assets/images<?= $best["image_livre"] ?>"
+                                    alt=""> </a>
+                            <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
+                                class="book-name"><?= $best["titre_livre"] ?></a>
 
-                        <div class="avis">
-                            <p><span>★</span> <a
-                                    href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>#feedback">
-                                    <?= $total_avis ?> Avis</a></p>
-                            <em class="auteur"><a href=""><?= $best["auteur_livre"] ?></a></em>
+                            <div class="avis">
+                                <p><span>★</span> <a
+                                        href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>#feedback">
+                                        <?= $total_avis ?> Avis</a></p>
+                                <em class="auteur"><a href=""><?= $best["auteur_livre"] ?></a></em>
+                            </div>
+                            <div class="prix-box">
+                                <span class="prix"><?php
+                                if ($best["prix"] == $prix) {
+                                    echo $prix . " $";
+                                } else {
+                                    echo "$prix$ <s style='color:#555; font-size:1rem;'>$best[prix]</s>";
+                                }
+                                ?></span>
+                                <form action="" method="post">
+                                    <input type="hidden" name="produit_id" value="<?= $best["id_livre"] ?>">
+                                    <button class="ajouter" type="submit">Ajouter au panier</button>
+                                </form>
+                            </div>
+                            <span class="best">Best</span>
                         </div>
-                        <div class="prix-box">
-                            <span class="prix"><?php
-                            if ($best["prix"] == $prix) {
-                                echo $prix . " $";
-                            } else {
-                                echo "$prix$ <s style='color:#555; font-size:1rem;'>$best[prix]</s>";
-                            }
-                            ?></span>
-                            <form action="" method="post">
-                                <input type="hidden" name="produit_id" value="<?= $best["id_livre"] ?>">
-                                <button class="ajouter" type="submit">Ajouter au panier</button>
-                            </form>
-                        </div>
-                        <span class="best">Best</span>
-                    </div>
-                <?php endwhile; ?>
-
+                    <?php endwhile; ?>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -262,52 +279,54 @@ $query3->close();
 
             <div class="nouveautes-box box">
                 <!--Article -->
-                <?php while ($new = $news->fetch_assoc()):
-                    $prix = $new["prix"];
-                    if ($new["reduction_livre"] > 0) {
-                        $prix = $prix * (1 - $new["reduction_livre"] / 100);
-                    }
+                <?php if ($news): ?>
+                    <?php while ($new = $news->fetch_assoc()):
+                        $prix = $new["prix"];
+                        if ($new["reduction_livre"] > 0) {
+                            $prix = $prix * (1 - $new["reduction_livre"] / 100);
+                        }
 
-                    //AFFICHER TOTAL AVIS
-                    $id_livre = (int) $new['id_livre'];
-                    $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
-                    $combien_d_avis->execute([$id_livre]);
-                    $feedback = $combien_d_avis->get_result();
-                    $total_avis = $feedback->num_rows;
-                    $combien_d_avis->close();
-                    ?>
-                    <div class="nouveaute" data-aos="zoom-in">
-                        <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
-                            class="product-link-img"><img loading="lazy" src="./assets/images<?= $new["image_livre"] ?>"
-                                alt="">
-                        </a>
-                        <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
-                            class="book-name"><?= $new["titre_livre"] ?></a>
+                        //AFFICHER TOTAL AVIS
+                        $id_livre = (int) $new['id_livre'];
+                        $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
+                        $combien_d_avis->execute([$id_livre]);
+                        $feedback = $combien_d_avis->get_result();
+                        $total_avis = $feedback->num_rows;
+                        $combien_d_avis->close();
+                        ?>
+                        <div class="nouveaute" data-aos="zoom-in">
+                            <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
+                                class="product-link-img"><img loading="lazy" src="./assets/images<?= $new["image_livre"] ?>"
+                                    alt="">
+                            </a>
+                            <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
+                                class="book-name"><?= $new["titre_livre"] ?></a>
 
-                        <div class="avis">
-                            <p><span>★</span> <a
-                                    href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>#feedback">
-                                    <?= $total_avis ?> Avis</a></p>
-                            <em class="auteur"><a href=""><?= $new["auteur_livre"] ?></a></em>
+                            <div class="avis">
+                                <p><span>★</span> <a
+                                        href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>#feedback">
+                                        <?= $total_avis ?> Avis</a></p>
+                                <em class="auteur"><a href=""><?= $new["auteur_livre"] ?></a></em>
+                            </div>
+                            <div class="prix-box">
+                                <span class="prix">
+                                    <?php
+                                    if ($new["prix"] == $prix) {
+                                        echo $prix . " $";
+                                    } else {
+                                        echo "$prix$ <s style='color:#555; font-size:1rem;'>$new[prix]</s>";
+                                    }
+                                    ?>
+                                </span>
+                                <form action="" method="post">
+                                    <input type="hidden" name="produit_id" value="<?= $new["id_livre"] ?>">
+                                    <button class="ajouter" type="submit">Ajouter au panier</button>
+                                </form>
+                            </div>
+                            <span class="new">New</span>
                         </div>
-                        <div class="prix-box">
-                            <span class="prix">
-                                <?php
-                                if ($new["prix"] == $prix) {
-                                    echo $prix . " $";
-                                } else {
-                                    echo "$prix$ <s style='color:#555; font-size:1rem;'>$new[prix]</s>";
-                                }
-                                ?>
-                            </span>
-                            <form action="" method="post">
-                                <input type="hidden" name="produit_id" value="<?= $new["id_livre"] ?>">
-                                <button class="ajouter" type="submit">Ajouter au panier</button>
-                            </form>
-                        </div>
-                        <span class="new">New</span>
-                    </div>
-                <?php endwhile; ?>
+                    <?php endwhile; ?>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -355,51 +374,53 @@ $query3->close();
             <h2 class="section-title" data-aos="fade-right">Promotions</h2>
 
             <div class="promotions-box box">
-                <?php while ($promo = $promos->fetch_assoc()):
-                    $prix = $promo["prix"];
-                    if ($promo["reduction_livre"] > 0) {
-                        $prix = $prix * (1 - $promo["reduction_livre"] / 100);
-                    }
+                <?php if ($promos): ?>
+                    <?php while ($promo = $promos->fetch_assoc()):
+                        $prix = $promo["prix"];
+                        if ($promo["reduction_livre"] > 0) {
+                            $prix = $prix * (1 - $promo["reduction_livre"] / 100);
+                        }
 
-                    //AFFICHER TOTAL AVIS
-                    $id_livre = (int) $promo['id_livre'];
-                    $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
-                    $combien_d_avis->execute([$id_livre]);
-                    $feedback = $combien_d_avis->get_result();
-                    $total_avis = $feedback->num_rows;
-                    $combien_d_avis->close();
-                    ?>
-                    <div class="promotion" data-aos="zoom-in">
-                        <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
-                            class="product-link-img"><img loading="lazy" src="./assets/images<?= $promo["image_livre"] ?>"
-                                alt=""> </a>
-                        <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
-                            class="book-name"><?= $promo["titre_livre"] ?></a>
+                        //AFFICHER TOTAL AVIS
+                        $id_livre = (int) $promo['id_livre'];
+                        $combien_d_avis = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ?;");
+                        $combien_d_avis->execute([$id_livre]);
+                        $feedback = $combien_d_avis->get_result();
+                        $total_avis = $feedback->num_rows;
+                        $combien_d_avis->close();
+                        ?>
+                        <div class="promotion" data-aos="zoom-in">
+                            <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
+                                class="product-link-img"><img loading="lazy" src="./assets/images<?= $promo["image_livre"] ?>"
+                                    alt=""> </a>
+                            <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
+                                class="book-name"><?= $promo["titre_livre"] ?></a>
 
-                        <div class="avis">
-                            <p><span>★</span> <a
-                                    href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>#feedback">
-                                    <?= $total_avis ?> Avis</a></p>
-                            <em class="auteur"><a href=""><?= $promo["auteur_livre"] ?></a></em>
+                            <div class="avis">
+                                <p><span>★</span> <a
+                                        href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>#feedback">
+                                        <?= $total_avis ?> Avis</a></p>
+                                <em class="auteur"><a href=""><?= $promo["auteur_livre"] ?></a></em>
+                            </div>
+                            <div class="prix-box">
+                                <span class="prix">
+                                    <?php
+                                    if ($promo["prix"] == $prix) {
+                                        echo $prix . " $";
+                                    } else {
+                                        echo "$prix$ <s style='color:#555; font-size:1rem;'>$promo[prix]</s>";
+                                    }
+                                    ?>
+                                </span>
+                                <form action="" method="post">
+                                    <input type="hidden" name="produit_id" value="<?= $promo["id_livre"] ?>">
+                                    <button class="ajouter" type="submit">Ajouter au panier</button>
+                                </form>
+                            </div>
+                            <span class="reduction">Promo</span>
                         </div>
-                        <div class="prix-box">
-                            <span class="prix">
-                                <?php
-                                if ($promo["prix"] == $prix) {
-                                    echo $prix . " $";
-                                } else {
-                                    echo "$prix$ <s style='color:#555; font-size:1rem;'>$promo[prix]</s>";
-                                }
-                                ?>
-                            </span>
-                            <form action="" method="post">
-                                <input type="hidden" name="produit_id" value="<?= $promo["id_livre"] ?>">
-                                <button class="ajouter" type="submit">Ajouter au panier</button>
-                            </form>
-                        </div>
-                        <span class="reduction">Promo</span>
-                    </div>
-                <?php endwhile; ?>
+                    <?php endwhile; ?>
+                <?php endif; ?>
             </div>
         </section>
 
