@@ -105,8 +105,7 @@ if (!empty($_GET)) {
     $tri_autorise = [
         'pertinence' => ' ORDER BY l.id_livre',
         'moins' => ' ORDER BY l.prix ASC',
-        'plus' => ' ORDER BY l.prix DESC',
-        'avis' => ''
+        'plus' => ' ORDER BY l.prix DESC'
     ];
     if (isset($_GET['trier']) && isset($tri_autorise[$_GET['trier']])) {
         $sql .= $tri_autorise[$_GET['trier']];
@@ -234,9 +233,6 @@ if (!isset($_SESSION["panier"])) {
                         </option>
                         <option value="plus" <?= (isset($_GET['trier']) && ($_GET['trier'] == 'plus')) ? 'selected' : '' ?>>
                             Plus cher
-                        </option>
-                        <option value="avis" <?= (isset($_GET['trier']) && ($_GET['trier'] == 'avis')) ? 'selected' : '' ?>>
-                            Avis
                         </option>
                     </select>
                 </div>
