@@ -88,10 +88,10 @@ if (!empty($_POST) && isset($_POST['note'])) {
         $id_user = (int) $_SESSION["user_id"];
 
         $note = (int) $_POST['note'];
-        $commentaire = htmlspecialchars($_POST['avis']) ?? '';
+        $commentaire = $_POST['avis'] ?? '';
         $client_id = (int) $_SESSION["user_id"];
         $email = isset($_SESSION["user_email"]) ? $_SESSION["user_email"] : '';
-        $pseudo = (isset($_SESSION["user_name"])) ? htmlspecialchars($_SESSION["user_name"]) : "Anonymous";
+        $pseudo = (isset($_SESSION["user_name"])) ? $_SESSION["user_name"] : "Anonymous";
         $livre = (int) $article['id_livre'];
 
         // Si l'email n'est pas en session, on le récupère proprement
