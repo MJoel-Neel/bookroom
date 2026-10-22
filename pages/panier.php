@@ -4,13 +4,17 @@ include_once("../config.php");
 require_once('../errors/flash.php');
 require_once('../includes/cart.php');
 
+// Initialise le panier s'il n'existe pas encore
+if (!isset($_SESSION["panier"])) {
+    $_SESSION["panier"] = [];
+}
 
 $total = 0;
 
 /*trouver la quantité d'un produit, en paramètre l'id à chercher et la table dans laquelle chercher */
-function qteOf($produit_id, $panier)
+function qteOf($produit_id, array $panier)
 {
-    $qte = 1;
+    $qte = 0;
     foreach ($panier as $key => $value) {
         if ($produit_id == $key) {
             $qte = $value;
@@ -24,8 +28,9 @@ if (isset($_POST["less"])) {
 
     $id = intval($_POST["less"]);
 
-    if ($_SESSION["panier"][$id] > 1) {
-        $is_success = cart_add($id, -1);
+    // Garde-fou : le produit doit exister dans le panier
+    if ($_SESSION["panier"][$id] > 1 && $_SESSION["panier"][$id] > 1) {
+        $is_success = cart_add($id, -1); // -1 : décrémente
 
         if ($is_success) {
             flash_info("Panier mis à jour ⏲️");
@@ -56,33 +61,39 @@ if (isset($_POST["delete"])) {
     $id = intval($_POST["delete"]);
     cart_remove($id);
     flash_warning("Produit supprimer 😥");
+
     header("Location: ./panier.php");
     exit();
 }
 
-/*PARTIE REQUETE SQL*/
+/*PARTIE REQUETE SQL : récupérer les livres du panier*/
+$res = null;
 if (!empty($_SESSION["panier"])) {
-    $articles = "";
     $list_articles = $_SESSION["panier"];
-    foreach ($list_articles as $item => $qte) {
-        $articles .= ",$item";
+    // Construit dynamiquement "?,?,?" pour chaque id du panier
+    $ids = array_keys($_SESSION["panier"]);  // [5, 12, 8, ...]
+    $placeholders = implode(',', array_fill(0, count($ids), '?')); // "?,?,?..."
+    // Types : tout en 'i' (les clés de panier sont des entiers)
+    $types = str_repeat('i', count($ids));
+
+
+    try {
+        $sql = "SELECT l.id_livre, l.titre_livre, l.prix, l.image_livre,
+                       l.reduction_livre, c.nom_categorie
+                FROM livre l
+                INNER JOIN categorie c ON c.id_categorie = l.id_categorie
+                WHERE l.id_livre IN ($placeholders)";
+
+        $query = $conn->prepare($sql);
+        $query->bind_param($types, ...$ids);     // spread : nécessite des variables/array (OK)
+        $query->execute();
+        $res = $query->get_result();
+        $query->close();
+    } catch (mysqli_sql_exception $e) {
+        error_log("panier.php SELECT: " . $e->getMessage()); // trace côté serveur
+        $res = null; // la vue affichera un panier vide/erreur
     }
-    $articles = ltrim($articles, ",");
-
-    $query = $conn->prepare("SELECT l.id_livre, l.titre_livre,
-               l.prix,
-               l.image_livre,
-               l.reduction_livre,
-               c.nom_categorie
-        FROM livre l
-        INNER JOIN categorie c ON c.id_categorie = l.id_categorie
-        WHERE l.id_livre IN ($articles)
-    ");
-
-    $query->execute();
-    $res = $query->get_result();
 }
-
 
 ?>
 
@@ -127,7 +138,7 @@ if (!empty($_SESSION["panier"])) {
             <div class="articles">
                 <!--Article1-->
                 <?php
-                if (isset($res)):
+                if ($res && $res->num_rows):
                     while ($produit = $res->fetch_assoc()):
                         $qte = qteOf($produit["id_livre"], $list_articles);
                         $prix = $produit["prix"] * $qte;

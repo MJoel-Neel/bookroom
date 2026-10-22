@@ -5,19 +5,17 @@ require_once('../errors/flash.php');
 require_once '../includes/cart.php';
 
 
-
-
-$errors = [];
+$errors = []; // erreurs de validation affichées dans le formulaire
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     try {
         $email = trim($_POST["mail"]);
-        $password = trim($_POST["mdp"]);
+        $password = $_POST["mdp"];
 
         // Validation
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors["email"] = "Email ou Mot de passe incomplet";
+            $errors["email"] = "Email ou Mot de passe incomplet"; 
         }
 
         if (empty($password)) {
@@ -46,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     session_regenerate_id(true);
                     // Fusion session → BDD
-                    cart_merge_on_login((int) $user["id_client"]);
+                    cart_merge_on_login((int) $user["id_client"]);  // Fusion panier invité → panier BDD
 
                     flash_success("Connexion réussie 🎉");
                     header("Location: ../index.php");
@@ -62,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
     } catch (mysqli_sql_exception $e) {
+        error_log("login.php DB error: " . $e->getMessage()); // trace réelle côté serveur
         flash_warning("Erreur de connexion, veuillez réessayer");
     }
 

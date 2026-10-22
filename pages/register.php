@@ -19,8 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $genre = trim($_POST["civilite"]);
         $name = trim($_POST["pseudo"]);
         $email = trim($_POST["mail"]);
-        $password = trim($_POST["mdp"]);
-        $confirmPassword = trim($_POST["conf"]);
+        $password = $_POST["mdp"];
+        $confirmPassword = $_POST["conf"];
 
         // --- VALIDATIONS ---
         if (empty($name) || strlen($name) < 3) {
@@ -64,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $default_user_role = "user";
             $stmt2->bind_param("sssss", $name, $email, $hashedPassword, $genre, $default_user_role);
             $stmt2->execute();
+            $stmt2->close();
 
             flash_success("Inscription réussie 🎉");
             header("Location: ./login.php");
@@ -72,6 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     } catch (mysqli_sql_exception $e) {
+        // Trace réelle côté serveur
+        error_log("register.php DB error: " . $e->getMessage());
         $errors[] = "Erreur d'enregistrement, Veuillez bien vérifer vos informations";
     }
 

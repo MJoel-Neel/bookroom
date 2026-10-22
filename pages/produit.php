@@ -1,115 +1,154 @@
 <?php
 session_start();
-include_once("../config.php");
+include_once("../config.php"); // $conn mysqli, strict → exceptions
 require_once("../errors/flash.php");
 require_once("../includes/cart.php");
 
-if (isset($_GET['k'])) {
-    $id_produit = (int) $_GET['k'];
 
-    /*PARTIE PRODUIT CLIQUé*/
+// Initialise le panier (évite les warnings si première visite)
+if (!isset($_SESSION["panier"])) {
+    $_SESSION["panier"] = [];
+}
+
+// Sans ?k=, on renvoie à l'accueil
+if (!isset($_GET['k'])) {
+    header("location: ../index.php");
+    exit;
+}
+
+
+$id_produit = (int) $_GET['k'];
+
+/*PARTIE PRODUIT CLIQUé*/
+try {
     $query1 = $conn->prepare("SELECT l.id_livre, l.image_livre, l.reduction_livre, l.titre_livre, c.nom_categorie, l.resume_livre, l.auteur_livre, l.prix, l.langue, l.public_legal FROM livre l
     INNER JOIN categorie c
     ON l.id_categorie = c.id_categorie
     WHERE l.id_livre = ?;");
-    $query1->execute([$id_produit]);
+    $query1->bind_param('i', $id_produit);
+    $query1->execute();
     $res1 = $query1->get_result();
     $article = $res1->fetch_assoc();
     $query1->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("produit.php article: " . $e->getMessage());
+}
 
+// Produit introuvable → retour accueil
+if (!$article) {
+    header("location: ../index.php");
+    exit;
+}
 
+/*BUTTON AJOUTER AU PANIER (formulaire quantité)*/
+if (isset($_POST['qte'])) {
+    $qte = (int) $_POST['qte'];
+    if ($qte < 1) {
+        $qte = 1;
+    } // garde-fou : pas de 0 ni négatif
 
-
-    /*BUTTON AJOUTER AU PANIER  */
-    if (isset($_POST['qte'])) {
-        $id_produit = (int) $article['id_livre'];
-        $is_success = cart_add($id_produit, (int) $_POST['qte']);
-        if ($is_success) {
-            flash_info("Panier mis à jour ⏲️");
-        }
-
-        header("Location: ./produit.php?nom_produit=$article[titre_livre]&k=$article[id_livre]");
-        exit();
+    $id_produit = (int) $article['id_livre'];
+    $is_success = cart_add($id_produit, $qte);
+    if ($is_success) {
+        flash_info("Panier mis à jour ⏲️");
     }
 
+    header("Location: ./produit.php?nom_produit=" . urlencode($article['titre_livre']) . "&k=" . $article['id_livre']);
+    exit();
+}
 
 
 
-    /*PARTIE PRODUIT EN LIEN*/
+
+/*PARTIE PRODUIT EN LIEN (même catégorie) */
+$res2 = null;
+try {
+    $id_produit = (int) $article['id_livre'];
     $categorie = $article['nom_categorie'];
     $query2 = $conn->prepare("SELECT * FROM livre l
     INNER JOIN categorie c
-    ON l.id_categorie = c.id_categorie WHERE nom_categorie = ? limit 5;");
-    $query2->execute([$categorie]);
+    ON l.id_categorie = c.id_categorie WHERE nom_categorie = ? AND l.id_livre != ? limit 4;");
+    $query2->bind_param("si", $categorie, $id_produit);
+    $query2->execute();
     $res2 = $query2->get_result();
     $query2->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("produit.php suggestions: " . $e->getMessage());
+}
 
-    //GESTION DES AVIS
-    //DONNER SON AVIS
-    if (!empty($_POST)) {
-        if (isset($_SESSION["user_id"]) && isset($_POST['note'])) {
-            $id_user = (int) $_SESSION["user_id"];
-            $client = mysqli_query($conn, "SELECT email_client FROM client WHERE id_client = $id_user;");
-            $client = $client->fetch_assoc();
-
-            $note = (int) htmlspecialchars($_POST['note']);
-            $commentaire = htmlspecialchars($_POST['avis']);
-            $client_id = (int) $_SESSION["user_id"];
-            $email = htmlspecialchars($client['email_client']);
-            $pseudo = (isset($_SESSION["user_name"])) ? htmlspecialchars($_SESSION["user_name"]) : "Anonymous";
-            $livre = (int) $_GET['k'];
-
-            $query3 = $conn->prepare("INSERT INTO avis (note, commentaire, id_livre_concerner, id_client_faire, email_client, pseudo_client) 
-                VALUES (?, ?, ?, ?, ?, ?)");
-            $query3->bind_param("isiiss", $note, $commentaire, $livre, $client_id, $email, $pseudo);
-            $query3->execute();
-            $res3 = $query3->get_result();
-            $query3->close();
-
-            flash_info("Avis pris en compte !");
-            header("Location: ./produit.php?nom_produit=$article[titre_livre]&k=$article[id_livre]#feedback");
-            exit();
-
-        }
-        if (!isset($_SESSION["user_id"]) && isset($_POST['note'])) {
-            header("Location: ./login.php");
-            exit();
-        }
-
-    }
-
-    //AFFICHER LES AVIS
-    $id_livre = (int) $_GET['k'];
-    $query4 = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ? ORDER BY id_avis DESC;");
-    $query4->execute([$id_livre]);
-    $res4 = $query4->get_result();
-    $total_avis = $res4->num_rows;
-    $query4->close();
-
-
-
-
-
-    /* Ajout produit + gestion quantité */
-    if (isset($_POST["produit_id"])) {
-        $id = (int) $_POST["produit_id"];
-        $is_success = cart_add($id, 1);
-        if ($is_success) {
-            flash_info("Panier mis à jour ⏲️");
-        }
-
-        /* compteur total panier */
-        $_SESSION["nombre_total_produit"] = count($_SESSION["panier"]);
-
-        // évite la duplication lors du refresh
-        header("Location: ./produit.php?nom_produit=$article[titre_livre]&k=$article[id_livre]");
+//GESTION DES AVIS
+//DONNER SON AVIS
+if (!empty($_POST) && isset($_POST['note'])) {
+    if (!isset($_SESSION["user_id"])) {
+        header("Location: ./login.php");
         exit();
     }
 
+    try {
+        $id_user = (int) $_SESSION["user_id"];
 
-} else {
-    header("location: ../index.php");
-    exit;
+        $note = (int) $_POST['note'];
+        $commentaire = htmlspecialchars($_POST['avis']) ?? '';
+        $client_id = (int) $_SESSION["user_id"];
+        $email = isset($_SESSION["user_email"]) ? $_SESSION["user_email"] : '';
+        $pseudo = (isset($_SESSION["user_name"])) ? htmlspecialchars($_SESSION["user_name"]) : "Anonymous";
+        $livre = (int) $article['id_livre'];
+
+        // Si l'email n'est pas en session, on le récupère proprement
+        if ($email === '') {
+            $cq = $conn->prepare("SELECT email_client FROM client WHERE id_client = ?");
+            $cq->bind_param("i", $id_user);
+            $cq->execute();
+            $crow = $cq->get_result()->fetch_assoc();
+            $cq->close();
+            $email = $crow['email_client'] ?? '';
+        }
+
+        $query3 = $conn->prepare("INSERT INTO avis (note, commentaire, id_livre_concerner, id_client_faire, email_client, pseudo_client) 
+                VALUES (?, ?, ?, ?, ?, ?)");
+        $query3->bind_param("isiiss", $note, $commentaire, $livre, $client_id, $email, $pseudo);
+        $query3->execute();
+        $query3->close();
+
+        flash_info("Avis pris en compte !");
+        header("Location: ./produit.php?nom_produit=" . urlencode($article['titre_livre']) . "&k=" . $article['id_livre'] . "#feedback");
+        exit();
+    } catch (mysqli_sql_exception $e) {
+        error_log("produit.php INSERT avis: " . $e->getMessage());
+        flash_warning("Impossible d'enregistrer votre avis, réessayez.");
+    }
+}
+
+//AFFICHER LES AVIS
+
+$res4 = null;
+$total_avis = 0;
+try {
+    $id_livre = (int) $article['id_livre'];
+    $query4 = $conn->prepare("SELECT * FROM avis WHERE id_livre_concerner = ? ORDER BY id_avis DESC;");
+    $query4->bind_param("i", $id_livre);
+    $query4->execute();
+    $res4 = $query4->get_result();
+    $total_avis = $res4->num_rows;
+    $query4->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("produit.php avis: " . $e->getMessage());
+}
+
+
+
+
+/* Ajout produit + gestion quantité */
+if (isset($_POST["produit_id"])) {
+    $id = (int) $_POST["produit_id"];
+    $is_success = cart_add($id, 1);
+    if ($is_success) {
+        flash_info("Panier mis à jour ⏲️");
+    }
+
+    // évite la duplication lors du refresh
+    header("Location: ./produit.php?nom_produit=" . urlencode($article['titre_livre']) . "&k=" . $article['id_livre']);
+    exit();
 }
 
 ?>
@@ -257,8 +296,9 @@ if (isset($_GET['k'])) {
         <h2 data-aos="flip-left">PRODUIT EN LIEN</h2>
         <div class="similaires-container">
             <?php
-            while ($produit_similaire = $res2->fetch_assoc()):
-                if ($produit_similaire['id_livre'] != $article['id_livre']):
+            if ($res2 && $res2->num_rows):
+                while ($produit_similaire = $res2->fetch_assoc()):
+
                     ?>
                     <div class="similaire" data-aos="zoom-in">
                         <div class="similaire-img">
@@ -287,8 +327,9 @@ if (isset($_GET['k'])) {
                     </div>
 
                     <?php
-                endif;
-            endwhile;
+                endwhile;
+            endif;
+
             ?>
         </div>
 
