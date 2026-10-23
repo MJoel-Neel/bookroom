@@ -1,260 +1,316 @@
 <?php
 // Démarrage de la session pour accéder aux variables $_SESSION
 session_start();
-// Inclusion du fichier de configuration 
+// Inclusion du fichier de configuration et de flash 
 include_once("../config.php");
 require_once("../errors/flash.php");
 
+// tableau pour stocker les erreurs de validation
+$errors = [];
 
-$admin = $_SESSION['user_mail'] ?? 'John Doe | How did you do';
-// Initialisation des compteurs
-$nb_client = 0;
-$nb_livre = 0;
+$admin = $_SESSION['user_mail'] ?? 'John Doe, How did you do it';
 
-// Vérification : l'utilisateur doit être un admin, sinon redirection
-if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) {
+// Accès réservé aux admins
+if (!isset($_SESSION["role_client"]) || $_SESSION["role_client"] !== 'admin') {
     header("location: ../pages/parametre.php");
     exit;
-} else {
+}
+
+try {
     // Produits : on récupère tous les livres
     $query1 = $conn->prepare("SELECT * FROM livre ORDER BY id_livre DESC ");
     $query1->execute();
     $produits = $query1->get_result();
-    $query1->free_result();
+    $query1->close();
 
     // Catégories : on récupère toutes les catégories
     $query2 = $conn->prepare("SELECT * FROM categorie");
     $query2->execute();
     $categories = $query2->get_result();
-    $query2->free_result();
+    $query2->close();
 
 
     // Clients : on récupère tous les clients
     $query3 = $conn->prepare("SELECT * FROM client");
     $query3->execute();
     $clients = $query3->get_result();
-    $query3->free_result();
+    $query3->close();
 
-    // On stocke le nombre de clients et de livres pour les statistiques
+    // On stocke le nombre de clients et de livres 
+    // pour les statistiques
     $nb_client = $clients->num_rows;
     $nb_livre = $produits->num_rows;
+} catch (mysqli_sql_exception $e) {
+    error_log("dashboard.php load: " . $e->getMessage());
+    flash_error("Erreur de chargement du tableau de bord.");
+
+    // valeurs par défaut pour la vue
+    $produits = $categories = $clients = null;
+}
 
 
-
-
-
-    //SUPPRESSION CLIENT
-    if (isset($_POST['user_id'])) {
+//SUPPRESSION CLIENT
+if (isset($_POST['user_id'])) {
+    try {
         $id_client = (int) $_POST['user_id'];
         $requete3 = $conn->prepare("DELETE FROM client WHERE id_client = ?");
         $requete3->bind_param('i', $id_client);
         $requete3->execute();
-        $requete3->free_result();
-
+        $requete3->close();
         flash_warning("Un client de moins !");
-        header("location: " . $_SERVER['PHP_SELF']);
-        exit;
+    } catch (mysqli_sql_exception $e) {
+        error_log("dashboard.php delete client: " . $e->getMessage());
+        flash_error("Suppression client impossible.");
     }
-    //SUPPRESSION CATEGORIE
-    if (isset($_POST['cat_id'])) {
-        $id_livre = (int) $_POST['cat_id'];
-        $requete3 = $conn->prepare("DELETE FROM categorie WHERE id_categorie = ?");
-        $requete3->bind_param('i', $id_livre);
-        $requete3->execute();
-        $requete3->free_result();
+    header("location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+//SUPPRESSION CATEGORIE
+if (isset($_POST['cat_id'])) {
+    try {
+        $id_cat = (int) $_POST['cat_id'];
+        $del = $conn->prepare("DELETE FROM categorie WHERE id_categorie = ?");
+        $del->bind_param('i', $id_cat);
+        $del->execute();
+        $del->close();
         flash_warning("Une categorie de moins !");
-        header("location: " . $_SERVER['PHP_SELF']);
-        exit;
+    } catch (mysqli_sql_exception $e) {
+        error_log("dashboard.php delete categorie: " . $e->getMessage());
+        flash_error("Suppression catégorie impossible.");
     }
+    header("location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
 
-    //SUPPRESSION PROUDITS
-    if (isset($_POST['produit_id'])) {
+//SUPPRESSION PROUDITS
+if (isset($_POST['produit_id'])) {
+    try {
         $id_produit = (int) $_POST['produit_id'];
-        $requete4 = $conn->prepare("DELETE FROM livre WHERE id_livre = ?");
-        $requete4->bind_param('i', $id_produit);
-        $requete4->execute();
-        $requete4->free_result();
+        $del = $conn->prepare("DELETE FROM livre WHERE id_livre = ?");
+        $del->bind_param('i', $id_produit);
+        $del->execute();
+        $del->close();
+
         flash_warning("Un produit supprimé !");
-        header("location: " . $_SERVER['PHP_SELF']);
-        exit;
+    } catch (mysqli_sql_exception $e) {
+        error_log("dashboard.php delete produit: " . $e->getMessage());
+        flash_error("Suppression produit impossible.");
     }
 
-    //MODIFIER LE ROLE D'UN USER
-    if (isset($_POST['adminize']) && !empty($_POST['adminize'])) {
-        $user_id = (int) htmlspecialchars(trim($_POST["adminize"]));
+    header("location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+//CHANGER LE ROLE D'UN USER
+if (!empty($_POST['adminize'])) {
+    try {
+        $user_id = (int) $_POST["adminize"];
+
         //OBTENIR LE ROLE ACTUEL DE L'USER
         $role_req = $conn->prepare("SELECT role_client FROM client WHERE id_client = ?;");
-        $role_req->execute([$user_id]);
-        $role_result = $role_req->get_result()->fetch_assoc()['role_client'];
+        $role_req->bind_param("i", $user_id);
+        $role_req->execute();
+        $role_result = $role_req->get_result()->fetch_assoc();
+        $role_req->close();
 
-        $role_cible = $role_result === 'user' ? 'admin' : 'user';
-        //PROCEDER A LA MISE A JOURRRRRRRRRRRRRR
-        $adminize_req = $conn->prepare('UPDATE client SET role_client = ? WHERE id_client = ?;');
-        $adminize_req->execute([$role_cible, $user_id]);
-        $adminize_req->close();
-        flash_info("Role client modifié");
+        if ($role_result) {
+            //PROCEDER A LA MISE A JOUR
+            $role_cible = $role_result["role_client"] === 'user' ? 'admin' : 'user';
+            $upd = $conn->prepare("UPDATE client SET role_client = ? WHERE id_client = ?");
+            $upd->bind_param("si", $role_cible, $user_id);
+            $upd->execute();
+            $upd->close();
+            flash_info("Rôle client modifié");
+        }
+    } catch (mysqli_sql_exception $e) {
+        error_log("dashboard.php adminize: " . $e->getMessage());
+        flash_error("Changement de rôle impossible.");
+    }
+    header("location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+//AJOUTER CATEGORIE
+if (!empty($_POST['add_nom_cat']) && !empty($_POST['add_pref'])) {
+    $nom_cat = trim($_POST['add_nom_cat']);
+    $pref = trim($_POST['add_pref']);
+
+    if (strlen($pref) <= 10) {
+        try {
+            $add = $conn->prepare("INSERT INTO categorie(nom_categorie, prefixe_categorie) VALUES (?, ?)");
+            $add->bind_param("ss", $nom_cat, $pref);
+            $add->execute();
+            $add->close();
+            flash_success("Nouvelle categorie en vue !");
+        } catch (mysqli_sql_exception $e) {
+            error_log("dashboard.php add categorie: " . $e->getMessage());
+            flash_error("Ajout de catégorie impossible.");
+        }
         header("location: " . $_SERVER['PHP_SELF']);
         exit();
     }
+}
 
-    //AJOUTER NOUVELLE CATEGORIE
-    if (!empty($_POST['add_nom_cat']) && !empty($_POST['add_pref'])) {
-        $nom_cat = htmlspecialchars(trim($_POST['add_nom_cat']));
-        $pref = htmlspecialchars(trim($_POST['add_pref']));
-        if (strlen($pref) <= 10) {
-            $add1 = $conn->prepare("INSERT INTO categorie(nom_categorie, prefixe_categorie) VALUES (?, ?);");
-            $add1->bind_param("ss", $nom_cat, $pref);
-            $add1->execute();
-            $add1->free_result();
-            flash_success("Nouvelle categorie en vue !");
-            header("location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-    }
+//EDITER CATEGORIE
+if (
+    !empty($_POST['edit_nom_cat']) &&
+    !empty($_POST['edit_pref']) &&
+    !empty($_POST['id_category'])
+) {
+    $edit_nom_cat = trim($_POST['edit_nom_cat']);
+    $edit_pref = trim($_POST['edit_pref']);
+    $id_edit_cat = (int) $_POST['id_category'];
 
-    //EDITER CATEGORIE
-    if (!empty($_POST['edit_nom_cat']) && !empty($_POST['edit_pref']) && !empty($_POST['id_category'])) {
-        $edit_nom_cat = htmlspecialchars(trim($_POST['edit_nom_cat']));
-        $edit_pref = htmlspecialchars(trim($_POST['edit_pref']));
-        $id_edit_cat = (int) $_POST['id_category'];
-        if (strlen($edit_pref) <= 10) {
-            $edit1 = $conn->prepare("UPDATE categorie SET nom_categorie = ?, prefixe_categorie = ?  WHERE id_categorie = ?;");
-            $edit1->bind_param("ssi", $edit_nom_cat, $edit_pref, $id_edit_cat);
-            $edit1->execute();
-            $edit1->free_result();
+    if (strlen($edit_pref) <= 10) {
+        try {
+            $edit = $conn->prepare("UPDATE categorie SET nom_categorie = ?, prefixe_categorie = ?  WHERE id_categorie = ?;");
+            $edit->bind_param("ssi", $edit_nom_cat, $edit_pref, $id_edit_cat);
+            $edit->execute();
+            $edit->close();
             flash_success("Categorie modifiée avec succès !");
-            header("location: " . $_SERVER['PHP_SELF']);
-            exit();
+        } catch (mysqli_sql_exception $e) {
+            error_log("dashboard.php edit categorie: " . $e->getMessage());
+            flash_error("Modification de catégorie impossible.");
         }
+
+        header("location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+}
+
+// CATÉGORIES POUR LE MENU DÉROULANT D'AJOUT
+$cat_livre = null;
+try {
+    $cq = $conn->prepare("SELECT * FROM categorie");
+    $cq->execute();
+    $cat_livre = $cq->get_result();
+    $cq->close();
+} catch (mysqli_sql_exception $e) {
+    error_log("dashboard.php cat_livre: " . $e->getMessage());
+}
+
+//AJOUTER/MODIFIER UN PRODUIT 
+if (
+    isset(
+    $_POST['titre_produit'],
+    $_POST['resume_produit'],
+    $_POST['auteur_produit'],
+    $_POST['prix_produit'],
+    $_POST['stock_produit'],
+    $_POST['cat_produit'],
+    $_FILES['image_produit'],
+    $_POST['langue_produit'],
+    $_POST['public_legal_produit'],
+    $_POST['reduction_produit']
+)
+) {
+    // Nettoyage et récupération des données du formulaire
+    $id_livre = isset($_POST['id_livre']) ? (int) $_POST['id_livre'] : 0;
+    $titre_produit = trim($_POST['titre_produit']);
+    $resume_produit = trim($_POST['resume_produit']);
+    $auteur_produit = trim($_POST['auteur_produit']);
+    $prix_produit = (float) $_POST['prix_produit'];
+    $stock_produit = (int) $_POST['stock_produit'];
+    $cat_produit_id = (int) $_POST['cat_produit'];
+    $image_produit = $_FILES['image_produit'];
+    $langue_produit = strtoupper(trim($_POST['langue_produit']));
+    $public_legal_produit = trim($_POST['public_legal_produit']);
+    $reduction_produit = (int) ($_POST['reduction_produit'] ?? 0);
+
+    // add (id_livre == 0) ou update (id_livre > 0)
+    $quest_type = $id_livre === 0 ? 'add' : 'update';
+
+
+    // Validation du prix (doit être un nombre > 0)
+    if ($prix_produit <= 0) {
+        $errors["prix_produit"] = 'Vérifier le prix ';
+    }
+    // Validation du stock (entier >= 0)
+    if ($stock_produit < 0) {
+        $errors["stock_produit"] = 'Le stock doit être un entier naturel ';
+    }
+    // Titre : au moins 3 caractères
+    if (strlen($titre_produit) < 3) {
+        $errors["titre_produit"] = 'Nom du produit (au moins 3 caractères)';
+    }
+    // Auteur : au moins 3 caractères
+    if (strlen($auteur_produit) < 3) {
+        $errors["auteur_produit"] = "Nom de l'auteur (au moins 3 caractères)";
+    }
+    // Résumé : au moins 20 caractères
+    if (strlen($resume_produit) < 20) {
+        $errors["resume_produit"] = "Resumé du produit (au moins 20 caractères)";
+    }
+    // Langue : 3 caractères maximum
+    if (strlen($langue_produit) > 3) {
+        $errors["langue_produit"] = "Langue du produit (3 caractères MAXIMUM eg: fr)";
+    }
+    // Réduction : entier >= 0
+    if ($reduction_produit < 0) {
+        $errors["reduction_produit"] = "Reduction du produit doit être un entier naturel";
     }
 
-    // RÉCUPÉRATION DES CATÉGORIES POUR LE MENU DÉROULANT D'AJOUT
-    $categorie_livre = $conn->prepare("SELECT * FROM categorie");
-    $categorie_livre->execute();
-    $cat_livre = $categorie_livre->get_result();
-    $categorie_livre->free_result();
 
-    //AJOUTER/MODIFIER UN PRODUIT 
-    // Vérifie que tous les champs du formulaire sont bien présents
-    if (
-        isset($_POST['titre_produit']) &&
-        isset($_POST['resume_produit']) &&
-        isset($_POST['auteur_produit']) &&
-        isset($_POST['prix_produit']) &&
-        isset($_POST['stock_produit']) &&
-        isset($_POST['cat_produit']) &&
-        isset($_FILES['image_produit']) &&
-        isset($_POST['langue_produit']) &&
-        isset($_POST['public_legal_produit']) &&
-        isset($_POST['reduction_produit'])
-    ) {
-        // Nettoyage et récupération des données du formulaire
-        $id_livre = isset($_POST['id_livre']) ? (int) $_POST['id_livre'] : 0;
-        $titre_produit = htmlspecialchars(trim($_POST['titre_produit']));
-        $resume_produit = htmlspecialchars(trim($_POST['resume_produit']));
-        $auteur_produit = htmlspecialchars(trim($_POST['auteur_produit']));
-        $prix_produit = (float) ($_POST['prix_produit']);
-        $stock_produit = (int) ($_POST['stock_produit']);
-        $cat_produit = (int) ($_POST['cat_produit']);
-        $image_produit = $_FILES['image_produit'];
-        $langue_produit = htmlspecialchars(strtoupper((trim($_POST['langue_produit']))));
-        $public_legal_produit = htmlspecialchars(trim($_POST['public_legal_produit']));
-        $reduction_produit = (int) $_POST['reduction_produit'] ?? 0;
+    // Vérifie qu'une image a bien été fournie
+    if (empty($image_produit['tmp_name']) && $quest_type === "add") {
+        $errors["image_produit"] = "Veuillez sélectionner l'image du livre";
+    }
 
-        // tableau pour stocker les erreurs de validation
-        $errors = [];
-
-        //Vérification du type de la demande (update ou add)
-        $quest_type = isset($_POST['id_livre']) ?
-            $id_livre === 0 ? 'add' : 'update' : null;
-
-
-        //SI QUEST N'EXISTE PAS ALORS REDIRECTION
-        if (!$quest_type) {
-            header("location: " . $_SERVER['PHP_SELF']);
-            exit;
-        }
-
-        // Validation du prix (doit être un nombre > 0)
-        if ($prix_produit <= 0) {
-            $errors["prix_produit"] = 'Vérifier le prix ';
-        }
-        // Validation du stock (entier >= 0)
-        if ($stock_produit < 0) {
-            $errors["stock_produit"] = 'Le stock doit être un entier naturel ';
-        }
-        // Titre : au moins 3 caractères
-        if (strlen($titre_produit) < 3) {
-            $errors["titre_produit"]  = 'Nom du produit (au moins 3 caractères)';
-        }
-        // Auteur : au moins 3 caractères
-        if (strlen($auteur_produit) < 3) {
-            $errors["auteur_produit"] = "Nom de l'auteur (au moins 3 caractères)";
-        }
-        // Résumé : au moins 20 caractères
-        if (strlen($resume_produit) < 20) {
-            $errors["resume_produit"] = "Resumé du produit (au moins 20 caractères)";
-        }
-        // Langue : 3 caractères maximum
-        if (strlen($langue_produit) > 3) {
-            $errors["langue_produit"] = "Langue du produit (3 caractères MAXIMUM eg: fr)";
-        }
-        // Réduction : entier >= 0
-        if (!is_int($reduction_produit) || (int) $reduction_produit < 0) {
-            $errors["reduction_produit"] = "Reduction du produit doit être un entier naturel";
-        }
-
-
-        // Vérifie qu'une image a bien été fournie
-        if (empty($image_produit['tmp_name']) && $quest_type === "add") {
-            $errors["image_produit"] = "Veuillez sélectionner l'image du livre";
-        }
-
-        // Si aucune erreur, on procède à l'insertion en BDD
-        if (empty($errors)) {
+    // Si aucune erreur, on procède à l'insertion en BDD
+    if (empty($errors)) {
+        try {
             // Récupération du nom et du préfixe de la catégorie choisie
             $req2 = $conn->prepare("SELECT nom_categorie, prefixe_categorie FROM categorie
-                         WHERE id_categorie = ?;");
-            $req2->bind_param('i', $cat_produit);
+                        WHERE id_categorie = ?;");
+            $req2->bind_param('i', $cat_produit_id);
             $req2->execute();
-            $cat_info = $req2->get_result();
-            $info = $cat_info->fetch_assoc();
+            $info = $req2->get_result()->fetch_assoc();
+            $req2->close();
 
-            //SI $quest_type === 'update' , sans upload d'image
+            if (!$info) {
+                throw new RuntimeException("Catégorie inexistante");
+            }
+
+            // UPDATE sans nouvelle image → pas de traitement fichier
             if ($quest_type === "update" && empty($image_produit['tmp_name'])) {
                 // update du livre dans la base de données
-                $update1 = $conn->prepare("UPDATE livre 
+                $udp = $conn->prepare("UPDATE livre 
                 SET titre_livre = ?, resume_livre = ?, auteur_livre = ?,
                     prix = ?, stock = ?, id_categorie = ?, langue = ?,
                     public_legal = ?, reduction_livre = ?
                 WHERE id_livre = ?;");
-                $update1->bind_param(
+                $udp->bind_param(
                     "sssdiissii",
                     $titre_produit,
                     $resume_produit,
                     $auteur_produit,
                     $prix_produit,
                     $stock_produit,
-                    $cat_produit,
+                    $cat_produit_id,
                     $langue_produit,
                     $public_legal_produit,
                     $reduction_produit,
                     $id_livre
                 );
-                $update1->execute();
+                $udp->execute();
+                $udp->close();
+
                 header('Location: ' . $_SERVER['PHP_SELF']);
                 exit;
             }
 
-            //SINON
             // Construction du dossier de destination
-            $nom = $info['nom_categorie'];
-            $nom = str_replace(" ", "", $nom);
+            $nom = str_replace(" ", "", $info['nom_categorie']);
             $uploadDirection = "../assets/images/produits/" . $nom . '/';
 
             // Création du dossier s'il n'existe pas
-            if (!is_dir($uploadDirection)) {
-                mkdir($uploadDirection, 0755, true);
+            if (
+                !is_dir($uploadDirection) &&
+                !mkdir($uploadDirection, 0755, true) &&
+                !is_dir($uploadDirection)
+            ) {
+                throw new RuntimeException("Création dossier impossible");
             }
 
             $extentionsAccepter = [
@@ -268,12 +324,10 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
             $tmpName = $image_produit['tmp_name'];
             $name = !empty($image_produit['name']) ? $image_produit['name'] : 'anonymous_book.webp';
 
-            //CHEMIN TEMPORAIRE de image_livre puisqu'il est NOT NULL DANS LA BASE
-            //NON EXISTANT SUR LE DISQUE
+            // Chemin temporaire pour image_livre (colonne NOT NULL)
             $tmp_image_livre = !empty($tmpName) ? $tmpName : "/tmp/anonymous_book.webp" . uniqid();
 
             // Vérification du type MIME réel du fichier
-            $fileType = "";
             if (!empty($tmpName)) {
                 $fileType = mime_content_type($tmpName);
                 if (!in_array($fileType, $extentionsAccepter)) {
@@ -283,25 +337,18 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
 
 
             // vérification de la taille du fichier
-            if (!empty($tmpName)) {
-                $max_size = 1024 * 1024;
-                if ($image_produit['size'] > $max_size) {
-                    $errors["image_produit"] = "Fichier trop lourd. Max 1 Mo";
-                }
+            if (
+                !empty($tmpName) &&
+                $image_produit['size'] > 1024 * 1024 //1 Mo
+            ) {
+                $errors["image_produit"] = "Fichier trop lourd. Max 1 Mo";
             }
 
-            //DEUXIEME CHECK DE $errors CAR TYPE MIME ET SIZE ET verif de tmp_name
-            //EN RAJOUTE UNE COUCHE 
+            // Deuxième passage de validation
             if (empty($errors)) {
-                //PREPARATION DES REQUETES
-                //Initialisation de $sql et de default bind_param, une requête au pif
-                $sql = "SELECT * FROM livre WHERE 1=? LIMIT 1";
-                $v = 1;
-                $default_bind_param = ["i", $v];
-
-                switch ($quest_type) {
-                    case "update":
-                        $sql = "UPDATE livre 
+                // --- Construction SQL + types + valeurs --
+                if ($quest_type === "update") {
+                    $sql = "UPDATE livre 
                 SET titre_livre = ?,
                     resume_livre = ?,
                     auteur_livre = ?,
@@ -313,47 +360,45 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                     public_legal = ?,
                     reduction_livre = ?
                 WHERE id_livre = ?;";
-                        $default_bind_param = [
-                            $titre_produit,
-                            $resume_produit,
-                            $auteur_produit,
-                            $prix_produit,
-                            $stock_produit,
-                            $tmp_image_livre,
-                            $cat_produit,
-                            $langue_produit,
-                            $public_legal_produit,
-                            $reduction_produit,
-                            $id_livre
-                        ];
-                        break;
-
-
-                    case "add":
-                        $sql = "INSERT INTO livre (titre_livre,
+                    $types = "sssdisissii";
+                    $default_bind_param = [
+                        $titre_produit,
+                        $resume_produit,
+                        $auteur_produit,
+                        $prix_produit,
+                        $stock_produit,
+                        $tmp_image_livre,
+                        $cat_produit_id,
+                        $langue_produit,
+                        $public_legal_produit,
+                        $reduction_produit,
+                        $id_livre
+                    ];
+                } else {
+                    $sql = "INSERT INTO livre (titre_livre,
                     resume_livre, auteur_livre, prix, stock, image_livre,
                     id_categorie, langue, public_legal, reduction_livre) VALUES
                     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-                        $default_bind_param = [
-                            $titre_produit,
-                            $resume_produit,
-                            $auteur_produit,
-                            $prix_produit,
-                            $stock_produit,
-                            $tmp_image_livre,
-                            $cat_produit,
-                            $langue_produit,
-                            $public_legal_produit,
-                            $reduction_produit,
-                        ];
-                        break;
+                    $types = "sssdisissi";
+                    $default_bind_param = [
+                        $titre_produit,
+                        $resume_produit,
+                        $auteur_produit,
+                        $prix_produit,
+                        $stock_produit,
+                        $tmp_image_livre,
+                        $cat_produit_id,
+                        $langue_produit,
+                        $public_legal_produit,
+                        $reduction_produit,
+                    ];
                 }
 
-                //Récupération de l'ancien chemin de l'image du livre
-                //au cas ou le déplacement échouera
+                // Ancienne image (pour rollback en cas d'échec du move)
                 if ($quest_type == 'update') {
                     $path_req = $conn->prepare("SELECT image_livre FROM livre WHERE id_livre = ?;");
-                    $path_req->execute([$id_livre]);
+                    $path_req->bind_param("i", $id_livre);
+                    $path_req->execute();
                     $row = $path_req->get_result()->fetch_assoc();
                     $old_img = $row['image_livre'] ?? '/tmp/anonymous_book.webp' . uniqid();
                     ;
@@ -362,14 +407,16 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
 
                 // Insertion du livre dans la base de données
                 $req1 = $conn->prepare($sql);
-                $req1->execute($default_bind_param);
+                $req1->bind_param($types, ...$default_bind_param);
+                $req1->execute();
                 $lastId = $quest_type === 'add' ? $conn->insert_id : $id_livre; // ID du livre qui vient d'être added/updated
+                $req1->close();
 
-                // Construction du nom du fichier image : id_livre.extension
+                // Nom du fichier image : id_livre.extension
                 $extension = pathinfo($name, PATHINFO_EXTENSION);
                 $fileName = $lastId . '.' . $extension;
 
-                // Chemin web (pour la BDD) et chemin physique (pour le déplacement)
+                // Chemins web et disque
                 $image_livre = "/produits/" . $nom . "/" . $info['prefixe_categorie'] . $fileName;
                 $targetFile = $uploadDirection . $info['prefixe_categorie'] . $fileName;
 
@@ -382,7 +429,7 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                     header("location: " . $_SERVER['PHP_SELF']);
                     exit;
                 } else {
-                    //SI $quest_type === 'add' et une erreur de déplacement survient on supprime tout
+                    // Rollback en cas d'échec du déplacement
                     if ($quest_type === 'add') {
                         $stmt1 = $conn->prepare("DELETE FROM livre WHERE id_livre = ?");
                         $stmt1->bind_param("i", $lastId);
@@ -391,7 +438,6 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                     }
 
                     if ($quest_type === "update") {
-                        //SI $quest_type === 'update' et une erreur de déplacement survient on revient en arriere 
                         $stmt2 = $conn->prepare("UPDATE livre SET image_livre = ? WHERE id_livre = ?");
                         $stmt2->bind_param("si", $old_img, $lastId);
                         $stmt2->execute();
@@ -401,18 +447,19 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                     exit;
                 }
             }
-
+        } catch (mysqli_sql_exception $e) {
+            error_log("dashboard.php produit (DB): " . $e->getMessage());
+            flash_error("Erreur base de données lors de l'enregistrement du produit.");
+        } catch (RuntimeException $e) {
+            error_log("dashboard.php produit: " . $e->getMessage());
+            flash_error("Erreur lors de l'enregistrement du produit.");
         }
 
     }
 
-    //GESTION DES ERRORS
-    if (!empty($errors)) {
-        flash_success("Perfect !");             // stocker
-        header("location: " . $_SERVER['PHP_SELF']);
-        exit;
-    }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -765,14 +812,14 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                 <textarea name="resume_produit" id="resume_produit"
                     placeholder="Résumé du livre (20 Caractères minimum)"></textarea>
                 <span class="field-error"><?= htmlspecialchars($errors["resume_produit"]) ?></span>
-                </div>
+            </div>
             <div>
                 <label for="auteur_produit">
                     Auteur Produit
                     <span class="important">*</span>
                 </label>
                 <input type="text" placeholder="Auteur Livre" name="auteur_produit" id="auteur_produit">
-            <span class="field-error"><?= htmlspecialchars($errors["auteur_produit"]) ?></span>
+                <span class="field-error"><?= htmlspecialchars($errors["auteur_produit"]) ?></span>
             </div>
             <div>
                 <label for="prix_produit">
@@ -788,7 +835,7 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                     <span class="important">*</span>
                 </label>
                 <input type="text" name="stock_produit" placeholder="Stock" name="stock_produit" id="stock_produit">
-            <span class="field-error"><?= htmlspecialchars($errors["stock_produit"]) ?></span>
+                <span class="field-error"><?= htmlspecialchars($errors["stock_produit"]) ?></span>
             </div>
             <div class="select-wrapper">
                 <label for="cat_produit">
@@ -807,7 +854,7 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                 </label>
                 <input type="file" name="image_produit" accept="image/png, image/jpeg, image/webp, image/jpg"
                     id="image_produit">
-                    <span class="field-error"><?= htmlspecialchars($errors["image_produit"]) ?></span>
+                <span class="field-error"><?= htmlspecialchars($errors["image_produit"]) ?></span>
             </div>
             <div>
                 <label for="langue_produit">
@@ -824,7 +871,8 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                     <span class="important">*</span>
                 </label>
                 <input type="text" placeholder="Public Légal eg:15+" value="" name="public_legal_produit"
-                    id="public_legal_produit"></div>
+                    id="public_legal_produit">
+            </div>
             <div>
                 <label for="reduction_produit">
                     Reduction Produit
@@ -832,8 +880,8 @@ if (!isset($_SESSION["role_client"]) || ($_SESSION["role_client"] !== 'admin')) 
                 </label>
                 <input type="text" placeholder="Reduction Livre" value="" name="reduction_produit"
                     id="reduction_produit">
-                    <span class="field-error"><?= htmlspecialchars($errors["reduction_produit"]) ?></span>
-                </div>
+                <span class="field-error"><?= htmlspecialchars($errors["reduction_produit"]) ?></span>
+            </div>
             <div class="get-hidden-input">
                 <input type="hidden" name="id_livre" value="" id="id_livre" class="hidden-input">
             </div>
