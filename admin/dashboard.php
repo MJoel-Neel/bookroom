@@ -5,6 +5,21 @@ session_start();
 include_once("../config.php");
 require_once("../errors/flash.php");
 
+$active_section = $_GET['section'] ?? 'show-produits';
+$active_section = in_array($active_section, ['show-produits','show-clients','show-categories'], true)
+    ? $active_section : 'show-produits';
+
+// helper — dashboard.php redirection
+function dashboard_redirect()
+{
+    $allowed = ['show-produits', 'show-clients', 'show-categories'];
+    $section = $_POST['current_section'] ?? 'show-produits';
+    if (!in_array($section, $allowed, true))
+        $section = 'show-produits';
+    header("Location: " . $_SERVER['PHP_SELF'] . '?section=' . urlencode($section));
+    exit;
+}
+
 // tableau pour stocker les erreurs de validation
 $errors = [];
 
@@ -62,8 +77,7 @@ if (isset($_POST['user_id'])) {
         error_log("dashboard.php delete client: " . $e->getMessage());
         flash_error("Suppression client impossible.");
     }
-    header("location: " . $_SERVER['PHP_SELF']);
-    exit;
+    dashboard_redirect();
 }
 
 //SUPPRESSION CATEGORIE
@@ -79,8 +93,7 @@ if (isset($_POST['cat_id'])) {
         error_log("dashboard.php delete categorie: " . $e->getMessage());
         flash_error("Suppression catégorie impossible.");
     }
-    header("location: " . $_SERVER['PHP_SELF']);
-    exit;
+    dashboard_redirect();
 }
 
 //SUPPRESSION PROUDITS
@@ -98,8 +111,7 @@ if (isset($_POST['produit_id'])) {
         flash_error("Suppression produit impossible.");
     }
 
-    header("location: " . $_SERVER['PHP_SELF']);
-    exit;
+    dashboard_redirect();
 }
 
 //CHANGER LE ROLE D'UN USER
@@ -127,8 +139,7 @@ if (!empty($_POST['adminize'])) {
         error_log("dashboard.php adminize: " . $e->getMessage());
         flash_error("Changement de rôle impossible.");
     }
-    header("location: " . $_SERVER['PHP_SELF']);
-    exit();
+    dashboard_redirect();
 }
 
 //AJOUTER CATEGORIE
@@ -147,8 +158,7 @@ if (!empty($_POST['add_nom_cat']) && !empty($_POST['add_pref'])) {
             error_log("dashboard.php add categorie: " . $e->getMessage());
             flash_error("Ajout de catégorie impossible.");
         }
-        header("location: " . $_SERVER['PHP_SELF']);
-        exit();
+        dashboard_redirect();
     }
 }
 
@@ -174,8 +184,7 @@ if (
             flash_error("Modification de catégorie impossible.");
         }
 
-        header("location: " . $_SERVER['PHP_SELF']);
-        exit();
+        dashboard_redirect();
     }
 }
 
@@ -296,8 +305,7 @@ if (
                 $udp->execute();
                 $udp->close();
 
-                header('Location: ' . $_SERVER['PHP_SELF']);
-                exit;
+                dashboard_redirect();
             }
 
             // Construction du dossier de destination
@@ -426,8 +434,8 @@ if (
                     $stmt->bind_param("si", $image_livre, $lastId);
                     $stmt->execute();
                     $stmt->close();
-                    header("location: " . $_SERVER['PHP_SELF']);
-                    exit;
+
+                    dashboard_redirect();
                 } else {
                     // Rollback en cas d'échec du déplacement
                     if ($quest_type === 'add') {
@@ -443,8 +451,8 @@ if (
                         $stmt2->execute();
                         $stmt2->close();
                     }
-                    header("location: " . $_SERVER['PHP_SELF']);
-                    exit;
+
+                    dashboard_redirect();
                 }
             }
         } catch (mysqli_sql_exception $e) {
@@ -507,7 +515,7 @@ if (
 
             <div class="all" data-aos="fade-right">
                 <div class="tools mobile">
-                    <div class="hover tool" onclick="showSection(event, 'show-produits')"
+                    <div class="tool <?= $active_section === 'show-produits' ? 'hover' : '' ?>" onclick="showSection(event, 'show-produits')"
                         title="Ajouter | Modifier | Supprimer">
                         <div class="content">
                             <i class="fa-brands fa-product-hunt"></i>
@@ -515,14 +523,14 @@ if (
                         </div>
                     </div>
 
-                    <div class=" tool" onclick="showSection(event, 'show-categories')" title="Gérer les catégories ">
+                    <div class="tool <?= $active_section === 'show-categories' ? 'hover' : '' ?>" onclick="showSection(event, 'show-categories')" title="Gérer les catégories ">
                         <div class="content">
                             <i class="fa-solid fa-table-list"></i>
                             <p class="tool-name">Catégories</p>
                         </div>
                     </div>
 
-                    <div class=" tool" onclick="showSection(event, 'show-clients')" title="Lister les clients">
+                    <div class="tool <?= $active_section === 'show-clients' ? 'hover' : '' ?>" onclick="showSection(event, 'show-clients')" title="Lister les clients">
                         <div class="content">
                             <i class="fa-solid fa-person"></i>
                             <p class="tool-name">Clients</p>
@@ -543,7 +551,8 @@ if (
 
                 <div class="show" data-aos="zoom-in">
                     <!--PRODUITS-->
-                    <div class="container active" id="show-produits">
+                    <div id="show-produits"
+                        class="container <?= $active_section === 'show-produits' ? 'active' : '' ?>">
                         <table class="produits">
                             <span class="more">
                                 <svg class="produit" xmlns="http://www.w3.org/2000/svg" height="24px"
@@ -621,6 +630,8 @@ if (
                                                             d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
                                                     </svg>
                                                 </button>
+                                                <input type="hidden" name="current_section" value="show-produits"
+                                                    class="current-section-input">
                                             </form>
                                         </td>
                                     </tr>
@@ -630,7 +641,7 @@ if (
                     </div>
 
                     <!--CATEGORIES-->
-                    <div class="container" id="show-categories">
+                    <div id="show-categories" class="container <?= $active_section === 'show-categories' ? 'active' : '' ?>">
                         <span class="more">
                             <svg class="add-cat" xmlns="http://www.w3.org/2000/svg" height="24px"
                                 viewBox="0 -960 960 960" width="24px" fill="#264E5B">
@@ -677,6 +688,8 @@ if (
                                                             d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
                                                     </svg>
                                                 </button>
+                                                <input type="hidden" name="current_section" value="show-categories"
+                                                    class="current-section-input">
                                             </form>
                                         </td>
                                     </tr>
@@ -686,7 +699,7 @@ if (
                     </div>
 
                     <!--CLIENTS-->
-                    <div class="container" id="show-clients">
+                    <div id="show-clients"  class="container <?= $active_section === 'show-clients'  ? 'active' : '' ?>">
                         <table class="clients">
                             <thead>
                                 <!--ENTETE-->
@@ -731,6 +744,8 @@ if (
                                                             d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
                                                     </svg>
                                                 </button>
+                                                <input type="hidden" name="current_section" value="show-clients"
+                                                    class="current-section-input">
                                             </form>
                                         </td>
 
@@ -744,6 +759,8 @@ if (
                                                         "<i class='fa-solid fa-user fa-lg' style='color: #014e01'; ></i>";
                                                     ?>
                                                 </button>
+                                                <input type="hidden" name="current_section" value="show-clients"
+                                                    class="current-section-input">
                                             </form>
                                         </td>
                                     </tr>
@@ -885,6 +902,7 @@ if (
             <div class="get-hidden-input">
                 <input type="hidden" name="id_livre" value="" id="id_livre" class="hidden-input">
             </div>
+            <input type="hidden" name="current_section" value="show-produits" class="current-section-input">
             <div class="edit-actions-div">
                 <button class="produit-actions-btn">Ajouter</button>
                 <button class="closing-form">
@@ -900,6 +918,7 @@ if (
                     class="edit-nom-cat"> </div>
             <div><input type="text" placeholder="préfixe" name="edit_pref" id="edit_pref" class="edit-pref-cat"></div>
             <div><input type="hidden" name="id_category" value="" id='edit_cat_id_input'></div>
+            <input type="hidden" name="current_section" value="show-categories" class="current-section-input">
             <div class="edit-actions-div">
                 <button type='submit'>Modifier</button>
                 <button class="closing-form">
@@ -912,6 +931,7 @@ if (
             </button>
             <div><input type="text" placeholder="Nom Catégorie" name="add_nom_cat" id="add_nom_cat"></div>
             <div><input type="text" placeholder="préfixe" name="add_pref" id="add_pref"></div>
+            <input type="hidden" name="current_section" value="show-categories" class="current-section-input">
             <div class="edit-actions-div">
                 <button>Ajouter</button>
                 <button class="closing-form">
