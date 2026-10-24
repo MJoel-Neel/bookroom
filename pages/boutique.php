@@ -211,7 +211,7 @@ if (!isset($_SESSION["panier"])) {
     <?php flash_render(); ?>
 
 
-    <section class="produit-rechercher">
+    <section class="produit-rechercher" id="recherche" >
         <div class="recherche-utilisateur" data-aos="fade-down">
             <p class="nom">
                 <span class="glasses">👓</span>
@@ -328,7 +328,8 @@ if (!isset($_SESSION["panier"])) {
                             $combien_d_avis->close();
                             ?>
                             <div class="article-img">
-                                <img loading="lazy" src="../assets/images<?= $produit['image_livre']; ?>" alt="">
+                                <img loading="lazy" src="../assets/images<?= str_contains($produit["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $produit["image_livre"] ?>" alt="">
                             </div>
 
                             <div class="libelle-article">

@@ -1,10 +1,5 @@
 body {
     background-color: var(--body-back);
-    background-image: url("../images/ico/background/f1f1f1Bg/f1f1f1-back2.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: scroll;
 }
  
 
@@ -16,7 +11,7 @@ body {
     max-width: 700px;
     background-color: var(--white);
     border-radius: 10px;
-    box-shadow: 5px 10px 20px var(--greyddd);
+    box-shadow: var(--article-block-shadow);
 }
 
 .head {
@@ -85,7 +80,6 @@ div.label {
     font-family: var(--font-light-2);
     padding-left: 20px;
     border-bottom: 2px solid var(--grey999);
-
     &:focus {
         outline: 1px solid var(--grey555);
         border: none;

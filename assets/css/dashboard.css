@@ -37,7 +37,7 @@ header.logo-div {
 
 .logo a {
     text-decoration: none;
-    color: var(--white);
+    color: var(--eternal-white);
     font-family: var(--bold-font);
 }
 
@@ -49,17 +49,17 @@ header.logo-div {
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--admin-badge-color);
     padding: 6px 14px;
     border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ffffff;
+    border: 1px solid --admin-badge-border;
+    color: var(--white);
     font-size: 0.85rem;
 }
 
 .admin-badge .admin-role {
-    background-color: #2563eb;
-    color: #ffffff;
+    background-color: --admin-role-bg;
+    color: var(--eternal-white);
     padding: 2px 8px;
     border-radius: 12px;
     font-size: 0.75rem;
@@ -69,7 +69,7 @@ header.logo-div {
 }
 
 .admin-badge .admin-email {
-    color: #cbd5e1;
+    color: var(--admin-mail);
     font-weight: 400;
 }
 
@@ -96,7 +96,7 @@ div.dashboard {
 
 .hamburger {
     display: block;
-    background-color: #64748B;
+    background-color: var(--dashboard-hamburger);
     border-radius: 10px;
     height: 5px;
     width: 90%;
@@ -138,7 +138,7 @@ div.tool {
     transition: .2s;
 
     &:hover {
-        background-color: var(--grey999);
+        background-color: var(--greyddd);
     }
 }
 
@@ -151,7 +151,7 @@ div.content {
 }
 
 div.content i {
-    color: var(#1C2A39, --dashboard-sidebar-i);
+    color: var(--dashboard-sidebar-i);
     font-size: 1.2rem;
     margin-right: 10px;
 }
@@ -233,19 +233,19 @@ span.more {
     height: 46px;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6, #06b6d4);
+    background: var(--dashboard-gradient);
     background-size: 300% 300%;
-    color: #fff;
+    color: var(--white);
     border: none;
     border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+    box-shadow: var(--dashboard-span-shadow);
     transition: transform .3s cubic-bezier(.34,1.56,.64,1);
     animation: aurora 6s ease infinite;
 }
 
 span.more:hover {
     transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 12px 32px rgba(139, 92, 246, 0.5);
+    box-shadow: var(--dashboard-span-hover-shadow);
 }
 
 span.more svg { width: 20px; height: 20px; cursor: pointer; }
@@ -256,7 +256,7 @@ span.more svg { width: 20px; height: 20px; cursor: pointer; }
 }
 
 svg.edit {
-    fill: #EF4444;
+    fill: var(--dashboard-edit);
     cursor: pointer;
 }
 
@@ -315,8 +315,8 @@ div.edit-div button.closing-form {
     padding: 10px 18px;
     border: none;
     border-radius: 12px;
-    background: #1e293b;
-    color: #fff;
+    background: var(--dashboard-closing-form);
+    color: var(--white);
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
@@ -324,7 +324,7 @@ div.edit-div button.closing-form {
 }
 
 div.edit-div button.closing-form:hover {
-    background: #dc2626;
+    background: var(--dashboard-closing-form-hover);
     transform: translateY(-2px);
 }
 
@@ -352,8 +352,8 @@ select.select-wrapper {
     padding: 12px 16px;
     font-size: 1rem;
     font-family: inherit;
-    color: #333;
-    border: 2px solid #cbd5e1;
+    color: var(--grey333);
+    border: 2px solid var(--admin-mail);
     border-radius: 12px;
     cursor: pointer;
 
@@ -372,15 +372,15 @@ select.select-wrapper {
 .cat-select:hover,
 .edit-div form input:hover,
 .edit-div form textarea:hover {
-    border-color: #94a3b8;
+    border-color: var(--select-hover-border);
 }
 
 .cat-select:focus,
 .edit-div form input:focus,
 .edit-div form textarea:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    border-color: var(--dashboard-field-focus);
+    box-shadow: var(--dashboard-field-shadow);
 }
 
 .cat-select option {
@@ -444,17 +444,17 @@ form.edit-cat-form {
     padding: 10px 20px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: #fff;
+    background: var(--dashboard-gradient);
+    color: var(--white);
     font-weight: 500;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    box-shadow: var(--dashboard-button-shadow);
     transition: transform .2s, box-shadow .2s;
 }
 
 .edit-div form button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.45);
+    box-shadow: var(--dashboard-button-shadow-hover);
 }
 
 .edit-div form button:active {
@@ -510,11 +510,11 @@ td.cat-nom, td.produit-nom {
 }
 
 tr {
-    background-color: #FFFFFF;
+    background-color: var(--white);
 }
 
 tr:nth-child(even) {
-    background-color: #F7F4EF;
+    background-color: var(--dashboard-tr-even);
 }
 
 td.suppr-user button {
@@ -553,12 +553,11 @@ svg.suppr-svg {
     min-width: 0; 
     max-width: 400px;
     padding: 22px 24px;
-    background-color: var(--white, #fff);
+    background-color: var(--white);
     border-radius: 18px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--dashboard-stat-bd);
     box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.04),
-        0 10px 28px rgba(0, 0, 0, 0.07);
+        --dashboard-stat-shadow1, --dashboard-stat-shadow2;
     overflow: hidden;
     transition:
         transform 0.25s ease,
@@ -567,9 +566,7 @@ svg.suppr-svg {
 
 #show-statistiques > div:hover {
     transform: translateY(-4px);
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.05),
-        0 18px 40px rgba(0, 0, 0, 0.12);
+    box-shadow:--dashboard-stat-hover-shadow1 , --dashboard-stat-hover-shadow2;
 }
 
 div.start-i {
@@ -578,10 +575,10 @@ div.start-i {
     height: 70px;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, var(--blue, #2979ff) 0%, #1565c0 100%);
-    color: var(--white, #fff);
+    background: linear-gradient(135deg, var(--blue) 0%, var--blue-2 100%);
+    color: var(--white);
     border-radius: 50%;
-    box-shadow: 0 8px 18px rgba(41, 121, 255, 0.35);
+    box-shadow: var(--dashboard-stat-i-shadow);
     transition: transform 0.25s ease;
     flex-shrink: 0;
 }
@@ -598,7 +595,7 @@ div.start-i i {
 div.chiffre {
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--grey222, #222);
+    color: var(--grey222);
     font-family: var(--bold-font, system-ui, sans-serif);
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -610,7 +607,7 @@ div.chiffre {
 div.what {
     font-family: var(--bold-font, system-ui, sans-serif);
     font-size: 0.9rem;
-    color: var(--grey666, #666);
+    color: var(--grey666);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 500;
@@ -621,7 +618,6 @@ div.what {
 }
 
 /* VARIANTES DE COULEUR PAR CARTE */
-
 .t-commandes div.start-i {
     background: linear-gradient(135deg, #2979ff 0%, #1565c0 100%);
     box-shadow: 0 8px 18px rgba(41, 121, 255, 0.35);

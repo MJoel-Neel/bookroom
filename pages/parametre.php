@@ -1,27 +1,41 @@
 <?php
 session_start();
-include_once("../config.php");
+include_once("../config.php"); // $conn mysqli, strict → exceptions
 require_once "../errors/flash.php";
 require_once "../includes/cart.php";
 
+// Si non connecté → accueil
+if (!isset($_SESSION["user_id"])) {
+    header("location: ../index.php");
+    exit;
+}
 
-if (isset($_SESSION["user_id"])) {
-    $user_id = (int) $_SESSION["user_id"];
+$user_id = (int) $_SESSION["user_id"];
+/* CHARGEMENT DU CLIENT */
+$user = null;
+try {
     $query1 = $conn->prepare("SELECT * FROM client WHERE id_client = ? LIMIT 1");
-    $query1->execute([$user_id]);
+    $query1->bind_param("i", $user_id);
+    $query1->execute();
     $user = $query1->get_result();
     $user = $user->fetch_assoc();
     $query1->close();
-
-} else {
-    header("location:  ../index.php");
+} catch (mysqli_sql_exception $e) {
+    error_log("parametre.php load client: " . $e->getMessage());
 }
-
+if (!$user) {
+    header("location: ../index.php");
+    exit;
+}
 
 //DECONNEXION
 if (isset($_GET['disconnect'])) {
     if (isset($_GET['disconnect'])) {
         unset($_SESSION["user_id"]);
+        unset($_SESSION["user_name"]);
+        unset($_SESSION["role_client"]);
+        unset($_SESSION["user_mail"]);
+
         flash_info("Nous expérons vous revoir bientôt 😊 !");
         header("location: ../index.php");
         exit;
@@ -29,78 +43,98 @@ if (isset($_GET['disconnect'])) {
 }
 
 //MODIFICATION
-if (isset($_POST)) {
-    if (isset($_SESSION["user_id"])) {
-        $user_id = (int) $_SESSION["user_id"];
-        //PROFILE
-        if (!empty($_POST['nouveau_pseudo']) && !empty($_POST['nouveau_mail']) && !empty($_POST['Nouveau_tel'])) {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $user_id = (int) $_SESSION["user_id"];
+    /* PROFIL (pseudo + email + tel) */
+    if (!empty($_POST['nouveau_pseudo']) && !empty($_POST['nouveau_mail']) && !empty($_POST['Nouveau_tel'])) {
+        try {
             $pseudo = trim($_POST["nouveau_pseudo"]);
             $email = trim($_POST["nouveau_mail"]);
             $tel = trim($_POST["Nouveau_tel"]);
 
-            // Vérifier si email existe déjà
-            $stmt = $conn->prepare("SELECT id_client FROM client WHERE email_client = ?");
-            $stmt->bind_param('s', $email);
+            // Vérifie si l'email est déjà utilisé PAR UN AUTRE client
+            $stmt = $conn->prepare("SELECT id_client FROM client WHERE email_client = ?
+            AND id_client <> ? ");
+            $stmt->bind_param('si', $email, $user_id);
             $stmt->execute();
-            $stmt->store_result(); //REQUIS
-            if ($stmt->num_rows == 0) {
+            $stmt->store_result();
+            if ($stmt->num_rows === 0) {
+                $stmt->close();
                 $query2 = $conn->prepare("UPDATE client
                 SET nom_prenom_client = ?, email_client = ?, tel_client = ?
                 WHERE id_client = ?");
                 $query2->bind_param('sssi', $pseudo, $email, $tel, $user_id);
                 $query2->execute();
                 $query2->close();
+
                 flash_success("Informations clients mises à jour");
             } else {
+                $stmt->close();
                 flash_error("Ce mail existe déjà");
             }
-            $stmt->close();
             header("Location: " . $_SERVER['PHP_SELF']);
             exit;
+        } catch (mysqli_sql_exception $e) {
+            error_log("parametre.php update profil: " . $e->getMessage());
+            flash_error("Erreur lors de la mise à jour du profil.");
         }
+    }
 
 
-        //SECURITY | PASSWORD 
-        if (!empty($_POST['ancien_mdp']) && !empty($_POST['Nouveau_mdp'])) {
-            $old_mdp = trim($_POST['ancien_mdp']);
-            $new_mdp = trim($_POST['Nouveau_mdp']);
+    /* --- MOT DE PASSE --- */
+    if (!empty($_POST['ancien_mdp']) && !empty($_POST['Nouveau_mdp'])) {
+        try {
+            $old_mdp = $_POST['ancien_mdp'];
+            $new_mdp = $_POST['Nouveau_mdp'];
 
-            //VERIFIER LE OLD MDP DANS LA BASE 
-            $stmt1 = $conn->prepare("SELECT * FROM client WHERE id_client = ?");
-            $stmt1->bind_param("i", $user_id);
-            $stmt1->execute();
-            $result = $stmt1->get_result();
-            $user = $result->fetch_assoc();
-            if (password_verify($old_mdp, $user["mot_de_passe"])) {
+            if (password_verify($old_mdp, $user["mot_de_passe"])) { // $user déjà chargé
                 $hashedPassword = password_hash($new_mdp, PASSWORD_DEFAULT);
                 $query3 = $conn->prepare("UPDATE client SET mot_de_passe = ? WHERE id_client = ?");
-                $query3->execute([$hashedPassword, $user_id]);
+                $query3->bind_param("si", $hashedPassword, $user_id);
+                $query3->execute();
+                $query3->close();
+
+                unset($_SESSION["user_id"]);
+                unset($_SESSION["user_name"]);
+                unset($_SESSION["role_client"]);
+                unset($_SESSION["user_mail"]);
+                session_regenerate_id(true);
 
                 flash_success("Mot de passe mis à jour !");
                 header("location: ./login.php");
                 exit();
+            } else {
+                flash_error("Ancien mot de passe incorrect.");
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit;
             }
-            $stmt1->close();
+        } catch (mysqli_sql_exception $e) {
+            error_log("parametre.php update password: " . $e->getMessage());
+            flash_error("Erreur lors du changement de mot de passe.");
         }
+    }
 
-        //ADRESSE
-        if (!empty($_POST['adresse']) && !empty($_POST['ville']) && !empty($_POST['postal'])) {
-            $full_address = htmlspecialchars($_POST['adresse']) . ' ' . htmlspecialchars($_POST['ville']) . ' ' . htmlspecialchars($_POST['postal']);
-            $query3 = $conn->prepare("UPDATE client
+    //ADRESSE
+    if (!empty($_POST['adresse']) && !empty($_POST['ville']) && !empty($_POST['postal'])) {
+        try {
+            $full_address = trim($_POST['adresse']) . ' ' . trim($_POST['ville']) . ' ' . trim($_POST['postal']);
+            $query4 = $conn->prepare("UPDATE client
                 SET adresse_client = ?
                 WHERE id_client = ?");
-            $query3->bind_param('si', $full_address, $user_id);
-            $query3->execute();
-            $query3->close();
+            $query4->bind_param('si', $full_address, $user_id);
+            $query4->execute();
+            $query4->close();
+
             flash_success("Adresse mise à jour !");
             header("Location: " . $_SERVER['PHP_SELF']);
             exit();
+        } catch (mysqli_sql_exception $e) {
+            error_log("parametre.php update adresse: " . $e->getMessage());
+            flash_error("Erreur lors de la mise à jour de l'adresse.");
         }
-
-    } else {
-        header("location: ../index.php");
-        exit;
     }
+
+
 }
 ?>
 
@@ -154,9 +188,9 @@ if (isset($_POST)) {
             <i class='fa-solid fa-user-tie'></i> Administrer</a></button>" : "";
 
             ?>
+
             <button><a href="./parametre.php?disconnect" class="deconnexion">
                     <i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a></button>
-
         </div>
 
         <!-- Content -->

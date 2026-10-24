@@ -160,7 +160,8 @@ if (!empty($_SESSION["panier"])) {
                             </button>
 
                             <div class="article-img">
-                                <img loading="lazy" src="../assets/images<?= $produit["image_livre"] ?>" alt="">
+                                <img loading="lazy" src="../assets/images<?= str_contains($produit["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $produit["image_livre"] ?>" alt="">
                             </div>
 
                             <div class="article-info">

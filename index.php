@@ -184,7 +184,9 @@ try {
 
                         <div class="best-seller" data-aos="zoom-in">
                             <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
-                                class="product-link-img"><img loading="lazy" src="./assets/images<?= $best["image_livre"] ?>"
+                                class="product-link-img">
+                                <img loading="lazy" src="./assets/images<?= str_contains($best["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $best["image_livre"] ?>"
                                     alt=""> </a>
                             <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
                                 class="book-name"><?= $best["titre_livre"] ?></a>
@@ -296,7 +298,8 @@ try {
                         ?>
                         <div class="nouveaute" data-aos="zoom-in">
                             <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
-                                class="product-link-img"><img loading="lazy" src="./assets/images<?= $new["image_livre"] ?>"
+                                class="product-link-img"><img loading="lazy" src="./assets/images<?= str_contains($new["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $new["image_livre"] ?>"
                                     alt="">
                             </a>
                             <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
@@ -391,7 +394,8 @@ try {
                         ?>
                         <div class="promotion" data-aos="zoom-in">
                             <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
-                                class="product-link-img"><img loading="lazy" src="./assets/images<?= $promo["image_livre"] ?>"
+                                class="product-link-img"><img loading="lazy" src="./assets/images<?= str_contains($promo["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $promo["image_livre"] ?>"
                                     alt=""> </a>
                             <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
                                 class="book-name"><?= $promo["titre_livre"] ?></a>

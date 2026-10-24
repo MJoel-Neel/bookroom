@@ -9,14 +9,14 @@
       display: flex;
       height: fit-content;
       flex: 1;
-      min-height: 400px;
-      width: 98%;
+      min-height: 450px;
+      width: 95%;
       max-width: 1000px;
       margin: 150px auto 50px;
       border-radius: 20px;
       overflow: hidden;
       background-color: var(--white-e0e0e0);
-      box-shadow: 5px 10px 20px var(--greyddd);
+      box-shadow: var(--article-block-shadow);
       font-family: var(--font-light-2);
       position: relative !important;
   }
@@ -31,7 +31,7 @@
       position: relative;
       overflow-y: auto;
   }
-
+  
   .sidebar h2 {
       margin-bottom: 20px;
   }
@@ -55,7 +55,7 @@
   }
 
   .sidebar button:hover {
-      background: var(--greyaaa);
+      background: var(--greyeee);
   }
 
   .sidebar button a {
@@ -148,7 +148,7 @@
 
   button.danger {
       background: var(--dark-maroon);
-      color: var(--white);
+      color: var(--eternal-white);
       padding: 10px 20px;
       border: none;
       cursor: not-allowed;
@@ -171,7 +171,7 @@
   /*RESPONSIVE*/
   svg#menubars {
       display: none;
-      background-color: var(--body-back);
+      fill: var(--eternal-orange);
       cursor: pointer;
   }
 

@@ -9,31 +9,31 @@
     max-width: 340px;
 }
 
-.flash {
+.flash { 
     padding: 14px 18px;
     border-radius: 12px;
     font-family: var(--bold-font, system-ui, sans-serif);
     font-size: 0.9rem;
     font-weight: 500;
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    color: var(--white);
+    box-shadow: var(--flash-shadow);
     animation: slideIn .3s ease, fadeOut .4s ease 4s forwards;
 }
 
 .flash-success {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: var(--flash-success-gradient);
 }
 
 .flash-error {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: var(--flash-error-gradient);
 }
 
 .flash-warning {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: var(--flash-warning-gradient);
 }
 
 .flash-info {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: var(--flash-error-gradient);
 }
 
 @keyframes slideIn {
@@ -52,13 +52,14 @@
     to {
         opacity: 0;
         transform: translateX(120%);
+        display: none;
     }
 }
 
 /*POUR LES INPUTS */
 .field-error {
     display: block;
-    color: #ef4444;
+    color: var(--input-error);
     font-size: 0.8rem;
     margin-top: 4px;
 }

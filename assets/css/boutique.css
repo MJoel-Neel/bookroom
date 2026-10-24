@@ -18,7 +18,7 @@
       background-color: var(--dashboard-head);
       padding: 10px 30px 10px 5px;
       border-radius: 20px;
-      color: var(--white);
+      color: var(--eternal-white);
   }
 
   /*rechercher*/
@@ -64,14 +64,14 @@
   form.filtres select#trier {
       font-family: var(--font-light-2);
       background-color: var(--white);
-      border: 1px solid #cbd5e1;
+      border: 1px solid var(--select-border-color);
       border-radius: 8px;
       padding: 10px 40px 10px 16px;
       font-weight: bold;
       cursor: pointer;
       max-width: 250px;
       width: 100%;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--select-shadow);
       transition: all 0.2s ease-in-out;
 
       position: absolute;
@@ -84,12 +84,12 @@
       -webkit-appearance: none;
 
       &:hover, &:focus {
-          border-color: #94a3b8;
+          border-color: var(--select-hover-border);
       }
   }
 
   select#trier option {
-      color: #1e293b;
+      color: var(--select-option);
       font-size: 1rem;
       background-color: var(--white);
       padding: 12px ;
@@ -97,7 +97,6 @@
 
   .filtres {
       background-color: var(--white);
-      border-right: 2px solid var(--greyaaa);
       height: fit-content;
   }
 
@@ -119,11 +118,12 @@
       width: 100%;
       background-color: var(--dashboard-head);
       cursor: pointer;
-      color: var(--white);
+      color: var(--eternal-white);
+      border-radius: 5px;
       font-size: 1rem;
       font-family: var(--font-light-2);
-      border: 1px solid var(--grey999);
-      box-shadow: 10px 20px 50px var(--blue);
+      border: 5px solid var(--greyddd);
+      box-shadow: 10px 20px 50px var(--greyccc);
       position: absolute;
       bottom: 0;
       left: 0;
@@ -259,7 +259,7 @@
       border-radius: 10px;
       padding: 10px;
       background-color: var(--white-f9f9f9);
-      box-shadow: 5px 10px 50px var(--grey999);
+      box-shadow: var(--article-block-shadow);
   }
 
   /*IMAGE ARTICLE*/
@@ -337,6 +337,7 @@
       font-family: var(--font-light-2);
       font-weight: bold;
       background-color: var(--yellow);
+      color: var(--eternal-black);
       transition: background .3s cubic-bezier(0.19, 1, 0.22, 1);
   }
 
@@ -396,14 +397,14 @@ div.pagination {
     max-width: 90%;
     border-radius: 12px;
     background-color: var(--white);
-    box-shadow: 5px 10px 20px var(--grey555);
+    box-shadow: var(--article-block-shadow);
 }
 
 div.pagination button {
     min-width: 38px;
     height: 38px;
     padding: 0 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--greyccc);
     border-radius: 6px;
     cursor: pointer;
     margin: 0; 

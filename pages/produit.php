@@ -88,10 +88,10 @@ if (!empty($_POST) && isset($_POST['note'])) {
         $id_user = (int) $_SESSION["user_id"];
 
         $note = (int) $_POST['note'];
-        $commentaire = htmlspecialchars($_POST['avis']) ?? '';
+        $commentaire = $_POST['avis'] ?? '';
         $client_id = (int) $_SESSION["user_id"];
         $email = isset($_SESSION["user_email"]) ? $_SESSION["user_email"] : '';
-        $pseudo = (isset($_SESSION["user_name"])) ? htmlspecialchars($_SESSION["user_name"]) : "Anonymous";
+        $pseudo = (isset($_SESSION["user_name"])) ? $_SESSION["user_name"] : "Anonymous";
         $livre = (int) $article['id_livre'];
 
         // Si l'email n'est pas en session, on le récupère proprement
@@ -196,7 +196,8 @@ if (isset($_POST["produit_id"])) {
     <!--PROUDUIT-->
     <div class="produit-container">
         <div class="produit-img" data-aos="zoom-in">
-            <img loading="lazy" src="../assets/images<?= $article['image_livre'] ?>" alt="">
+            <img loading="lazy" src="../assets/images<?= str_contains($article["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $article["image_livre"] ?>" alt="">
         </div>
 
         <div class="produit-info" data-aos="fade-left">
@@ -302,7 +303,8 @@ if (isset($_POST["produit_id"])) {
                     ?>
                     <div class="similaire" data-aos="zoom-in">
                         <div class="similaire-img">
-                            <img loading="lazy" src="../assets/images<?= $produit_similaire['image_livre'] ?>" alt="">
+                            <img loading="lazy" src="../assets/images<?= str_contains($produit_similaire["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $produit_similaire["image_livre"] ?>" alt="">
                         </div>
                         <div class="similaire-nom">
                             <a
