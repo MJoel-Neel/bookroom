@@ -146,6 +146,7 @@ function showPages(buttonValue, value = null) {
                 tousProduitsTrouves[i].classList.remove('not-show')
             }
         }
+        document.querySelector('#recherche').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     handleSuivPrec(pageNumber)
