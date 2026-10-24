@@ -30,7 +30,6 @@ div.top {
     background-color: var(--white);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(10px);
-    box-shadow: 5px 10px 20px var(--greyeee);
     display: flex;
     max-width: 100vw;
     padding: 15px 50px;
@@ -124,9 +123,10 @@ div.search {
 .search-input>input {
     width: 100% !important;
     min-width: 100%;
-    border: none;
+
     outline: none;
     height: 1cm;
+    border: 1px solid var(--select-hover-border);
     border-radius: 10px 0 0 10px;
     padding-left: 1.4rem;
     font-family: var(--font-light-1);
@@ -169,12 +169,12 @@ ul.list-users>.cart {
     position: relative;
 }
 
-ul.list-users>.cart svg {
+ul.list-users svg{
     fill: var(--black);
 }
 
 ul.list-users>.cart span.nombre-produit {
-    background-color: var(--orange);
+    background-color: var(--eternal-orange);
     position: absolute;
     right: -2px;
     top: -5px;
@@ -182,7 +182,7 @@ ul.list-users>.cart span.nombre-produit {
     border-radius: 50%;
     font-size: 1.1rem;
     font-family: cursive;
-    color: var(--black);
+    color: var(--eternal-black);
 }
 
 /*SEARCH FICTIVE*/
@@ -206,7 +206,7 @@ ul.list-users>li.search-raccourci svg {
     position: absolute;
     background-color: var(--white);
     width: 270px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--user-suscribe-shadow);
     padding: 20px 15px;
     top: 100%;
     right: -20px;
@@ -247,7 +247,7 @@ ul.list-users>li.search-raccourci svg {
     height: 44px;
     font-family: var(--bold-font);
     font-size: 1rem;
-    border: none;
+    border: 1px solid var(--greyddd);
     background-color: var(--body-back);
     color: var(--black);
     cursor: pointer;
@@ -255,7 +255,7 @@ ul.list-users>li.search-raccourci svg {
 
     &:hover {
         background-color: var(--maroon);
-        color: var(--white);
+        color: var(--eternal-white);
     }
 
     &:active {
@@ -407,11 +407,13 @@ div.firstvisit {
     .search>form {
         margin: auto;
         width: 100%;
-        border: 2px solid var(--greybbb);
+        border: 1px solid var(--greyddd);
+        border-radius: 10px;
     }
 
     .search>form input {
         background-color: var(--white);
+        border: none;
     }
 
     div.top {

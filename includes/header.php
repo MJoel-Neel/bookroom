@@ -56,7 +56,7 @@ include_once __DIR__ . '/constants.php';
         <ul class="list-users">
             <?php
             if (!isset($_SESSION["user_id"])) {
-                echo " <li class='users'>
+                echo " <li class='users' title='user' >
                     <svg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px'
                         fill='#000000'>
                         <path
@@ -76,7 +76,7 @@ include_once __DIR__ . '/constants.php';
                         </div>
                     </li>";
             } else {
-                echo "<li class='users'>
+                echo "<li class='users' title='paramètre' >
                                 <a href='" . BASE_URL . "/pages/parametre.php'>
                                 <svg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' 
                                     fill='#000000'>
@@ -88,10 +88,6 @@ include_once __DIR__ . '/constants.php';
                         ";
             }
             ?>
-
-
-
-
 
 
             <li class="cart" title="Cart">
@@ -110,6 +106,16 @@ include_once __DIR__ . '/constants.php';
                 ?>
 
             </li>
+
+            <li class="theme" title="theme" id="theme-select" >
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                    fill="#e3e3e3">
+                    <path
+                        d="M280-160q-100 0-170-70T40-400q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm0-80q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm440-200v-80h80v80h-80Zm-80-240-56-56 56-56 56 56-56 56Zm200 240v-80h80v80h-80Zm-200 240-56-56 56-56 56 56-56 56ZM640-120l-56-56 56-56 56 56-56 56ZM160-640l-56-56 56-56 56 56-56 56Z" />
+                </svg>
+            </li>
+
+
 
             <li class="search-raccourci">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"

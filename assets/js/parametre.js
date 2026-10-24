@@ -152,3 +152,4 @@ buttonAdresse.addEventListener('click', (e) => {
         document.querySelector('form#address').submit()
     }
 })
+

@@ -473,6 +473,7 @@ if (
 <html lang="en">
 
 <head>
+    <script src="./assets/js/theme.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
@@ -488,6 +489,7 @@ if (
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script src="../assets/js/dataAOS.js" defer></script>
+    <script src="../assets/js/theme.js" defer ></script>
     <title>Tableau de bord administrateur | Bookroom</title>
 </head>
 
@@ -544,6 +546,13 @@ if (
                             <i class="fa-solid fa-chart-pie"></i>
                             <p class="tool-name">Statistiques</p>
                         </div>
+                    </div>
+
+                    <div class="tool" title="thèmes" >
+                        <div id="dash-theming" class="content" style="cursor: pointer;" >
+                <i class="fa-solid fa-circle-half-stroke"></i>
+                 <p class="tool-name">Thèmes</p>
+            </div>
                     </div>
 
                 </div>
@@ -756,8 +765,8 @@ if (
                                                 <button class="role-button" type="submit" title="<?= $client['role_client'] === 'admin' ?
                                                     'retirer les droits admin' : 'octroyer les droits admin' ?>">
                                                     <?= $client['role_client'] === 'admin' ?
-                                                        "<i class='fa-solid fa-user-secret fa-lg' style='color: #035add;'></i>" :
-                                                        "<i class='fa-solid fa-user fa-lg' style='color: #014e01'; ></i>";
+                                                        "<i class='fa-solid fa-user-secret fa-lg' style='color: var(--blue);'></i>" :
+                                                        "<i class='fa-solid fa-user fa-lg' style='color: var(--green)'; ></i>";
                                                     ?>
                                                 </button>
                                                 <input type="hidden" name="current_section" value="show-clients"

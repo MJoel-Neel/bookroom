@@ -188,9 +188,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <i class='fa-solid fa-user-tie'></i> Administrer</a></button>" : "";
 
             ?>
+
             <button><a href="./parametre.php?disconnect" class="deconnexion">
                     <i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a></button>
-
         </div>
 
         <!-- Content -->
