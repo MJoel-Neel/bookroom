@@ -13,6 +13,11 @@ if (!isset($_SESSION["panier"])) {
 if (isset($_POST["produit_id"])) {
 
     $id = (int) $_POST["produit_id"]; // pour éviter les valeurs non numériques
+    $current_section = (!empty($_POST["current_section"])) ? $_POST["current_section"] : 'nouveautes' ;
+
+    $ancre_autorises = ["promotion", "nouveautes", "best-sellers"];
+    $target_section = in_array($current_section, $ancre_autorises) ? $current_section : "nouveautes";
+
 
     $is_success = cart_add($id, 1);
     if ($is_success) {
@@ -20,7 +25,7 @@ if (isset($_POST["produit_id"])) {
     }
 
     // évite la duplication lors du refresh (POST -> GET)
-    header("Location: " . $_SERVER["PHP_SELF"]);
+    header("Location: " . $_SERVER["PHP_SELF"] . "#" . urlencode($target_section));
     exit();
 }
 
@@ -207,6 +212,7 @@ try {
                                 ?></span>
                                 <form action="" method="post">
                                     <input type="hidden" name="produit_id" value="<?= $best["id_livre"] ?>">
+                                    <input type="hidden" name="current_section" value="best-sellers">
                                     <button class="ajouter" type="submit">Ajouter au panier</button>
                                 </form>
                             </div>
@@ -323,6 +329,7 @@ try {
                                 </span>
                                 <form action="" method="post">
                                     <input type="hidden" name="produit_id" value="<?= $new["id_livre"] ?>">
+                                    <input type="hidden" name="current_section" value="nouveautes">
                                     <button class="ajouter" type="submit">Ajouter au panier</button>
                                 </form>
                             </div>
@@ -418,6 +425,7 @@ try {
                                 </span>
                                 <form action="" method="post">
                                     <input type="hidden" name="produit_id" value="<?= $promo["id_livre"] ?>">
+                                    <input type="hidden" name="current_section" value="promotion">
                                     <button class="ajouter" type="submit">Ajouter au panier</button>
                                 </form>
                             </div>
