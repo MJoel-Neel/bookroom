@@ -579,7 +579,8 @@ if (
                                 <?php while ($livre = $produits->fetch_assoc()): ?>
                                     <tr>
                                         <td class="produit_img">
-                                            <img loading="lazy" src="../assets/images<?= $livre['image_livre'] ?>" alt="">
+                                            <img loading="lazy" src="../assets/images<?= str_contains($livre["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $livre["image_livre"] ?>" alt="">
                                         </td>
                                         <td class="produit-nom">
                                             <?= $livre['titre_livre'] ?>

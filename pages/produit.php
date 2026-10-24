@@ -196,7 +196,8 @@ if (isset($_POST["produit_id"])) {
     <!--PROUDUIT-->
     <div class="produit-container">
         <div class="produit-img" data-aos="zoom-in">
-            <img loading="lazy" src="../assets/images<?= $article['image_livre'] ?>" alt="">
+            <img loading="lazy" src="../assets/images<?= str_contains($article["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $article["image_livre"] ?>" alt="">
         </div>
 
         <div class="produit-info" data-aos="fade-left">
@@ -302,7 +303,8 @@ if (isset($_POST["produit_id"])) {
                     ?>
                     <div class="similaire" data-aos="zoom-in">
                         <div class="similaire-img">
-                            <img loading="lazy" src="../assets/images<?= $produit_similaire['image_livre'] ?>" alt="">
+                            <img loading="lazy" src="../assets/images<?= str_contains($produit_similaire["image_livre"], 'tmp/') ?
+                                "/produits/anonymous_book.webp" : $produit_similaire["image_livre"] ?>" alt="">
                         </div>
                         <div class="similaire-nom">
                             <a
