@@ -1,3 +1,9 @@
+<?php 
+if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    } 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +27,7 @@
 <body>
     <!--HEADER-->
     <?php
-    include_once("../includes/header.php");
+        include_once("../includes/header.php");
     ?>
 
    <main>
@@ -51,7 +57,7 @@
 
     <!--FOOTER-->
     <?php
-    include_once("../includes/footer.php");
+        include_once("../includes/footer.php");
     ?>
 </body>
 
