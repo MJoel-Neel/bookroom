@@ -700,14 +700,14 @@ div.qualites div.qualite {
 }
 
 div.qualite div i {
-    font-size: 5rem;
+    font-size: 4rem;
     color: var(--white-f3f3f3);
 }
 
 div.qualite div.parceque {
     font-family: var(--font-light-2);
     margin-top: 15px;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     text-transform: capitalize;
     color: var(--white);
 }
