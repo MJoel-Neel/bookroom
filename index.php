@@ -227,7 +227,7 @@ try {
         <!--SECTION OFFRES-->
 
         <section class="pub offres">
-            <h2 data-aos="fade-right">Nos Offres</h2>
+            <h2>Nos Offres</h2>
             <div class="offres-container">
                 <div class="uni-box" data-aos="fade-left">
                     <img loading="lazy" src="./assets/images/ico/background/section/offres/offre1.png" alt="">
