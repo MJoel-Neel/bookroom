@@ -1,0 +1,666 @@
+/* ============================================================
+   PAGES LÉGALES (CGU & MENTIONS LÉGALES) - UNIFIÉ
+   ============================================================ */
+
+/* ---------- Conteneur Principal ---------- */
+.page-cgu,
+.page-mentions {
+  max-width: 1100px;
+  margin: 0 auto;
+  /* 140px compense ton header fixed */
+  padding: 140px 24px 100px; 
+  color: var(--grey333);
+  background: var(--body-back);
+  line-height: 1.8;
+  font-size: 16px;
+  font-family: var(--font-light-1), sans-serif;
+  
+  /* Force le footer à rester en bas si le contenu est court */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+}
+
+/* ---------- En-tête de la page ---------- */
+.cgu-entete,
+.mentions-entete {
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--greyddd);
+  padding-bottom: 24px;
+}
+
+.cgu-fil-ariane,
+.mentions-fil-ariane {
+  font-size: 13px;
+  color: var(--grey999);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.cgu-fil-ariane a,
+.mentions-fil-ariane a {
+  color: var(--grey555);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.cgu-fil-ariane a:hover,
+.mentions-fil-ariane a:hover {
+  color: var(--a-hover-color);
+}
+
+.cgu-titre,
+.mentions-titre {
+  font-family: var(--bold-font), sans-serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  margin: 0 0 16px;
+  color: var(--black);
+  letter-spacing: -0.02em;
+}
+
+.cgu-sous-titre,
+.mentions-sous-titre {
+  font-size: 15px;
+  color: var(--grey999);
+  margin: 0;
+}
+
+/* ============================================================
+   LAYOUT (SIDEBAR + CONTENU)
+   ============================================================ */
+.cgu-layout,
+.mentions-layout {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start; 
+  flex-grow: 1; /* Permet au contenu de prendre l'espace disponible */
+}
+
+/* ---------- Sidebar (Fixe / Sticky) ---------- */
+.cgu-sidebar,
+.mentions-sidebar {
+  position: sticky;
+  top: 120px; /* Reste fixée sous le header */
+  width: 280px;
+  flex-shrink: 0; 
+  background: var(--white-f9f9f9);
+  border: 1px solid var(--greyddd);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--dashboard-stat-shadow1);
+  /* Transition pour le menu mobile */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cgu-sidebar-header,
+.mentions-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--greyddd);
+  padding-bottom: 12px;
+}
+
+.cgu-sidebar-titre,
+.mentions-sidebar-titre {
+  font-family: var(--bold-font), sans-serif;
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Bouton fermer (Mobile only) */
+.cgu-close-btn,
+.mentions-close-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--grey555);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.cgu-close-btn:hover,
+.mentions-close-btn:hover {
+  color: var(--a-hover-color);
+}
+
+/* Bouton Hamburger (Mobile only) */
+.cgu-menu-btn,
+.mentions-menu-btn {
+  display: none;
+  background: var(--white);
+  border: 1px solid var(--greyddd);
+  color: var(--black);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-family: var(--bold-font), sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  box-shadow: var(--dashboard-stat-shadow1);
+}
+
+/* ---------- Liste du Sommaire ---------- */
+.cgu-sommaire-liste,
+.mentions-sommaire-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: sommaire;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cgu-sommaire-liste li,
+.mentions-sommaire-liste li {
+  counter-increment: sommaire;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Le lien de la sidebar */
+.cgu-sommaire-liste a,
+.mentions-sommaire-liste a {
+  color: var(--grey555);
+  text-decoration: none;
+  display: flex; 
+  align-items: baseline;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.cgu-sommaire-liste a::before,
+.mentions-sommaire-liste a::before {
+  content: counter(sommaire) ".";
+  color: var(--orange);
+  font-family: var(--bold-font);
+  font-weight: 700;
+  margin-right: 12px;
+  font-size: 15px;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+/* Hover sur la sidebar */
+.cgu-sommaire-liste a:hover,
+.mentions-sommaire-liste a:hover {
+  background: var(--white-e0e0e0);
+  color: var(--black);
+}
+
+/* Onglet actif dans la sidebar */
+.cgu-sommaire-liste a.is-active,
+.mentions-sommaire-liste a.is-active {
+  background: var(--white);
+  color: var(--black);
+  border-left-color: var(--orange);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-weight: 700;
+}
+
+/* ---------- Contenu Principal ---------- */
+.cgu-contenu,
+.mentions-contenu {
+  flex-grow: 1; 
+  min-width: 0;
+}
+
+/* ============================================================
+   LOGIQUE D'AFFICHAGE DES ONGLETS
+   ============================================================ */
+.cgu-article,
+.mentions-section {
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.cgu-article.is-active,
+.mentions-section.is-active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   STYLE DU CONTENU (Fiches, Textes, Tableaux)
+   ============================================================ */
+.cgu-article-titre,
+.mentions-section-titre {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--bold-font), sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  margin: 0 0 24px;
+  color: var(--black);
+}
+
+.cgu-article-numero,
+.mentions-section-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 1.1rem;
+  font-family: var(--bold-font), sans-serif;
+  box-shadow: var(--dashboard-stat-i-shadow);
+}
+
+.cgu-article p,
+.mentions-texte {
+  margin: 0 0 18px;
+  color: var(--grey333);
+}
+
+.cgu-article strong,
+.mentions-texte strong {
+  color: var(--black);
+  font-weight: 700;
+}
+
+.cgu-article a,
+.mentions-texte a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, color 0.3s;
+  font-weight: 500;
+}
+
+.cgu-article a:hover,
+.mentions-texte a:hover {
+  color: var(--a-hover-color);
+  border-bottom-color: var(--a-hover-color);
+}
+
+/* Note / Encadré */
+.cgu-note {
+  background: var(--pagination-bg);
+  border-left: 4px solid var(--blue);
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  font-size: 15px;
+  color: var(--grey333);
+  margin: 24px 0;
+}
+
+/* Fiches (Mentions légales / RGPD) */
+.mentions-fiche {
+  background: var(--white-fcfcfc);
+  border: 1px solid var(--greyddd);
+  border-radius: 16px;
+  padding: 8px 32px;
+  margin: 24px 0 32px;
+  box-shadow: var(--dashboard-stat-shadow1);
+}
+
+.mentions-liste-definition {
+  margin: 0;
+}
+
+.mentions-ligne {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) 1fr;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--greyddd);
+  align-items: baseline;
+}
+
+.mentions-ligne:last-child {
+  border-bottom: none;
+}
+
+.mentions-ligne dt {
+  font-family: var(--bold-font), sans-serif;
+  font-weight: 700;
+  color: var(--grey555);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mentions-ligne dd {
+  margin: 0;
+  color: var(--black);
+  font-weight: 500;
+}
+
+/* Tableaux (Cookies) */
+.cgu-tableau-conteneur,
+.mentions-tableau-conteneur {
+  overflow-x: auto;
+  margin: 24px 0 32px;
+  border: 1px solid var(--greyddd);
+  border-radius: 16px;
+  background: var(--white-fcfcfc);
+  box-shadow: var(--dashboard-stat-shadow1);
+}
+
+.cgu-tableau,
+.mentions-tableau {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.cgu-tableau-legende,
+.mentions-tableau-legende {
+  caption-side: top;
+  text-align: left;
+  padding: 20px 24px;
+  font-family: var(--bold-font), sans-serif;
+  color: var(--black);
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--greyddd);
+}
+
+.cgu-tableau thead th,
+.mentions-tableau thead th {
+  background: var(--white-f5f5f5);
+  color: var(--black);
+  text-align: left;
+  padding: 16px 24px;
+  font-family: var(--bold-font), sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--greyddd);
+}
+
+.cgu-tableau tbody td,
+.mentions-tableau tbody td {
+  padding: 16px 24px;
+  border-top: 1px solid var(--greyddd);
+  color: var(--grey555);
+}
+
+/* Listes à puces */
+.cgu-liste,
+.mentions-liste {
+  margin: 0 0 24px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.cgu-liste li,
+.mentions-liste li {
+  position: relative;
+  margin-bottom: 12px;
+  padding-left: 28px;
+  color: var(--grey333);
+}
+
+.cgu-liste li::before,
+.mentions-liste li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+  font-size: 1.4rem;
+}
+
+/* Liste contact */
+.cgu-liste-contact,
+.mentions-liste-contact {
+  margin-top: 16px;
+  background: var(--white-f9f9f9);
+  border: 1px solid var(--greyddd);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.cgu-liste-contact li,
+.mentions-liste-contact li {
+  padding-left: 0;
+  border-bottom: 1px solid var(--greyddd);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.cgu-liste-contact li:last-child,
+.mentions-liste-contact li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.cgu-liste-contact li::before,
+.mentions-liste-contact li::before {
+  display: none;
+}
+
+/* Pied de page (Boutons) */
+.cgu-pied,
+.mentions-pied {
+  margin-top: auto; /* Pousse le footer tout en bas */
+  padding-top: 32px;
+  border-top: 2px solid var(--greyddd);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cgu-bouton,
+.mentions-bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: var(--bold-font), sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.cgu-bouton-retour,
+.mentions-bouton-retour {
+  background: var(--white-f5f5f5);
+  color: var(--black);
+  border-color: var(--greyddd);
+}
+
+.cgu-bouton-retour:hover,
+.mentions-bouton-retour:hover {
+  background: var(--white-e0e0e0);
+  transform: translateY(-2px);
+}
+
+.cgu-bouton-imprimer,
+.mentions-bouton-imprimer {
+  background: var(--black);
+  color: var(--white);
+  box-shadow: var(--dashboard-stat-shadow2);
+}
+
+.cgu-bouton-imprimer:hover,
+.mentions-bouton-imprimer:hover {
+  background: var(--grey333);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   RESPONSIVE (TABLETTE & MOBILE)
+   ============================================================ */
+@media (max-width: 900px) {
+  .cgu-layout,
+  .mentions-layout {
+    flex-direction: column;
+  }
+
+  /* Affiche le bouton hamburger */
+  .cgu-menu-btn,
+  .mentions-menu-btn {
+    display: flex;
+  }
+
+  /* Transforme la sidebar en Drawer (Menu coulissant) */
+  .cgu-sidebar,
+  .mentions-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    z-index: 9999;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid var(--greyddd);
+    transform: translateX(-100%); /* Caché par défaut */
+    box-shadow: 20px 0 50px rgba(0,0,0,0.1);
+    padding: 32px 24px;
+    overflow-y: auto;
+  }
+
+  /* Ouverture du menu via JS */
+  .cgu-sidebar.is-open,
+  .mentions-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  /* Affiche le bouton X */
+  .cgu-close-btn,
+  .mentions-close-btn {
+    display: block;
+  }
+
+  /* Ajustement de la liste dans le menu mobile */
+  .cgu-sommaire-liste,
+  .mentions-sommaire-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .cgu-sommaire-liste a,
+  .mentions-sommaire-liste a {
+    flex-direction: row;
+    align-items: baseline;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+  }
+  
+  .cgu-sommaire-liste a.is-active,
+  .mentions-sommaire-liste a.is-active {
+    border-left-color: var(--orange);
+    background: var(--white);
+  }
+
+  /* Fiches en mode mobile */
+  .mentions-ligne {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 16px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-cgu,
+  .page-mentions {
+    padding: 100px 16px 60px;
+  }
+
+  .mentions-fiche {
+    padding: 8px 16px;
+  }
+
+  /* Boutons du footer empilés sur mobile */
+  .cgu-pied,
+  .mentions-pied {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cgu-bouton,
+  .mentions-bouton {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   IMPRESSION
+   ============================================================ */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Cache les éléments de navigation et boutons à l'impression */
+  header, footer, 
+  .cgu-fil-ariane,
+  .mentions-fil-ariane,
+  .cgu-sidebar,
+  .mentions-sidebar,
+  .cgu-menu-btn,
+  .mentions-menu-btn,
+  .cgu-pied,
+  .mentions-pied {
+    display: none !important;
+  }
+
+  .page-cgu,
+  .page-mentions {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* Force l'affichage de toutes les sections pour l'impression */
+  .cgu-article,
+  .mentions-section {
+    display: block !important;
+    break-inside: avoid;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  .cgu-article-numero,
+  .mentions-section-numero {
+    background: #000 !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cgu-tableau-conteneur,
+  .mentions-tableau-conteneur,
+  .mentions-fiche {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}

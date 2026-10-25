@@ -18,7 +18,7 @@ footer {
 .copyright {
     justify-items: center;
     text-align: center;
-    background-color: var(--greyddd);
+    background-color: var(--greyeee);
 }
 
 .copyright h2 {
@@ -66,7 +66,7 @@ address a {
 
 address i {
     font-size: 1.4rem;
-    color: var(--maroon);
+    color: var(--a-hover-color);
 }
 
 ul.foot-ul {
@@ -183,30 +183,49 @@ form.foot-form div button {
 }
 
 footer div.copy {
-    background-color: var(--greybbb);
+    background-color: var(--greyccc);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 30px;
     padding: 10px 5px;
+    align-items: center;
 
 }
 
 .droits {
     font-family: var(--font-light-1);
     font-weight: bold;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--grey222);
 }
-
-.social i {
-    cursor: pointer;
+.cgu-ml {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-family: var(--font-light-2);
+}
+.cgu-ml i {
     font-size: 1.2rem;
+    color: var(--a-hover-color);
+}
+.cgu-ml p.cgu-ml-link {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.cgu-ml a {
+    text-decoration: none;
+    color: var(--black);
+    &:hover {
+        color: var(--a-hover-color);
+    }
 }
 
 @media (max-width:900px) {
     .page-foot {
-        grid-template-columns: 400px;
+        grid-template-columns: 0.7fr;
         grid-template-rows: repeat(3, 1fr);
         gap: 40px 20px;
         justify-content: center;
@@ -219,11 +238,11 @@ footer div.copy {
         padding-bottom: 20px;
         border-bottom: 1px solid var(--grey333);
     }
+}
 
-    .copyright,
-    form.foot-form {
-        margin: auto;
-        max-width: 98%;
+@media (max-width:700px) {
+    .page-foot {
+        grid-template-columns: 0.9fr;
     }
 }
 
