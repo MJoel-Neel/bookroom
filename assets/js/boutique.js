@@ -66,7 +66,7 @@ if (articleTrouver.length == 0) {
     </div>
     <div class="message-container" > 
         <p class="no-produit-text" > <strong> Aucun article trouvé </strong> </p>
-        <p> Désolé, nous n'avons trouvé aucun article correstpondant à votre recherche.</p>
+        <p> Désolé, nous n'avons trouvé aucun article correspondant à votre recherche.</p>
     </div>
     `
     document.querySelector('.articles').appendChild(div)

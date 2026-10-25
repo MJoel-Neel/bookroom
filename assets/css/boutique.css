@@ -252,6 +252,8 @@
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+      width: 100%;
+
   }
 
   div.articles div.article {
@@ -387,7 +389,7 @@
   div.aucun-produit-trouve div.img-container {
       width: 100%;
       height: 300px;
-    }
+  }
 
   div.img-container img {
       width: 100%;
@@ -404,8 +406,8 @@
   }
 
   div.message-container p.no-produit-text {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
   }
 
   /*PAGINATION*/

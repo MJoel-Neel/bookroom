@@ -25,20 +25,16 @@ div.error {
     text-align: center;
 }
 
-div.error div.mes-404 {
-    font-size: clamp(5rem, 15vw, 8rem);
-    font-weight: bold;
-    color: var(--grey555);
-    font-family: var(--error-font);
-    line-height: 1;
-    margin-bottom: 0.5rem;
+
+div.img-container {
+    width: 100%;
+}
+div.img-container img {
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
 }
 
-div.error div.mes-404 span {
-    display: inline-block;
-    transform: rotate(15deg);
-    color: var(--a-hover-color);
-}
 
 div.error-message {
     width: 100%;
@@ -48,14 +44,14 @@ div.error-message p.principal-mes {
     font-size: 1.25rem;
     font-weight: 600;
     font-family: var(--font-light-2);
-    color: var(--black);
+    color: var(--grey222);
     margin-bottom: 0.75rem;
 }
 
 div.error-message p.futher-mes {
     font-family: var(--font-light-2);
     font-size: 0.95rem;
-    color: var(--grey555);
+    color: var(--grey222);
     width: 90%;
     line-height: 1.5;
     margin: 0 auto;
@@ -63,6 +59,7 @@ div.error-message p.futher-mes {
 
 div.return {
     margin-top: 2rem;
+    z-index: 30;
 }
 
 div.return a {
