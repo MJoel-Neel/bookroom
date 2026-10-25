@@ -230,15 +230,15 @@ try {
             <h2>Nos Offres</h2>
             <div class="offres-container">
                 <div class="uni-box" data-aos="fade-left">
-                    <img loading="lazy" src="./assets/images/ico/background/section/offres/offre1.png" alt="">
+                    <img loading="lazy" src="./assets/images/ico/background/section/offres/offre1.webp" alt="">
                 </div>
 
                 <div class="minis-box">
                     <article class="mini" data-aos="zoom-in">
-                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre2.png" alt="">
+                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre2.webp" alt="">
                     </article>
                     <article class="mini" data-aos="fade-left">
-                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre3.png" alt="">
+                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre3.webp" alt="">
                     </article>
                 </div>
             </div>

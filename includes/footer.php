@@ -8,7 +8,7 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? ''. BASE_URL. '/pages/parame
     <div class="page-foot">
         <div class="copyright">
             <h2>Book<span>room</span></h2>
-            <img loading="lazy" src="<?= BASE_URL ?>/assets/images/ico/background/section/footer.png" alt="">
+            <img loading="lazy" src="<?= BASE_URL ?>/assets/images/ico/background/section/footer.webp" alt="">
             <div class="adresse">
                 <address><i class="fa-solid fa-address-card"></i> 228 rte de la Bazoque</address>
                 <address><i class="fa-solid fa-mobile"></i> <a href="tel:+330633573557">06 33 57 35 57</a></address>
