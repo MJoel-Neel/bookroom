@@ -59,8 +59,16 @@ const articleTrouver = document.querySelectorAll('.article')
 let div = ''
 if (articleTrouver.length == 0) {
     div = document.createElement('div')
-    div.classList.add('aucun-produit-touve')
-    div.innerHTML = "<img loading='lazy' src='../assets/images/ico/background/section/aucun-produit.png' />"
+    div.classList.add('aucun-produit-trouve')
+    div.innerHTML = `
+    <div class="img-container" > 
+        <img loading='lazy' src='../assets/images/ico/background/section/cart.svg' /> 
+    </div>
+    <div class="message-container" > 
+        <p class="no-produit-text" > <strong> Aucun article trouvé </strong> </p>
+        <p> Désolé, nous n'avons trouvé aucun article correstpondant à votre recherche.</p>
+    </div>
+    `
     document.querySelector('.articles').appendChild(div)
 }
 else {
