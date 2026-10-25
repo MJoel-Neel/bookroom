@@ -116,7 +116,7 @@ try {
 
             <div class="hero-container">
                 <div class="hero hero1">
-                    <img loading="lazy" src="./assets/images/ico/background/section/heros/hero1.jpg" alt="">
+                    <img loading="lazy" src="./assets/images/ico/background/section/heros/hero1.svg" alt="">
                 </div>
                 <div class="hero hero2">
                     <img loading="lazy" src="./assets/images/ico/background/section/heros/hero2.png" alt="">

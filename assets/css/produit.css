@@ -374,7 +374,7 @@ table.description-produit tbody tr td.td-content {
      cursor: pointer;
      width: fit-content;
      text-decoration: none;
-     color: var(--white);
+     color: var(--eternal-white);
      font-size: 1.1rem;
      font-variant: small-caps;
      font-family: var(--font-light-2);

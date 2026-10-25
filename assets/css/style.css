@@ -13,7 +13,7 @@ div.main {
 section.heros {
     width: 100vw;
     margin: 0px auto;
-    height: 85vh;
+    height: 85dvh;
     background-color: transparent;
     position: relative;
     overflow: hidden;
@@ -82,6 +82,7 @@ div.hero-container div.hero {
 div.hero-container div.hero img {
     width: 100% !important;
     height: 100% !important;
+    object-fit: cover;
 }
 
 /*BLOC PUB*/
@@ -483,13 +484,6 @@ article.mini img {
         padding: 20px 1%;
     }
 
-    div.presentation h2.section-title {
-        font-size: 2rem;
-    }
-
-    div.presentation p {
-        font-size: 1rem;
-    }
 
     div.qualites div.qualite {
         width: 130px !important;
@@ -536,15 +530,41 @@ article.mini img {
     }
 
     section.offres h2 {
-    transform: translateY(-50px) translateX(20px);
-}
+        transform: translateY(-50px) translateX(20px);
+    }
 
     section.propos {
         padding: 70px 0 !important;
     }
 
+    section.heros {
+        height: 70dvh;
+    }
+
+    div.presentation h2.section-title {
+        font-size: 3rem !important;
+    }
+
+    div.presentation p {
+        font-size: 1.5rem;
+    }
+
     h2 {
         font-size: 1.4rem !important;
+    }
+}
+
+@media (max-width: 600px) {
+    div.presentation h2.section-title {
+        font-size: 2rem !important;
+    }
+
+    div.presentation p {
+        font-size: 1.1rem !important;
+    }
+
+    div.hero-container div.hero img {
+        object-fit: cover;
     }
 }
 
