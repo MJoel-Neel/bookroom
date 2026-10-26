@@ -196,7 +196,7 @@ footer div.copy {
 .droits {
     font-family: var(--font-light-1);
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: var(--grey222);
 }
 .cgu-ml {
@@ -204,13 +204,13 @@ footer div.copy {
     gap: 20px;
     flex-wrap: wrap;
     font-family: var(--font-light-2);
+    font-size: .8rem;
+    justify-content: center;
 }
 .cgu-ml i {
-    font-size: 1.2rem;
     color: var(--a-hover-color);
 }
 .cgu-ml p.cgu-ml-link {
-    font-size: 1rem;
     display: flex;
     align-items: center;
     gap: 5px;

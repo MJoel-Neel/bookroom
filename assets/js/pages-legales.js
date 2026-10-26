@@ -1,18 +1,10 @@
-/**
- * SCRIPT UNIFIÉ POUR LES PAGES LÉGALES (CGU & MENTIONS LÉGALES)
- * Gère :
- * 1. Le système d'onglets (Tabs)
- * 2. L'ouverture / fermeture du menu mobile (Hamburger)
- */
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ============================================================
-       1. SYSTÈME D'ONGLETS (TABS)
-       ============================================================ */
+    /* 1. SYSTÈME D'ONGLETS (TABS) */
     const tabLinks = document.querySelectorAll('.tab-link');
-    // On cible à la fois les classes CGU et Mentions Légales
-    const sections = document.querySelectorAll('.cgu-article, .mentions-section');
+
+    // On cible toutes les classes de sections (CGU, Mentions Légales, Confidentialité)
+    const sections = document.querySelectorAll('.cgu-article, .mentions-section, .confidentialite-section');
 
     tabLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -30,20 +22,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 targetSection.classList.add('is-active');
+                const yOffset = -100; 
+                const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
             }
         });
     });
 
-    /* ============================================================
-       2. GESTION DU MENU MOBILE (HAMBURGER)
-       ============================================================ */
+    /* 2. GESTION DU MENU MOBILE (HAMBURGER) */
     const btnOpen = document.getElementById('menu-toggle');
     const btnClose = document.getElementById('menu-close');
-    // On cible la sidebar peu importe la page (CGU ou ML)
-    const sidebar = document.querySelector('.cgu-sidebar, .mentions-sidebar');
+
+    // On cible la sidebar peu importe la page (CGU, ML ou Confidentialité)
+    const sidebar = document.querySelector('.cgu-sidebar, .mentions-sidebar, .confidentialite-sidebar');
 
     if (btnOpen && btnClose && sidebar) {
-        
+
         // Ouvrir le menu
         btnOpen.addEventListener('click', () => {
             sidebar.classList.add('is-open');

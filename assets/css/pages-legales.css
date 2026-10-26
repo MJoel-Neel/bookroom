@@ -1,36 +1,37 @@
-/* ============================================================
-   PAGES LÉGALES (CGU & MENTIONS LÉGALES) - UNIFIÉ
-   ============================================================ */
+/* PAGES LÉGALES (CGU, MENTIONS LÉGALES & CONFIDENTIALITÉ) - UNIFIÉ */
 
-/* ---------- Conteneur Principal ---------- */
+/* Conteneur Principal */
 .page-cgu,
-.page-mentions {
+.page-mentions,
+.page-confidentialite {
   max-width: 1100px;
-  margin: 0 auto;
-  /* 140px compense ton header fixed */
-  padding: 140px 24px 100px; 
+  flex: 1;
+  width: 95%;
+  margin: 25px auto 0;
+  padding: 50px 24px 100px;
   color: var(--grey333);
   background: var(--body-back);
   line-height: 1.8;
   font-size: 16px;
-  font-family: var(--font-light-1), sans-serif;
-  
-  /* Force le footer à rester en bas si le contenu est court */
+  font-family: var(--font-light-2), sans-serif;
+  position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100vh; 
+  min-height: 50vh;
 }
 
-/* ---------- En-tête de la page ---------- */
+/* En-tête de la page */
 .cgu-entete,
-.mentions-entete {
+.mentions-entete,
+.confidentialite-entete {
   margin-bottom: 40px;
   border-bottom: 1px solid var(--greyddd);
   padding-bottom: 24px;
 }
 
 .cgu-fil-ariane,
-.mentions-fil-ariane {
+.mentions-fil-ariane,
+.confidentialite-fil-ariane {
   font-size: 13px;
   color: var(--grey999);
   margin-bottom: 16px;
@@ -43,19 +44,22 @@
 }
 
 .cgu-fil-ariane a,
-.mentions-fil-ariane a {
+.mentions-fil-ariane a,
+.confidentialite-fil-ariane a {
   color: var(--grey555);
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .cgu-fil-ariane a:hover,
-.mentions-fil-ariane a:hover {
+.mentions-fil-ariane a:hover,
+.confidentialite-fil-ariane a:hover {
   color: var(--a-hover-color);
 }
 
 .cgu-titre,
-.mentions-titre {
+.mentions-titre,
+.confidentialite-titre {
   font-family: var(--bold-font), sans-serif;
   font-size: clamp(2rem, 5vw, 3.2rem);
   line-height: 1.1;
@@ -65,30 +69,35 @@
 }
 
 .cgu-sous-titre,
-.mentions-sous-titre {
+.mentions-sous-titre,
+.confidentialite-sous-titre {
   font-size: 15px;
   color: var(--grey999);
   margin: 0;
 }
 
-/* ============================================================
+/*
    LAYOUT (SIDEBAR + CONTENU)
-   ============================================================ */
+   */
 .cgu-layout,
-.mentions-layout {
+.mentions-layout,
+.confidentialite-layout {
   display: flex;
   gap: 48px;
-  align-items: flex-start; 
-  flex-grow: 1; /* Permet au contenu de prendre l'espace disponible */
+  align-items: flex-start;
+  flex-grow: 1;
+  /* Permet au contenu de prendre l'espace disponible */
 }
 
 /* ---------- Sidebar (Fixe / Sticky) ---------- */
 .cgu-sidebar,
-.mentions-sidebar {
+.mentions-sidebar,
+.confidentialite-sidebar {
   position: sticky;
-  top: 120px; /* Reste fixée sous le header */
+  top: 120px;
+  /* Reste fixée sous le header */
   width: 280px;
-  flex-shrink: 0; 
+  flex-shrink: 0;
   background: var(--white-f9f9f9);
   border: 1px solid var(--greyddd);
   border-radius: 16px;
@@ -99,7 +108,8 @@
 }
 
 .cgu-sidebar-header,
-.mentions-sidebar-header {
+.mentions-sidebar-header,
+.confidentialite-sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -109,7 +119,8 @@
 }
 
 .cgu-sidebar-titre,
-.mentions-sidebar-titre {
+.mentions-sidebar-titre,
+.confidentialite-sidebar-titre {
   font-family: var(--bold-font), sans-serif;
   font-size: 1.1rem;
   margin: 0;
@@ -120,7 +131,8 @@
 
 /* Bouton fermer (Mobile only) */
 .cgu-close-btn,
-.mentions-close-btn {
+.mentions-close-btn,
+.confidentialite-close-btn {
   display: none;
   background: transparent;
   border: none;
@@ -131,13 +143,15 @@
 }
 
 .cgu-close-btn:hover,
-.mentions-close-btn:hover {
+.mentions-close-btn:hover,
+.confidentialite-close-btn:hover {
   color: var(--a-hover-color);
 }
 
 /* Bouton Hamburger (Mobile only) */
 .cgu-menu-btn,
-.mentions-menu-btn {
+.mentions-menu-btn,
+.confidentialite-menu-btn {
   display: none;
   background: var(--white);
   border: 1px solid var(--greyddd);
@@ -157,7 +171,8 @@
 
 /* ---------- Liste du Sommaire ---------- */
 .cgu-sommaire-liste,
-.mentions-sommaire-liste {
+.mentions-sommaire-liste,
+.confidentialite-sommaire-liste {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -168,7 +183,8 @@
 }
 
 .cgu-sommaire-liste li,
-.mentions-sommaire-liste li {
+.mentions-sommaire-liste li,
+.confidentialite-sommaire-liste li {
   counter-increment: sommaire;
   font-size: 14px;
   font-weight: 500;
@@ -176,10 +192,11 @@
 
 /* Le lien de la sidebar */
 .cgu-sommaire-liste a,
-.mentions-sommaire-liste a {
+.mentions-sommaire-liste a,
+.confidentialite-sommaire-liste a {
   color: var(--grey555);
   text-decoration: none;
-  display: flex; 
+  display: flex;
   align-items: baseline;
   padding: 12px 16px;
   border-radius: 8px;
@@ -188,7 +205,8 @@
 }
 
 .cgu-sommaire-liste a::before,
-.mentions-sommaire-liste a::before {
+.mentions-sommaire-liste a::before,
+.confidentialite-sommaire-liste a::before {
   content: counter(sommaire) ".";
   color: var(--orange);
   font-family: var(--bold-font);
@@ -201,52 +219,65 @@
 
 /* Hover sur la sidebar */
 .cgu-sommaire-liste a:hover,
-.mentions-sommaire-liste a:hover {
+.mentions-sommaire-liste a:hover,
+.confidentialite-sommaire-liste a:hover {
   background: var(--white-e0e0e0);
   color: var(--black);
 }
 
 /* Onglet actif dans la sidebar */
 .cgu-sommaire-liste a.is-active,
-.mentions-sommaire-liste a.is-active {
+.mentions-sommaire-liste a.is-active,
+.confidentialite-sommaire-liste a.is-active {
   background: var(--white);
   color: var(--black);
-  border-left-color: var(--orange);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px var(--dashboard-stat-bd);
   font-weight: 700;
 }
 
 /* ---------- Contenu Principal ---------- */
 .cgu-contenu,
-.mentions-contenu {
-  flex-grow: 1; 
+.mentions-contenu,
+.confidentialite-contenu {
+  flex-grow: 1;
   min-width: 0;
+  width: 100%;
 }
 
-/* ============================================================
+/*
    LOGIQUE D'AFFICHAGE DES ONGLETS
-   ============================================================ */
+   */
 .cgu-article,
-.mentions-section {
+.mentions-section,
+.confidentialite-section {
   display: none;
   animation: fadeIn 0.3s ease-in-out;
 }
 
 .cgu-article.is-active,
-.mentions-section.is-active {
+.mentions-section.is-active,
+.confidentialite-section.is-active {
   display: block;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ============================================================
+/*
    STYLE DU CONTENU (Fiches, Textes, Tableaux)
-   ============================================================ */
+   */
 .cgu-article-titre,
-.mentions-section-titre {
+.mentions-section-titre,
+.confidentialite-section-titre {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -257,7 +288,8 @@
 }
 
 .cgu-article-numero,
-.mentions-section-numero {
+.mentions-section-numero,
+.confidentialite-section-numero {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -272,19 +304,22 @@
 }
 
 .cgu-article p,
-.mentions-texte {
+.mentions-texte,
+.confidentialite-texte {
   margin: 0 0 18px;
   color: var(--grey333);
 }
 
 .cgu-article strong,
-.mentions-texte strong {
+.mentions-texte strong,
+.confidentialite-texte strong {
   color: var(--black);
   font-weight: 700;
 }
 
 .cgu-article a,
-.mentions-texte a {
+.mentions-texte a,
+.confidentialite-texte a {
   color: var(--blue);
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -293,7 +328,8 @@
 }
 
 .cgu-article a:hover,
-.mentions-texte a:hover {
+.mentions-texte a:hover,
+.confidentialite-texte a:hover {
   color: var(--a-hover-color);
   border-bottom-color: var(--a-hover-color);
 }
@@ -310,7 +346,8 @@
 }
 
 /* Fiches (Mentions légales / RGPD) */
-.mentions-fiche {
+.mentions-fiche,
+.confidentialite-fiche {
   background: var(--white-fcfcfc);
   border: 1px solid var(--greyddd);
   border-radius: 16px;
@@ -319,11 +356,13 @@
   box-shadow: var(--dashboard-stat-shadow1);
 }
 
-.mentions-liste-definition {
+.mentions-liste-definition,
+.confidentialite-liste-definition {
   margin: 0;
 }
 
-.mentions-ligne {
+.mentions-ligne,
+.confidentialite-ligne {
   display: grid;
   grid-template-columns: minmax(200px, 280px) 1fr;
   gap: 24px;
@@ -332,11 +371,13 @@
   align-items: baseline;
 }
 
-.mentions-ligne:last-child {
+.mentions-ligne:last-child,
+.confidentialite-ligne:last-child {
   border-bottom: none;
 }
 
-.mentions-ligne dt {
+.mentions-ligne dt,
+.confidentialite-ligne dt {
   font-family: var(--bold-font), sans-serif;
   font-weight: 700;
   color: var(--grey555);
@@ -345,7 +386,8 @@
   letter-spacing: 0.05em;
 }
 
-.mentions-ligne dd {
+.mentions-ligne dd,
+.confidentialite-ligne dd {
   margin: 0;
   color: var(--black);
   font-weight: 500;
@@ -353,7 +395,8 @@
 
 /* Tableaux (Cookies) */
 .cgu-tableau-conteneur,
-.mentions-tableau-conteneur {
+.mentions-tableau-conteneur,
+.confidentialite-tableau-conteneur {
   overflow-x: auto;
   margin: 24px 0 32px;
   border: 1px solid var(--greyddd);
@@ -363,7 +406,8 @@
 }
 
 .cgu-tableau,
-.mentions-tableau {
+.mentions-tableau,
+.confidentialite-tableau {
   width: 100%;
   border-collapse: collapse;
   font-size: 15px;
@@ -381,7 +425,8 @@
 }
 
 .cgu-tableau thead th,
-.mentions-tableau thead th {
+.mentions-tableau thead th,
+.confidentialite-tableau thead th {
   background: var(--white-f5f5f5);
   color: var(--black);
   text-align: left;
@@ -394,7 +439,8 @@
 }
 
 .cgu-tableau tbody td,
-.mentions-tableau tbody td {
+.mentions-tableau tbody td,
+.confidentialite-tableau tbody td {
   padding: 16px 24px;
   border-top: 1px solid var(--greyddd);
   color: var(--grey555);
@@ -402,14 +448,16 @@
 
 /* Listes à puces */
 .cgu-liste,
-.mentions-liste {
+.mentions-liste,
+.confidentialite-liste {
   margin: 0 0 24px;
   padding-left: 0;
   list-style: none;
 }
 
 .cgu-liste li,
-.mentions-liste li {
+.mentions-liste li,
+.confidentialite-liste li {
   position: relative;
   margin-bottom: 12px;
   padding-left: 28px;
@@ -417,7 +465,8 @@
 }
 
 .cgu-liste li::before,
-.mentions-liste li::before {
+.mentions-liste li::before,
+.confidentialite-liste li::before {
   content: "•";
   position: absolute;
   left: 0;
@@ -457,8 +506,10 @@
 
 /* Pied de page (Boutons) */
 .cgu-pied,
-.mentions-pied {
-  margin-top: auto; /* Pousse le footer tout en bas */
+.mentions-pied,
+.confidentialite-pied {
+  margin-top: 10px;
+  /* Pousse le footer tout en bas */
   padding-top: 32px;
   border-top: 2px solid var(--greyddd);
   display: flex;
@@ -469,7 +520,8 @@
 }
 
 .cgu-bouton,
-.mentions-bouton {
+.mentions-bouton,
+.confidentialite-bouton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -485,49 +537,43 @@
 }
 
 .cgu-bouton-retour,
-.mentions-bouton-retour {
+.mentions-bouton-retour,
+.confidentialite-bouton-retour {
   background: var(--white-f5f5f5);
   color: var(--black);
   border-color: var(--greyddd);
 }
 
 .cgu-bouton-retour:hover,
-.mentions-bouton-retour:hover {
+.mentions-bouton-retour:hover,
+.confidentialite-bouton-retour:hover {
   background: var(--white-e0e0e0);
   transform: translateY(-2px);
 }
 
-.cgu-bouton-imprimer,
-.mentions-bouton-imprimer {
-  background: var(--black);
-  color: var(--white);
-  box-shadow: var(--dashboard-stat-shadow2);
-}
 
-.cgu-bouton-imprimer:hover,
-.mentions-bouton-imprimer:hover {
-  background: var(--grey333);
-  transform: translateY(-2px);
-}
-
-/* ============================================================
+/*
    RESPONSIVE (TABLETTE & MOBILE)
-   ============================================================ */
+   */
 @media (max-width: 900px) {
+
   .cgu-layout,
-  .mentions-layout {
+  .mentions-layout,
+  .confidentialite-layout {
     flex-direction: column;
   }
 
   /* Affiche le bouton hamburger */
   .cgu-menu-btn,
-  .mentions-menu-btn {
+  .mentions-menu-btn,
+  .confidentialite-menu-btn {
     display: flex;
   }
 
   /* Transforme la sidebar en Drawer (Menu coulissant) */
   .cgu-sidebar,
-  .mentions-sidebar {
+  .mentions-sidebar,
+  .confidentialite-sidebar {
     position: fixed;
     top: 0;
     left: 0;
@@ -537,34 +583,39 @@
     border-radius: 0;
     border: none;
     border-right: 1px solid var(--greyddd);
-    transform: translateX(-100%); /* Caché par défaut */
-    box-shadow: 20px 0 50px rgba(0,0,0,0.1);
+    transform: translateX(-100%);
+    /* Caché par défaut */
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
     padding: 32px 24px;
     overflow-y: auto;
   }
 
   /* Ouverture du menu via JS */
   .cgu-sidebar.is-open,
-  .mentions-sidebar.is-open {
+  .mentions-sidebar.is-open,
+  .confidentialite-sidebar.is-open {
     transform: translateX(0);
   }
 
   /* Affiche le bouton X */
   .cgu-close-btn,
-  .mentions-close-btn {
+  .mentions-close-btn,
+  .confidentialite-close-btn {
     display: block;
   }
 
   /* Ajustement de la liste dans le menu mobile */
   .cgu-sommaire-liste,
-  .mentions-sommaire-liste {
+  .mentions-sommaire-liste,
+  .confidentialite-sommaire-liste {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .cgu-sommaire-liste a,
-  .mentions-sommaire-liste a {
+  .mentions-sommaire-liste a,
+  .confidentialite-sommaire-liste a {
     flex-direction: row;
     align-items: baseline;
     padding: 12px 16px;
@@ -572,15 +623,11 @@
     border: none;
     border-left: 3px solid transparent;
   }
-  
-  .cgu-sommaire-liste a.is-active,
-  .mentions-sommaire-liste a.is-active {
-    border-left-color: var(--orange);
-    background: var(--white);
-  }
+
 
   /* Fiches en mode mobile */
-  .mentions-ligne {
+  .mentions-ligne,
+  .confidentialite-ligne {
     grid-template-columns: 1fr;
     gap: 4px;
     padding: 16px 0;
@@ -588,79 +635,95 @@
 }
 
 @media (max-width: 600px) {
+
   .page-cgu,
-  .page-mentions {
+  .page-mentions,
+  .page-confidentialite {
+    width: 100%;
     padding: 100px 16px 60px;
   }
 
-  .mentions-fiche {
+  .mentions-fiche,
+  .confidentialite-fiche {
     padding: 8px 16px;
   }
 
   /* Boutons du footer empilés sur mobile */
   .cgu-pied,
-  .mentions-pied {
+  .mentions-pied,
+  .confidentialite-pied {
     flex-direction: column;
     align-items: stretch;
   }
 
   .cgu-bouton,
-  .mentions-bouton {
+  .mentions-bouton,
+  .confidentialite-bouton {
     width: 100%;
     text-align: center;
   }
 }
 
-/* ============================================================
+/*
    IMPRESSION
-   ============================================================ */
+   */
 @media print {
   body {
-    background: #fff !important;
-    color: #000 !important;
+    background: var(--eternal-white) !important;
+    color: var(--eternal-black) !important;
   }
 
   /* Cache les éléments de navigation et boutons à l'impression */
-  header, footer, 
+  header,
+  footer,
   .cgu-fil-ariane,
   .mentions-fil-ariane,
+  .confidentialite-fil-ariane,
   .cgu-sidebar,
   .mentions-sidebar,
+  .confidentialite-sidebar,
   .cgu-menu-btn,
   .mentions-menu-btn,
+  .confidentialite-menu-btn,
   .cgu-pied,
-  .mentions-pied {
+  .mentions-pied,
+  .confidentialite-pied {
     display: none !important;
   }
 
   .page-cgu,
-  .page-mentions {
+  .page-mentions,
+  .page-confidentialite {
     max-width: 100%;
     padding: 0;
   }
 
   /* Force l'affichage de toutes les sections pour l'impression */
   .cgu-article,
-  .mentions-section {
+  .mentions-section,
+  .confidentialite-section {
     display: block !important;
     break-inside: avoid;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--greyccc);
     margin-bottom: 24px;
     padding-bottom: 16px;
   }
 
   .cgu-article-numero,
-  .mentions-section-numero {
-    background: #000 !important;
-    color: #fff !important;
+  .mentions-section-numero,
+  .confidentialite-section-numero {
+    background: var(--eternal-black) !important;
+    color: var(--eternal-white) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
   .cgu-tableau-conteneur,
   .mentions-tableau-conteneur,
-  .mentions-fiche {
+  .confidentialite-tableau-conteneur,
+  .mentions-fiche,
+  .confidentialite-fiche {
     box-shadow: none;
-    border: 1px solid #ccc;
+    border: 1px solid var(--greyccc);
   }
 }

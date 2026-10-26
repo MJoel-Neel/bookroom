@@ -35,6 +35,7 @@ div.top {
     padding: 15px 50px;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--article-block-shadow);
     z-index: 1003;
     position: relative;
     max-height: 75px;

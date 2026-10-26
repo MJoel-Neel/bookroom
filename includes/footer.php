@@ -73,6 +73,12 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/para
                     Mentions légales
                 </a>
             </p>
+             <p class="cgu-ml-link">
+                <i class="fa-solid fa-square-person-confined"></i>
+                <a href="<?= BASE_URL ?>/pages/confidentialite.php">
+                    Politiques de confidentialités
+                </a>
+            </p>
         </div>
     </div>
 </footer>

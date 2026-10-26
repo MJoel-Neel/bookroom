@@ -8,8 +8,8 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
 
     <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/fonts/font.css">
@@ -31,21 +31,21 @@ session_start();
 
 <main class="page-mentions">
 
-  <!-- ============ EN-TÊTE DE PAGE ============ -->
+  <!-- EN-TÊTE DE PAGE -->
   <div class="mentions-entete">
     <div class="mentions-fil-ariane" aria-label="Fil d'Ariane">
-      <a href="/index.php">Accueil</a>
+      <a href="../index.php">Accueil</a>
       <span aria-hidden="true">›</span>
       <span aria-current="page">Mentions légales</span>
     </div>
 
     <h1 class="mentions-titre">Mentions légales</h1>
     <p class="mentions-sous-titre">
-      Dernière mise à jour : <time datetime="2025-01-01">1<sup>er</sup> janvier 2025</time>
+      Dernière mise à jour : <time datetime="2025-01-01">1<sup>er</sup> novembre 2026</time>
     </p>
   </div>
 
-  <!-- ============ LAYOUT (SIDEBAR + CONTENU) ============ -->
+  <!-- LAYOUT (SIDEBAR + CONTENU) -->
   <div class="mentions-layout">
 
     <!-- BOUTON HAMBURGER (Mobile) -->
@@ -313,13 +313,10 @@ session_start();
     </article>
   </div>
 
-  <!-- ============ PIED DE PAGE ============ -->
-  <footer class="mentions-pied">
-    <a href="/index.php" class="mentions-bouton mentions-bouton-retour">← Retour à l'accueil</a>
-    <button type="button" class="mentions-bouton mentions-bouton-imprimer" onclick="window.print()">
-      Imprimer cette page
-    </button>
-  </footer>
+  <!-- PIED DE PAGE -->
+  <div class="mentions-pied">
+    <a href="../ " class="mentions-bouton mentions-bouton-retour">← Retour à l'accueil</a>
+  </div>
 
 </main>
 
