@@ -52,7 +52,7 @@ if (isset($_POST["produit_id"])) {
 }
 
 //PREPARATION SQL
-$search = $_GET['search'] ?? '*'; // valeur par défaut
+$search = trim($_GET['search']) ?? '*'; // valeur par défaut
 $sql = "SELECT * FROM livre l
     INNER JOIN categorie c
     ON l.id_categorie = c.id_categorie WHERE 1=1"; // 1=1 pour enchaîner les AND facilement
@@ -63,7 +63,7 @@ if (!empty($_GET)) {
     // RECHERCHE (titre)
     if (!empty($_GET['search'])) {
         $sql .= " AND l.titre_livre LIKE ? ";
-        $params[] = '%' . $_GET['search'] . '%'; // recherche "contient"
+        $params[] = '%' . trim($_GET['search']) . '%'; // recherche "contient"
     }
     //prix min
     if (isset($_GET['min'])) {
@@ -211,7 +211,7 @@ if (!isset($_SESSION["panier"])) {
     <?php flash_render(); ?>
 
 
-    <section class="produit-rechercher" id="recherche" >
+    <section class="produit-rechercher" id="recherche">
         <div class="recherche-utilisateur" data-aos="fade-down">
             <p class="nom">
                 <span class="glasses">👓</span>
@@ -329,7 +329,7 @@ if (!isset($_SESSION["panier"])) {
                             ?>
                             <div class="article-img">
                                 <img loading="lazy" src="../assets/images<?= str_contains($produit["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $produit["image_livre"] ?>" alt="">
+                                    "/produits/anonymous_book.webp" : $produit["image_livre"] ?>" alt="">
                             </div>
 
                             <div class="libelle-article">

@@ -37,7 +37,7 @@ include_once __DIR__ . '/constants.php';
         <div class="search">
             <form method="get" action="<?= BASE_URL ?>/pages/boutique.php" id="search-form" class="search-form">
                 <div class="search-input">
-                    <input autofocus type="search" value="<?= $search ?>" placeholder="Recherchez un livre ..."
+                    <input autofocus type="search" value="<?=trim($search) ?>" placeholder="Recherchez un livre ..."
                         id="search-product" name="search">
                 </div>
 
