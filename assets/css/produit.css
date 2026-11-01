@@ -19,6 +19,7 @@
      background-color: var(--greyddd);
      border-radius: 20px;
      height: 400px;
+     width: 100%;
      align-content: center;
      text-align: center;
 
@@ -26,7 +27,7 @@
 
  div.produit-img img {
      width: 80%;
-     max-width: 300px;
+          max-width: 300px;
      height: 90%;
  }
 
@@ -204,7 +205,7 @@ table.description-produit thead tr th {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--white);
+    color: var(--black);
     background: --description-gradient;
     padding: 22px 28px;
     text-align: center;

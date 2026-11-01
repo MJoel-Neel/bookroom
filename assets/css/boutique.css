@@ -269,13 +269,14 @@
   div.article div.article-img {
       background-color: var(--white);
       width: 80%;
-      height: 200px;
+      height: 250px;
       text-align: center;
       margin: auto;
   }
 
   div.article-img img {
-      width: 80%;
+      width: 90%;
+object-fit: cover;
       height: 100%;
   }
 

@@ -47,12 +47,12 @@ session_start();
     <!-- LAYOUT (SIDEBAR + CONTENU) -->
     <div class="cgu-layout">
 
-      <!-- BOUTON HAMBURGER (Mobile) -->
+      <!-- BOUTON HAMBURGER -->
       <button type="button" class="cgu-menu-btn" id="menu-toggle" aria-label="Ouvrir le sommaire" aria-expanded="false">
         <i class="fa-solid fa-bars"></i> Sommaire
       </button>
 
-      <!-- SIDEBAR / SOMMAIRE FIXE -->
+      <!-- SIDEBAR / SOMMAIRE -->
       <aside class="cgu-sidebar" id="sidebar-sommaire">
         <div class="cgu-sidebar-header">
           <h2 class="cgu-sidebar-titre">Sommaire</h2>
@@ -150,7 +150,6 @@ session_start();
             <li>L'utilisateur est seul responsable de la confidentialité de son mot de passe.</li>
             <li>Toute activité effectuée depuis son compte est réputée être de son fait.</li>
             <li>En cas d'utilisation non autorisée, l'utilisateur doit en informer Bookroom sans délai.</li>
-            <li>L'utilisateur doit avoir au moins 16 ans pour créer un compte, ou disposer du consentement parental.
             </li>
           </ul>
         </section>
@@ -243,9 +242,7 @@ session_start();
           </h2>
           <p>
             Le site utilise des cookies nécessaires au fonctionnement (session, panier,
-            préférences de thème) et, avec votre consentement, des cookies de mesure
-            d'audience. Vous pouvez à tout moment modifier vos préférences depuis le
-            panneau de consentement.
+            erreurs).
           </p>
           <div class="cgu-tableau-conteneur">
             <table class="cgu-tableau">
@@ -260,18 +257,8 @@ session_start();
               <tbody>
                 <tr>
                   <td>Essentiels</td>
-                  <td>Session, panier, thème</td>
-                  <td>Session / 1 an</td>
-                </tr>
-                <tr>
-                  <td>Mesure d'audience</td>
-                  <td>Statistiques anonymisées</td>
-                  <td>13 mois</td>
-                </tr>
-                <tr>
-                  <td>Marketing</td>
-                  <td>Publicités personnalisées</td>
-                  <td>Désactivé par défaut</td>
+                  <td>Session, panier, erreurs</td>
+                  <td>Session / 24 min</td>
                 </tr>
               </tbody>
             </table>
