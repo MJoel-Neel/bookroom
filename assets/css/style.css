@@ -13,7 +13,7 @@ div.main {
 section.heros {
     width: 100vw;
     margin: 0px auto;
-    height: 85vh;
+    height: 85dvh;
     background-color: transparent;
     position: relative;
     overflow: hidden;
@@ -51,7 +51,7 @@ div.presentation a {
     margin-top: 20px;
     font-family: var(--font-light-2);
     font-weight: bold;
-    color: var(--white);
+    color: var(--eternal-white);
     display: block;
     width: fit-content;
     position: relative;
@@ -82,6 +82,7 @@ div.hero-container div.hero {
 div.hero-container div.hero img {
     width: 100% !important;
     height: 100% !important;
+    object-fit: cover;
 }
 
 /*BLOC PUB*/
@@ -172,7 +173,7 @@ div.promotion {
     padding: 10px;
     border-radius: 10px;
     flex-grow: 0.1;
-    overflow: hidden; 
+    overflow: hidden;
     transition: transform .3s ease-in-out, box-shadow .3s ease-in-out;
 
     &:hover {
@@ -182,14 +183,14 @@ div.promotion {
 }
 
 /* Zone image */
-div.best-seller > a.product-link-img,
-div.nouveaute > a.product-link-img,
-div.promotion > a.product-link-img {
+div.best-seller>a.product-link-img,
+div.nouveaute>a.product-link-img,
+div.promotion>a.product-link-img {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 250px;
+    height: 300px;
     margin-bottom: 10px;
     background: var(--greyeee);
     border-radius: 6px;
@@ -203,21 +204,21 @@ div.promotion > a.product-link-img {
 }
 
 /* Image */
-div.best-seller > a.product-link-img img,
-div.nouveaute > a.product-link-img img,
-div.promotion > a.product-link-img img {
-    width: 100%;
+div.best-seller>a.product-link-img img,
+div.nouveaute>a.product-link-img img,
+div.promotion>a.product-link-img img {
+    width: 70%;
     height: 100%;
-    object-fit: contain;                   
+    object-fit: cover;
     object-position: center;
     display: block;
     transition: transform .4s ease;
 }
 
 /* Zoom léger de l'image au hover de la card */
-div.best-seller:hover > a.product-link-img img,
-div.nouveaute:hover > a.product-link-img img,
-div.promotion:hover > a.product-link-img img {
+div.best-seller:hover>a.product-link-img img,
+div.nouveaute:hover>a.product-link-img img,
+div.promotion:hover>a.product-link-img img {
     transform: scale(1.06);
 }
 
@@ -431,12 +432,11 @@ section.pub {
 
 /*SECTION OFFRES*/
 section.offres h2 {
-    transform: translateY(-70px) translateX(20px);
+    transform: translateY(-50px) translateX(170px);
     font-size: 2rem;
     font-family: var(--bold-font);
     text-transform: capitalize;
     margin-top: 200px;
-    margin-left: 40px !important;
 }
 
 .offres div.offres-container {
@@ -444,20 +444,26 @@ section.offres h2 {
     width: 100%;
     display: grid;
     grid-template-columns: 2fr 1.1fr;
-    grid-template-rows: 500px;
+    grid-template-rows: 600px;
     gap: 20px;
 }
 
 div.offres-container div.uni-box {
     background-color: var(--greyddd);
-    border-radius: 20px;
+    border-radius: 5px;
+}
+
+div.minis-box {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-evenly;
 }
 
 div.minis-box article.mini {
     border-radius: 20px;
-    margin: 10px 0;
     width: 100%;
-    height: 45%;
+    height: 48%;
     background-color: var(--greyddd);
 }
 
@@ -468,7 +474,7 @@ article.mini img {
     transition: .5s;
 
     &:hover {
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 }
 
@@ -478,13 +484,6 @@ article.mini img {
         padding: 20px 1%;
     }
 
-    div.presentation h2.section-title {
-        font-size: 2rem;
-    }
-
-    div.presentation p {
-        font-size: 1rem;
-    }
 
     div.qualites div.qualite {
         width: 130px !important;
@@ -512,20 +511,60 @@ article.mini img {
 
 }
 
+@media (max-width: 1000px) {
+    .offres div.offres-container {
+        grid-template-columns: 0.7fr !important;
+        justify-content: center;
+        grid-template-rows: 400px 600px;
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 800px) {
     section.offres h2 {
         margin-top: 10px;
     }
 
     .offres div.offres-container {
-        grid-template-columns: 0.7fr;
-        justify-content: center;
-        grid-template-rows: 400px 600px;
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+    }
+
+    section.offres h2 {
+        transform: translateY(-50px) translateX(20px);
     }
 
     section.propos {
         padding: 70px 0 !important;
+    }
+
+    section.heros {
+        height: 70dvh;
+    }
+
+    div.presentation h2.section-title {
+        font-size: 3rem !important;
+    }
+
+    div.presentation p {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.4rem !important;
+    }
+}
+
+@media (max-width: 600px) {
+    div.presentation h2.section-title {
+        font-size: 2rem !important;
+    }
+
+    div.presentation p {
+        font-size: 1.1rem !important;
+    }
+
+    div.hero-container div.hero img {
+        object-fit: cover;
     }
 }
 
@@ -539,8 +578,9 @@ section.propos {
 }
 
 section.propos h2 {
-    transform: translateY(-150px) translateX(20px);
-    font-size: 1.5rem;
+    transform: translateY(-150px);
+    text-align: center;
+    font-size: 2rem;
     font-family: var(--bold-font);
     text-transform: capitalize;
     margin-left: 40px !important;
@@ -660,14 +700,14 @@ div.qualites div.qualite {
 }
 
 div.qualite div i {
-    font-size: 5rem;
+    font-size: 4rem;
     color: var(--white-f3f3f3);
 }
 
 div.qualite div.parceque {
     font-family: var(--font-light-2);
     margin-top: 15px;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     text-transform: capitalize;
     color: var(--white);
 }

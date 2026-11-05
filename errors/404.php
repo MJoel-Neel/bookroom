@@ -32,9 +32,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
    <main>
      <div class="error">
-        <div class="mes-404" >404 <span>!</span></div>
-
-
+<div class="img-container">
+            <img src="../assets/images/ico/background/section/404-error-1.svg" loading="lazy" alt="404">
+</div>
         <div class="error-message">
             <p class="principal-mes">
                 Panier perdu dans l’entrepôt 📦

@@ -13,6 +13,11 @@ if (!isset($_SESSION["panier"])) {
 if (isset($_POST["produit_id"])) {
 
     $id = (int) $_POST["produit_id"]; // pour éviter les valeurs non numériques
+    $current_section = (!empty($_POST["current_section"])) ? $_POST["current_section"] : 'nouveautes' ;
+
+    $ancre_autorises = ["promotion", "nouveautes", "best-sellers"];
+    $target_section = in_array($current_section, $ancre_autorises) ? $current_section : "nouveautes";
+
 
     $is_success = cart_add($id, 1);
     if ($is_success) {
@@ -20,7 +25,7 @@ if (isset($_POST["produit_id"])) {
     }
 
     // évite la duplication lors du refresh (POST -> GET)
-    header("Location: " . $_SERVER["PHP_SELF"]);
+    header("Location: " . $_SERVER["PHP_SELF"] . "#" . urlencode($target_section));
     exit();
 }
 
@@ -111,7 +116,7 @@ try {
 
             <div class="hero-container">
                 <div class="hero hero1">
-                    <img loading="lazy" src="./assets/images/ico/background/section/heros/hero1.jpg" alt="">
+                    <img loading="lazy" src="./assets/images/ico/background/section/heros/hero1.svg" alt="">
                 </div>
                 <div class="hero hero2">
                     <img loading="lazy" src="./assets/images/ico/background/section/heros/hero2.png" alt="">
@@ -207,6 +212,7 @@ try {
                                 ?></span>
                                 <form action="" method="post">
                                     <input type="hidden" name="produit_id" value="<?= $best["id_livre"] ?>">
+                                    <input type="hidden" name="current_section" value="best-sellers">
                                     <button class="ajouter" type="submit">Ajouter au panier</button>
                                 </form>
                             </div>
@@ -221,18 +227,18 @@ try {
         <!--SECTION OFFRES-->
 
         <section class="pub offres">
-            <h2 data-aos="fade-right">Nos Offres</h2>
+            <h2>Nos Offres</h2>
             <div class="offres-container">
                 <div class="uni-box" data-aos="fade-left">
-                    <img loading="lazy" src="./assets/images/ico/background/section/offres/offre1.png" alt="">
+                    <img loading="lazy" src="./assets/images/ico/background/section/offres/offre1.webp" alt="">
                 </div>
 
                 <div class="minis-box">
                     <article class="mini" data-aos="zoom-in">
-                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre2.png" alt="">
+                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre2.webp" alt="">
                     </article>
                     <article class="mini" data-aos="fade-left">
-                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre3.png" alt="">
+                        <img loading="lazy" src="./assets/images/ico/background/section/offres/offre3.webp" alt="">
                     </article>
                 </div>
             </div>
@@ -323,6 +329,7 @@ try {
                                 </span>
                                 <form action="" method="post">
                                     <input type="hidden" name="produit_id" value="<?= $new["id_livre"] ?>">
+                                    <input type="hidden" name="current_section" value="nouveautes">
                                     <button class="ajouter" type="submit">Ajouter au panier</button>
                                 </form>
                             </div>
@@ -418,6 +425,7 @@ try {
                                 </span>
                                 <form action="" method="post">
                                     <input type="hidden" name="produit_id" value="<?= $promo["id_livre"] ?>">
+                                    <input type="hidden" name="current_section" value="promotion">
                                     <button class="ajouter" type="submit">Ajouter au panier</button>
                                 </form>
                             </div>

@@ -141,7 +141,7 @@ div.panier-vide {
     margin: auto;
     background-color: var(--greyddd);
     position: relative;
-    background-image: url("../images/ico/background/section/panier-vide.png");
+    background-image: url("../images/ico/background/section/empty-cart.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
