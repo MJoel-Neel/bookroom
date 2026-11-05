@@ -4,7 +4,7 @@ require __DIR__ . '/../env.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    header('Allow: POST');
+    header("Location: ../index.php");
     exit;
 }
 
