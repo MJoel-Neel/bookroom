@@ -52,6 +52,8 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/para
         <form class="foot-form" method="post" id="contact" action="<?= BASE_URL ?>/mail/resend.php">
             <div aria-hidden="true">
                 <input type="hidden" name="website" tabindex="-1" autocomplete="off">
+                <input type="hidden" name="return_to"
+                    value="<?= htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8') ?>">
             </div>
 
             <h3>Me contacter</h3>
