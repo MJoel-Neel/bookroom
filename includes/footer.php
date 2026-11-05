@@ -41,16 +41,19 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/para
                 </a></li>
         </ul>
 
-        <form class="foot-form" method="post" action="<?= BASE_URL ?>/errors/404.php">
+        <form class="foot-form" method="post" action="<?= BASE_URL ?>/mail/resend.php">
+            <div aria-hidden="true">
+                <input type="hidden" name="website" tabindex="-1" autocomplete="off">
+            </div>
 
             <h3>Me contacter</h3>
 
             <div><input type="text" name="user_contact_name" placeholder="Entrez votre Pseudo" required
-                    id="user_contact_name"></div>
+                    id="user_contact_name" maxlength="100"></div>
             <div><input type="email" name="user_contact_email" placeholder="Entrez votre Email" required
-                    id="user_contact_email"></div>
+                    maxlength="254" id="user_contact_email"></div>
             <div><textarea name="user_contact_message" id="user_contact_message"
-                    placeholder="Quel est le contenu de votre message ?" required></textarea></div>
+                   maxlength="5000" placeholder="Quel est le contenu de votre message ?" required></textarea></div>
             <div><button class="send-mes">Envoyer</button></div>
         </form>
     </div>
@@ -73,7 +76,7 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/para
                     Mentions légales
                 </a>
             </p>
-             <p class="cgu-ml-link">
+            <p class="cgu-ml-link">
                 <i class="fa-solid fa-square-person-confined"></i>
                 <a href="<?= BASE_URL ?>/pages/confidentialite.php">
                     Politiques de confidentialités
