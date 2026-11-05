@@ -161,7 +161,7 @@ function showPages(buttonValue, value = null) {
 }
 
 function handleDisplay(event) {
-    let value = event.currentTarget.dataset.page
+    let value = Number(event.currentTarget.dataset.page)
     paginationButtons.forEach((button) => {
         button.classList.remove('paginationButton')
     })
@@ -178,14 +178,19 @@ paginationButtons.forEach((button) => {
 })
 
 function handleSuivPrec(pageNumber) {
-    if (pageNumber === 1) {
+    const isProduit = (NBtousProduitsTrouves === 0) ? false : true
+    if (pageNumber === 1 || !isProduit) {
+        document.querySelector('div.pagination button.prec').setAttribute('disabled', true)
         document.querySelector('div.pagination button.prec').classList.add('gris')
     } else {
+        document.querySelector('div.pagination button.prec').removeAttribute('disabled', false)
         document.querySelector('div.pagination button.prec').classList.remove('gris')
     }
-    if (pageNumber === NBpagesDispos) {
+    if (pageNumber === NBpagesDispos || !isProduit) {
+        document.querySelector('div.pagination button.suiv').setAttribute('disabled', true)
         document.querySelector('div.pagination button.suiv').classList.add('gris')
     } else {
+        document.querySelector('div.pagination button.suiv').removeAttribute('disabled', false)
         document.querySelector('div.pagination button.suiv').classList.remove('gris')
     }
 }
@@ -210,13 +215,11 @@ allFiltres.forEach((filterDiv) => {
                 button.textContent = 'Voir moins'
                 button.dataset.status = 'less'
                 filterDiv.classList.remove('more')
-                console.log(button.textContent, button.dataset.status)
             }
             else  if(button.dataset.status === 'less') {
                 button.textContent = 'Voir plus'
                 button.dataset.status = 'more'
                 filterDiv.classList.add('more')
-                console.log(button.textContent, button.dataset.status)
             }
             else {
                 button.textContent = "error"
