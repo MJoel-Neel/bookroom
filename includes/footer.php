@@ -41,7 +41,7 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/para
                 </a></li>
         </ul>
 
-        <form class="foot-form" method="post" action="<?= BASE_URL ?>/mail/resend.php">
+        <form class="foot-form" method="post" id="contact" action="<?= BASE_URL ?>/mail/resend.php">
             <div aria-hidden="true">
                 <input type="hidden" name="website" tabindex="-1" autocomplete="off">
             </div>
