@@ -1,4 +1,12 @@
 <?php
+if (!empty($_GET["sent"]) && ($_GET["sent"] == 1)) {
+    $mes = "<span class='footer_message success'> Message envoyé avec succès 🎉 </span>";
+}
+
+if (!empty($_GET["error"]) && $_GET["error"] == 1) {
+    $mes = "<span class='footer_message error'> Une erreur lors de l'envoi du message 😥</span>";
+}
+
 include_once __DIR__ . '/constants.php';
 $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/parametre.php' : '' . BASE_URL . '/pages/login.php';
 ?>
@@ -41,19 +49,23 @@ $user_footer_link = (isset($_SESSION["user_id"])) ? '' . BASE_URL . '/pages/para
                 </a></li>
         </ul>
 
-        <form class="foot-form" method="post" action="<?= BASE_URL ?>/mail/resend.php">
+        <form class="foot-form" method="post" id="contact" action="<?= BASE_URL ?>/mail/resend.php">
             <div aria-hidden="true">
                 <input type="hidden" name="website" tabindex="-1" autocomplete="off">
             </div>
 
             <h3>Me contacter</h3>
 
+
             <div><input type="text" name="user_contact_name" placeholder="Entrez votre Pseudo" required
                     id="user_contact_name" maxlength="100"></div>
-            <div><input type="email" name="user_contact_email" placeholder="Entrez votre Email" required
-                    maxlength="254" id="user_contact_email"></div>
-            <div><textarea name="user_contact_message" id="user_contact_message"
-                   maxlength="5000" placeholder="Quel est le contenu de votre message ?" required></textarea></div>
+            <div><input type="email" name="user_contact_email" placeholder="Entrez votre Email" required maxlength="254"
+                    id="user_contact_email"></div>
+            <div><textarea name="user_contact_message" id="user_contact_message" maxlength="5000"
+                    placeholder="Quel est le contenu de votre message ?" required></textarea></div>
+            <div>
+                <?= $mes ?? "" ?>
+            </div>
             <div><button class="send-mes">Envoyer</button></div>
         </form>
     </div>

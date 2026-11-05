@@ -4,7 +4,7 @@ require __DIR__ . '/../env.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    header('Allow: POST');
+    header("Location: ../index.php");
     exit;
 }
 
@@ -13,7 +13,7 @@ $to = getenv('RESEND_TO');
 $api = getenv('RESEND_API_KEY');
 if (!$from || !$to || !$api) {
     error_log('[Resend] Missing env');
-    header('Location: ../?error=1');
+    header('Location: ../?error=1#contact');
     exit;
 }
 
@@ -25,13 +25,13 @@ $message = $s('user_contact_message');
 $trap = $s('website');
 
 if ($trap !== '') {
-    header('Location: ../?sent=1');
+    header('Location: ../?sent=1#contact');
     exit;
 }
 
 if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $message === '') {
-    header('Location: ../?error=1');
-    exit;   // ← FIXED: ../ like the others
+    header('Location: ../?error=1#contact');
+    exit;  
 }
 
 try {
@@ -165,7 +165,7 @@ try {
     $body = json_encode($payload, JSON_THROW_ON_ERROR);
 } catch (\JsonException $e) {
     error_log('[Resend] json: ' . $e->getMessage());
-    header('Location: ../?error=1');
+    header('Location: ../?error=1#contact');
     exit;
 }
 
@@ -184,9 +184,9 @@ $err = curl_error($ch);
 
 if ($response === false || $err !== '' || $code < 200 || $code >= 300) {
     error_log("[Resend] code=$code err=$err body=$response");
-    header('Location: ../?error=1');
+    header('Location: ../?error=1#contact');
     exit;
 }
 
-header('Location: ../?sent=1');
+header('Location: ../?sent=1#contact');
 exit;
