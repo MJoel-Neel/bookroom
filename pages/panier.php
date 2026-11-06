@@ -98,7 +98,7 @@ if (!empty($_SESSION["panier"])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -161,7 +161,7 @@ if (!empty($_SESSION["panier"])) {
 
                             <div class="article-img">
                                 <img loading="lazy" src="../assets/images<?= str_contains($produit["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $produit["image_livre"] ?>" alt="">
+                                    "/produits/anonymous_book.webp" : $produit["image_livre"] ?>" alt="">
                             </div>
 
                             <div class="article-info">

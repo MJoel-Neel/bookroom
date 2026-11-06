@@ -181,7 +181,7 @@ if (!isset($_SESSION["panier"])) {
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -340,8 +340,8 @@ if (!isset($_SESSION["panier"])) {
                                 <p class="categorie"><?= $produit['nom_categorie']; ?></p>
                                 <div class="resume">
                                     <?= (strlen($produit['resume_livre']) > 130 ?
-                                substr($produit['resume_livre'], 0, 130). '...'
-                                : $produit['resume_livre']); ?>
+                                        substr($produit['resume_livre'], 0, 130) . '...'
+                                        : $produit['resume_livre']); ?>
                                 </div>
                                 <div class="avis">
                                     <p><span>★</span> <a

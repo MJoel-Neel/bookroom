@@ -6,7 +6,7 @@ include_once("../config.php");
 require_once("../errors/flash.php");
 
 $active_section = $_GET['section'] ?? 'show-produits';
-$active_section = in_array($active_section, ['show-produits','show-clients','show-categories'], true)
+$active_section = in_array($active_section, ['show-produits', 'show-clients', 'show-categories'], true)
     ? $active_section : 'show-produits';
 
 // helper — dashboard.php redirection
@@ -470,7 +470,7 @@ if (
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <script src="./assets/js/theme.js" defer></script>
@@ -489,7 +489,7 @@ if (
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script src="../assets/js/dataAOS.js" defer></script>
-    <script src="../assets/js/theme.js" defer ></script>
+    <script src="../assets/js/theme.js" defer></script>
     <title>Tableau de bord administrateur | Bookroom</title>
 </head>
 
@@ -517,22 +517,24 @@ if (
 
             <div class="all" data-aos="fade-right">
                 <div class="tools mobile">
-                    <div class="tool <?= $active_section === 'show-produits' ? 'hover' : '' ?>" onclick="showSection(event, 'show-produits')"
-                        title="Ajouter | Modifier | Supprimer">
+                    <div class="tool <?= $active_section === 'show-produits' ? 'hover' : '' ?>"
+                        onclick="showSection(event, 'show-produits')" title="Ajouter | Modifier | Supprimer">
                         <div class="content">
                             <i class="fa-brands fa-product-hunt"></i>
                             <p class="tool-name">Produits</p>
                         </div>
                     </div>
 
-                    <div class="tool <?= $active_section === 'show-categories' ? 'hover' : '' ?>" onclick="showSection(event, 'show-categories')" title="Gérer les catégories ">
+                    <div class="tool <?= $active_section === 'show-categories' ? 'hover' : '' ?>"
+                        onclick="showSection(event, 'show-categories')" title="Gérer les catégories ">
                         <div class="content">
                             <i class="fa-solid fa-table-list"></i>
                             <p class="tool-name">Catégories</p>
                         </div>
                     </div>
 
-                    <div class="tool <?= $active_section === 'show-clients' ? 'hover' : '' ?>" onclick="showSection(event, 'show-clients')" title="Lister les clients">
+                    <div class="tool <?= $active_section === 'show-clients' ? 'hover' : '' ?>"
+                        onclick="showSection(event, 'show-clients')" title="Lister les clients">
                         <div class="content">
                             <i class="fa-solid fa-person"></i>
                             <p class="tool-name">Clients</p>
@@ -548,11 +550,11 @@ if (
                         </div>
                     </div>
 
-                    <div class="tool" title="thèmes" >
-                        <div id="dash-theming" class="content" style="cursor: pointer;" >
-                <i class="fa-solid fa-circle-half-stroke"></i>
-                 <p class="tool-name">Thèmes</p>
-            </div>
+                    <div class="tool" title="thèmes">
+                        <div id="dash-theming" class="content" style="cursor: pointer;">
+                            <i class="fa-solid fa-circle-half-stroke"></i>
+                            <p class="tool-name">Thèmes</p>
+                        </div>
                     </div>
 
                 </div>
@@ -589,7 +591,7 @@ if (
                                     <tr>
                                         <td class="produit_img">
                                             <img loading="lazy" src="../assets/images<?= str_contains($livre["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $livre["image_livre"] ?>" alt="">
+                                                "/produits/anonymous_book.webp" : $livre["image_livre"] ?>" alt="">
                                         </td>
                                         <td class="produit-nom">
                                             <?= $livre['titre_livre'] ?>
@@ -651,7 +653,8 @@ if (
                     </div>
 
                     <!--CATEGORIES-->
-                    <div id="show-categories" class="container <?= $active_section === 'show-categories' ? 'active' : '' ?>">
+                    <div id="show-categories"
+                        class="container <?= $active_section === 'show-categories' ? 'active' : '' ?>">
                         <span class="more">
                             <svg class="add-cat" xmlns="http://www.w3.org/2000/svg" height="24px"
                                 viewBox="0 -960 960 960" width="24px" fill="#264E5B">
@@ -709,7 +712,7 @@ if (
                     </div>
 
                     <!--CLIENTS-->
-                    <div id="show-clients"  class="container <?= $active_section === 'show-clients'  ? 'active' : '' ?>">
+                    <div id="show-clients" class="container <?= $active_section === 'show-clients' ? 'active' : '' ?>">
                         <table class="clients">
                             <thead>
                                 <!--ENTETE-->

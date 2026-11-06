@@ -1,11 +1,11 @@
-<?php 
+<?php
 if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    } 
+    session_start();
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script src="../assets/js/dataAOS.js" defer></script>
-    <title>404 error</title>
+    <title>Page d'erreur 404 | Bookroom </title>
 
     <?php include_once("../includes/header_head.php"); ?>
     <?php include_once("../includes/footer_head.php"); ?>
@@ -27,37 +27,37 @@ if (session_status() === PHP_SESSION_NONE) {
 <body>
     <!--HEADER-->
     <?php
-        include_once("../includes/header.php");
+    include_once("../includes/header.php");
     ?>
 
-   <main>
-     <div class="error">
-<div class="img-container">
-            <img src="../assets/images/ico/background/section/404-error-1.svg" loading="lazy" alt="404">
-</div>
-        <div class="error-message">
-            <p class="principal-mes">
-                Panier perdu dans l’entrepôt 📦
-            </p>
+    <main>
+        <div class="error">
+            <div class="img-container">
+                <img src="../assets/images/ico/background/section/404-error-1.svg" loading="lazy" alt="404">
+            </div>
+            <div class="error-message">
+                <p class="principal-mes">
+                    Panier perdu dans l’entrepôt 📦
+                </p>
 
-            <p class="futher-mes">
-                Pendant que nous le recherchons… pourquoi ne pas explorer nos produits ?
-            </p>
+                <p class="futher-mes">
+                    Pendant que nous le recherchons… pourquoi ne pas explorer nos produits ?
+                </p>
 
+            </div>
+
+            <div class="return">
+                <a href="../pages/boutique.php?search" class="retour">
+                    👉 Découvrir la boutique
+                </a>
+            </div>
         </div>
-
-        <div class="return">
-            <a href="../pages/boutique.php?search" class="retour">
-                👉 Découvrir la boutique
-            </a>
-        </div>
-    </div>
-   </main>
+    </main>
 
 
     <!--FOOTER-->
     <?php
-        include_once("../includes/footer.php");
+    include_once("../includes/footer.php");
     ?>
 </body>
 
