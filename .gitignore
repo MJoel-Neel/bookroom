@@ -7,6 +7,7 @@ config.php
 # MOTS DE PASSE / SECRETS
 .env
 .env.*
+.htaccess
 
 # SYSTÈME
 .DS_Store
@@ -31,4 +32,4 @@ essai.mcd
 payer.php
 reduction.sql
 
-
+sitemap.php
