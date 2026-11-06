@@ -137,7 +137,7 @@ session_start();
         <ul class="confidentialite-liste">
           <li><strong>Données d'identité :</strong> Civilité, nom, prénom.</li>
           <li><strong>Données de contact :</strong> Adresse e-mail, numéro de téléphone, adresse postale.</li>
-          <li><strong>Données de connexion :</strong> Identifiant, mot de passe chiffré, adresse IP.</li>
+          <li><strong>Données de connexion :</strong> Identifiant, mot de passe chiffré.</li>
           <li><strong>Données de commande :</strong> Historique d'achats, factures.</li>
           <li><strong>Données de navigation :</strong> Pages consultées, préférences de thème (clair/sombre).</li>
         </ul>
@@ -159,8 +159,6 @@ session_start();
         <ul class="confidentialite-liste">
           <li><strong>Gestion de la relation client :</strong> Traitement des commandes, livraisons, retours et service après-vente.</li>
           <li><strong>Gestion de votre compte :</strong> Permettre la connexion et la modification de vos informations.</li>
-          <li><strong>Amélioration de nos services :</strong> Analyse statistique de l'utilisation du site (de manière anonymisée).</li>
-          <li><strong>Communication :</strong> Envoi de newsletters ou d'offres promotionnelles (uniquement avec votre accord).</li>
           <li><strong>Sécurité :</strong> Prévention des fraudes et respect de nos obligations légales.</li>
         </ul>
       </section>
@@ -184,10 +182,6 @@ session_start();
             <div class="confidentialite-ligne">
               <dt>Factures</dt>
               <dd>10 ans (obligation comptable légale).</dd>
-            </div>
-            <div class="confidentialite-ligne">
-              <dt>Cookies analytiques</dt>
-              <dd>13 mois maximum.</dd>
             </div>
           </dl>
         </div>
@@ -264,16 +258,6 @@ session_start();
                 <td>Panier, session de connexion, préférences d'affichage.</td>
                 <td>Non requis</td>
               </tr>
-              <tr>
-                <td>Mesure d'audience</td>
-                <td>Statistiques anonymes de visites (Google Analytics).</td>
-                <td>Requis</td>
-              </tr>
-              <tr>
-                <td>Réseaux sociaux</td>
-                <td>Boutons de partage Facebook, X (Twitter).</td>
-                <td>Requis</td>
-              </tr>
             </tbody>
           </table>
         </div>
@@ -296,7 +280,6 @@ session_start();
           <li>Chiffrement des mots de passe (algorithme de hachage sécurisé).</li>
           <li>Connexion sécurisée au site via le protocole HTTPS (SSL/TLS).</li>
           <li>Accès aux bases de données strictement limité aux personnes habilitées.</li>
-          <li>Sauvegardes régulières et sécurisées des données.</li>
         </ul>
       </section>
 
