@@ -6,9 +6,6 @@ if (isset($_SESSION["panier"])) {
 }
 
 $search = (isset($_GET["search"])) ? trim($_GET["search"], '%') : '';
-?>
-
-<?php
 include_once __DIR__ . '/constants.php';
 ?>
 

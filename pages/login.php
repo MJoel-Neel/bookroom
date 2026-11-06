@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Validation
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errors["email"] = "Email ou Mot de passe incomplet"; 
+            $errors["email"] = "Email ou Mot de passe incomplet";
         }
 
         if (empty($password)) {
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script src="../assets/js/dataAOS.js" defer></script>
-    <script src="../assets/js/theme.js" defer ></script>
+    <script src="../assets/js/theme.js" defer></script>
     <title>Connexion à votre compte | Bookroom</title>
 </head>
 

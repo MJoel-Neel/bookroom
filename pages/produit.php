@@ -154,7 +154,7 @@ if (isset($_POST["produit_id"])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -197,7 +197,7 @@ if (isset($_POST["produit_id"])) {
     <div class="produit-container">
         <div class="produit-img" data-aos="zoom-in">
             <img loading="lazy" src="../assets/images<?= str_contains($article["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $article["image_livre"] ?>" alt="">
+                "/produits/anonymous_book.webp" : $article["image_livre"] ?>" alt="">
         </div>
 
         <div class="produit-info" data-aos="fade-left">

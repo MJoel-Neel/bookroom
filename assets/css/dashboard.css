@@ -444,7 +444,7 @@ form.edit-cat-form {
     padding: 10px 20px;
     border: none;
     border-radius: 12px;
-    background: var(--dashboard-gradient);
+    background: var(--blue);
     color: var(--white);
     font-weight: 500;
     cursor: pointer;
