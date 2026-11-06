@@ -50,10 +50,10 @@ include_once __DIR__ . '/constants.php';
             </form>
         </div>
 
-        <ul class="list-users">
+        <ul class="list-users" >
             <?php
             if (!isset($_SESSION["user_id"])) {
-                echo " <li class='users' title='user' >
+                echo " <li class='users' title='user' tabindex='0' >
                     <svg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px'
                         fill='#000000'>
                         <path
@@ -73,7 +73,7 @@ include_once __DIR__ . '/constants.php';
                         </div>
                     </li>";
             } else {
-                echo "<li class='users' title='paramètre' >
+                echo "<li class='users' title='paramètre' tabindex='0' >
                                 <a href='" . BASE_URL . "/pages/parametre.php'>
                                 <svg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' 
                                     fill='#000000'>
@@ -104,7 +104,7 @@ include_once __DIR__ . '/constants.php';
 
             </li>
 
-            <li class="theme" title="theme" id="theme-select" >
+            <li class="theme" title="theme" id="theme-select" tabindex="0" >
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#e3e3e3">
                     <path
@@ -114,7 +114,7 @@ include_once __DIR__ . '/constants.php';
 
 
 
-            <li class="search-raccourci">
+            <li class="search-raccourci" tabindex="0">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                     fill="#e3e3e3">
                     <path

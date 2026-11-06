@@ -2,26 +2,25 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+require_once __DIR__ . '/../includes/constants.php';
+$seo = [
+    'title' => 'Page d\'erreur 404 | Bookroom',
+    'description' => 'La page demandée est introuvable. Retournez à l\'accueil ou parcourez la boutique de livres Bookroom.',
+    'robots' => 'noindex,nofollow',
+];
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/fonts/font.css">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
-    <link rel="stylesheet" href="../assets/css/404.css">
+    <?php require __DIR__ . '/../includes/head.php'; ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/404.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
-    <script src="../assets/js/dataAOS.js" defer></script>
-    <title>Page d'erreur 404 | Bookroom </title>
-
-    <?php include_once("../includes/header_head.php"); ?>
-    <?php include_once("../includes/footer_head.php"); ?>
+    <script src="<?= BASE_URL ?>/assets/js/dataAOS.js" defer></script>
 </head>
 
 <body>

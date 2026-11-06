@@ -177,6 +177,12 @@ if (!isset($_SESSION["panier"])) {
 }
 
 
+require_once __DIR__ . '/../includes/constants.php';
+$seo = [
+    'title'       => 'Boutique de livres – éducation, fiction, manga | Bookroom',
+    'description' => 'Parcourez notre catalogue : éducation, fiction, manga. Livraison rapide, prix attractifs.',
+]; 
+
 ?>
 
 
@@ -184,26 +190,14 @@ if (!isset($_SESSION["panier"])) {
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
-    <link rel="stylesheet" href="../assets/css/boutique.css">
-    <link rel="stylesheet" href="../assets/fonts/font.css">
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/flash.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <?php require __DIR__ . '/../includes/head.php'; ?>
+    <link rel="stylesheet" href= "<?= BASE_URL ?>/assets/css/boutique.css" >
+    <link rel="stylesheet" href= "<?= BASE_URL ?>/assets/css/flash.css" >
+    <script src="../assets/js/boutique.js" defer></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
     <script src="../assets/js/dataAOS.js" defer></script>
-    <title>Boutique de livres en ligne – education, fiction, Manga | Bookroom</title>
-    <script src="../assets/js/boutique.js" defer></script>
-
-    <?php include_once("../includes/header_head.php"); ?>
-    <?php include_once("../includes/footer_head.php"); ?>
-
 </head>
 
 <body>

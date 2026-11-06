@@ -23,7 +23,8 @@ div.php-register-error p span {
 }
 
 .register {
-    margin: 20px auto;
+    flex: 1;
+    margin: 40px auto;
     padding-bottom: 20px;
     width: 700px;
     height: max-content;

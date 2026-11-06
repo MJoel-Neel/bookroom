@@ -95,33 +95,27 @@ if (!empty($_SESSION["panier"])) {
     }
 }
 
+
+require_once __DIR__ . '/../includes/constants.php';
+$seo = [
+    'title' => 'Panier – Acheter des livres en ligne | Bookroom',
+    'description' => 'Votre panier Bookroom : vérifiez vos livres sélectionnés avant de finaliser votre commande en toute sécurité.',
+    'robots' => 'noindex,follow',
+];
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/css/flash.css">
-    <link rel="stylesheet" href="../assets/fonts/font.css">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
-    <title>Panier – Acheter des livres en ligne | Bookroom</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../assets/css/panier.css">
-    <script src="../assets/js/panier.js" defer></script>
+    <?php require __DIR__ . '/../includes/head.php'; ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/flash.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/panier.css">
+    <script src="<?= BASE_URL ?>/assets/js/panier.js" defer></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
-    <script src="../assets/js/dataAOS.js" defer></script>
-    <script src="../assets/js/head.js" defer></script>
-    <link rel="stylesheet" href="../assets/css/header.css">
-
-    <?php include_once("../includes/header_head.php"); ?>
-    <?php include_once("../includes/footer_head.php"); ?>
+    <script src="<?= BASE_URL ?>/assets/js/dataAOS.js" defer></script>
 </head>
 
 <body>

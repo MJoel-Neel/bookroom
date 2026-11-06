@@ -151,39 +151,47 @@ if (isset($_POST["produit_id"])) {
     exit();
 }
 
+
+require_once __DIR__ . '/../includes/constants.php';
+
+$title = htmlspecialchars($article['titre_livre']) . ' – ' . htmlspecialchars($article['auteur_livre']);
+
+$seo = [
+    'title' => $title . ' | Livre à acheter | Bookroom',
+    'description' => $title . ' disponible à l\'achat. Livraison rapide et prix attractif.',
+    'image' => BASE_URL . '/assets/images' . htmlspecialchars($article['image']),
+    'type' => 'book',
+];
+
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php
-    echo htmlspecialchars($article['titre_livre']) . ' de ' .
-        htmlspecialchars($article['auteur_livre']) .
-        ' disponible à l\'achat. Livraison rapide et prix attractif.';
-    ?>">
-    <link rel="stylesheet" href="../assets/css/flash.css">
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/fonts/font.css">
+    <?php require __DIR__ . '/../includes/head.php'; ?>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/produit.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/flash.css">
+    <script src="<?= BASE_URL ?>/assets/js/produit.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
-    <script src="../assets/js/dataAOS.js" defer></script>
-    <link rel="stylesheet" href="../assets/css/produit.css">
-    <script src="../assets/js/produit.js" defer></script>
-    <title>
-        <?php
-        echo htmlspecialchars($article['titre_livre']) . " – " .
-            htmlspecialchars($article['auteur_livre']) .
-            " | Livre, $article[nom_categorie] à acheter | Bookroom";
-        ?>
-    </title>
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
-
-    <?php include_once("../includes/header_head.php"); ?>
-    <?php include_once("../includes/footer_head.php"); ?>
+    <script src="<?= BASE_URL ?>/assets/js/dataAOS.js" defer></script>
+    <!-- JSON-LD: Book -->
+    <script type="application/ld+json">
+    <?= json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'Book',
+        'name' => $article['titre_livre'],
+        'author' => ['@type' => 'Person', 'name' => $article['auteur_livre']],
+        'category' => $article['nom_categorie'] ?? null,
+        'offers' => [
+            '@type' => 'Offer',
+            'price' => $article['prix'] ?? null,
+            'priceCurrency' => 'EUR',
+            'availability' => 'https://schema.org/InStock',
+        ],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
+    </script>
 </head>
 
 <body>

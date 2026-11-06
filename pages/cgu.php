@@ -1,29 +1,18 @@
 <?php
 session_start();
+require_once __DIR__ . '/../includes/constants.php';
+$seo = [
+    'title'       => 'Conditions Générales d\'Utilisation | Bookroom',
+    'description' => 'Conditions Générales d\'Utilisation de Bookroom : commandes, livraison, retours et droits des utilisateurs. À lire avant tout achat.',
+];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
-
-  <link rel="stylesheet" href="../assets/css/base.css">
-  <link rel="stylesheet" href="../assets/fonts/font.css">
-  <link rel="stylesheet" href="../assets/css/pages-legales.css">
-  <script src="../assets/js/pages-legales.js" defer></script>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <title>Conditions Générales d'Utilisation | Bookroom</title>
-
-  <?php include_once("../includes/header_head.php"); ?>
-  <?php include_once("../includes/footer_head.php"); ?>
+  <?php require __DIR__ . '/../includes/head.php'; ?>
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/pages-legales.css">
+  <script src="<?= BASE_URL ?>/assets/js/pages-legales.js" defer></script>
 </head>
 
 <body>

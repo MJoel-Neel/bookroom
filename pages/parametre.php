@@ -133,9 +133,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             flash_error("Erreur lors de la mise à jour de l'adresse.");
         }
     }
-
-
 }
+
+require_once __DIR__ . '/../includes/constants.php';
+$seo = [
+    'title' => 'Paramètres de profil et de compte | Bookroom',
+    'description' => 'Gérez les paramètres de votre compte Bookroom : informations personnelles, mot de passe, préférences et notifications.',
+    'robots' => 'noindex,follow',
+];
 ?>
 
 
@@ -143,19 +148,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <title>Paramètres de profil et de compte | Bookroom</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-    <script src="../assets/js/parametre.js" defer></script>
-    <link rel="stylesheet" href="../assets/css/parametre.css">
-    <link rel="stylesheet" href="../assets/css/flash.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php include_once("../includes/header_head.php"); ?>
-    <?php include_once("../includes/footer_head.php"); ?>
-
+    <?php require __DIR__ . '/../includes/head.php'; ?>
+    <script src="<?= BASE_URL ?>/assets/js/parametre.js" defer></script>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/parametre.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/flash.css">
 </head>
 
 <body>
