@@ -35,7 +35,7 @@ $sep = str_contains($returnTo, '?') ? '&' : '?';
 // depuis les variables d'environnement.
 $from = getenv('RESEND_FROM');
 $to = getenv('RESEND_TO');
-$api = getenv('RESEND_API_KEY') . 'api';
+$api = getenv('RESEND_API_KEY');
 
 // Vérifie que toutes les variables nécessaires à l'envoi sont disponibles.
 if (!$from || !$to || !$api) {
