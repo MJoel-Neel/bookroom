@@ -159,7 +159,7 @@ $title = htmlspecialchars($article['titre_livre']) . ' – ' . htmlspecialchars(
 $seo = [
     'title' => $title . ' | Livre à acheter | Bookroom',
     'description' => $title . ' disponible à l\'achat. Livraison rapide et prix attractif.',
-    'image' => BASE_URL . '/assets/images' . htmlspecialchars($article['image']),
+    'image' => BASE_URL . '/assets/images' . $article['image'],
     'type' => 'book',
 ];
 
