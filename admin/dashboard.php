@@ -464,32 +464,49 @@ if (
         }
 
     }
-
 }
 
+require_once __DIR__ . '/../includes/constants.php';
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'bookroom.fr';
+$path = parse_url($_SERVER['REQUEST_URI'] ?? '/admin/dashboard.php', PHP_URL_PATH) ?? '/admin/dashboard.php';
+$canonical = $scheme . '://' . $host . $path;
+
+$e = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
 
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-    <script src="./assets/js/theme.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="32x32" href="../favicon32.png">
-    <link rel="stylesheet" href="../assets/css/base.css">
-    <link rel="stylesheet" href="../assets/fonts/font.css">
-    <link rel="icon" type="image/png" sizes="16x16" href="../favicon16.png">
+
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="description"
+        content="Espace d'administration Bookroom : gestion des livres, commandes et utilisateurs.">
+    <link rel="canonical" href="<?= $e($canonical) ?>">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= BASE_URL ?>/favicon32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= BASE_URL ?>/favicon16.png">
+
+    <!-- Partagés -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/base.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/fonts/font.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
-    <link rel="stylesheet" href="../assets/css/flash.css">
-    <script src="../assets/js/dashboard.js" defer></script>
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="<?= BASE_URL ?>/assets/js/theme.js" defer></script>
+
+    <!-- Dashboard -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/dashboard.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/flash.css">
+    <script src="<?= BASE_URL ?>/assets/js/dashboard.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
-    <script src="../assets/js/dataAOS.js" defer></script>
-    <script src="../assets/js/theme.js" defer></script>
+    <script src="<?= BASE_URL ?>/assets/js/dataAOS.js" defer></script>
+
     <title>Tableau de bord administrateur | Bookroom</title>
 </head>
 
