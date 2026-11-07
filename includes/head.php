@@ -16,6 +16,10 @@ if ($seo['canonical'] === null) {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'bookroom.fr';
     $path = $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+    
+    if (basename($path) === 'produit.php' && isset($_GET['k']) && ctype_digit((string) $_GET['k'])) {
+        $path .= '?k=' . (int) $_GET['k'];
+    }
     $seo['canonical'] = $scheme . '://' . $host . $path;
 }
 
