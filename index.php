@@ -14,7 +14,7 @@ if (!isset($_SESSION["panier"])) {
 if (isset($_POST["produit_id"])) {
 
     $id = (int) $_POST["produit_id"]; // pour éviter les valeurs non numériques
-    $current_section = (!empty($_POST["current_section"])) ? $_POST["current_section"] : 'nouveautes' ;
+    $current_section = (!empty($_POST["current_section"])) ? $_POST["current_section"] : 'nouveautes';
 
     $ancre_autorises = ["promotion", "nouveautes", "best-sellers"];
     $target_section = in_array($current_section, $ancre_autorises) ? $current_section : "nouveautes";
@@ -72,7 +72,7 @@ try {
 
 require_once __DIR__ . '/includes/constants.php';
 $seo = [
-    'title'       => 'Librairie en ligne – Acheter des livres pas chers | Bookroom',
+    'title' => 'Librairie en ligne – Acheter des livres pas chers | Bookroom',
     'description' => 'Achetez des livres pas chers en ligne : éducation, fiction, manga. Livraison rapide, prix attractifs.',
 ];
 ?>
@@ -184,8 +184,7 @@ $seo = [
                             <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
                                 class="product-link-img">
                                 <img loading="lazy" src="./assets/images<?= str_contains($best["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $best["image_livre"] ?>"
-                                    alt=""> </a>
+                                    "/produits/anonymous_book.webp" : $best["image_livre"] ?>" alt=""> </a>
                             <a href="./pages/produit.php?nom_produit=<?= $best['titre_livre'] ?>&k=<?= $best['id_livre'] ?>"
                                 class="book-name"><?= $best["titre_livre"] ?></a>
 
@@ -198,9 +197,9 @@ $seo = [
                             <div class="prix-box">
                                 <span class="prix"><?php
                                 if ($best["prix"] == $prix) {
-                                    echo $prix . " $";
+                                    echo $prix . " €";
                                 } else {
-                                    echo "$prix$ <s style='color:#555; font-size:1rem;'>$best[prix]</s>";
+                                    echo "$prix € <s style='color:#555; font-size:1rem;'>$best[prix]</s>";
                                 }
                                 ?></span>
                                 <form action="" method="post">
@@ -298,8 +297,7 @@ $seo = [
                         <div class="nouveaute" data-aos="zoom-in">
                             <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
                                 class="product-link-img"><img loading="lazy" src="./assets/images<?= str_contains($new["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $new["image_livre"] ?>"
-                                    alt="">
+                                    "/produits/anonymous_book.webp" : $new["image_livre"] ?>" alt="">
                             </a>
                             <a href="./pages/produit.php?nom_produit=<?= $new['titre_livre'] ?>&k=<?= $new['id_livre'] ?>"
                                 class="book-name"><?= $new["titre_livre"] ?></a>
@@ -314,9 +312,9 @@ $seo = [
                                 <span class="prix">
                                     <?php
                                     if ($new["prix"] == $prix) {
-                                        echo $prix . " $";
+                                        echo $prix . " €";
                                     } else {
-                                        echo "$prix$ <s style='color:#555; font-size:1rem;'>$new[prix]</s>";
+                                        echo "$prix € <s style='color:#555; font-size:1rem;'>$new[prix]</s>";
                                     }
                                     ?>
                                 </span>
@@ -395,8 +393,7 @@ $seo = [
                         <div class="promotion" data-aos="zoom-in">
                             <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
                                 class="product-link-img"><img loading="lazy" src="./assets/images<?= str_contains($promo["image_livre"], 'tmp/') ?
-                                "/produits/anonymous_book.webp" : $promo["image_livre"] ?>"
-                                    alt=""> </a>
+                                    "/produits/anonymous_book.webp" : $promo["image_livre"] ?>" alt=""> </a>
                             <a href="./pages/produit.php?nom_produit=<?= $promo['titre_livre'] ?>&k=<?= $promo['id_livre'] ?>"
                                 class="book-name"><?= $promo["titre_livre"] ?></a>
 
@@ -410,9 +407,9 @@ $seo = [
                                 <span class="prix">
                                     <?php
                                     if ($promo["prix"] == $prix) {
-                                        echo $prix . " $";
+                                        echo $prix . " €";
                                     } else {
-                                        echo "$prix$ <s style='color:#555; font-size:1rem;'>$promo[prix]</s>";
+                                        echo "$prix € <s style='color:#555; font-size:1rem;'>$promo[prix]</s>";
                                     }
                                     ?>
                                 </span>
@@ -463,9 +460,13 @@ $seo = [
             <h2 class="section-title" data-aos="fade-right">Catégories</h2>
 
             <div class="cat-flex">
-                <a href="./pages/boutique.php?categorie=developpement++personnel" data-aos="zoom-in">
+                <a href="./pages/boutique.php?categorie=education" data-aos="zoom-in">
                     <i class="fa-solid fa-book-open" style="color: #FFC400;"></i>
                     <em class="cat-name">éducation</em>
+                </a>
+                <a href="./pages/boutique.php?categorie=developpement++personnel" data-aos="zoom-in">
+                    <i class="fa-solid fa-fire" style="color: #fc8874;"></i>
+                    <em class="cat-name">développement <br> personnel</em>
                 </a>
 
                 <a href="./pages/boutique.php?categorie=fiction" data-aos="zoom-in">
