@@ -10,6 +10,20 @@ function accept() {
     }
 }
 
+function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+
 document.querySelector('.register-form').addEventListener('submit', verifUserInfo)
 async function verifUserInfo(e) {
     try {
@@ -57,9 +71,9 @@ async function verifUserInfo(e) {
         }
 
         //mdp
-        if (mdp.trim().length >= 10) {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/;
+        if (passwordRegex.test(mdp)) {
             document.querySelector('#mdp').classList.remove('wrong')
-
         }
         else {
             document.querySelector('#mdp').classList.add('wrong')

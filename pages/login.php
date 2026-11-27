@@ -34,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->close();
 
             if ($user) {
-
                 if (password_verify($password, $user["mot_de_passe"])) {
                     // Création session
                     $_SESSION["user_id"] = $user["id_client"];
@@ -114,11 +113,11 @@ $seo = [
 
                 <div class="input-container">
                     <div class="label">
-                        <label for="mdp">Mot de Passe <span class="important">*</span> (>=10) </label>
+                        <label for="mdp">Mot de Passe <span class="important">*</span> </label>
                     </div>
 
                     <input class="enter" type="password" id="mdp" name="mdp" placeholder="Votre Mot de passe *">
-                    <i class="ico fa-solid fa-key"></i>
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('mdp', this)"></i>
                     <span class="field-error"><?= htmlspecialchars($errors["mdp"]) ?></span>
                 </div>
 

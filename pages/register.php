@@ -145,10 +145,12 @@ $seo = [
 
                 <div class="input-container">
                     <div class="label">
-                        <label for="mdp">Mot de Passe (Au moins 10 caractères)<span class="important">*</span></label>
+                        <label for="mdp">Mot de Passe (12+ caractères : majuscule, minuscule, chiffre, spécial)<span
+                                class="important">*</span></label>
                     </div>
 
                     <input class="enter" type="password" id="mdp" name="mdp" placeholder="Mot de passe *">
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('mdp', this)"></i>
                     <span class="field-error"><?= htmlspecialchars($errors["mdp"]) ?></span>
                 </div>
 
