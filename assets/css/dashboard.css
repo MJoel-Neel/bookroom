@@ -742,69 +742,125 @@ div.what {
 }
 
 
-/*REDUCTION*/
-div.first,
-div.second {
+
+/* --- COMMANDES TABS --- */
+.commande-tabs {
     display: flex;
-    margin: 20px 0;
-    gap: 20px;
-}
-
-div.second {
-    display: none;
-    margin-top: 40px;
-}
-
-div.second.flex {
-    display: flex !important;
-}
-
-span#other {
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: var(--orange);
-    cursor: pointer;
-}
-
-span#other.none {
-    display: none !important;
-}
-
-div.reduction-div {
-    display: flex;
-    flex-direction: column;
     gap: 10px;
-    flex-wrap: wrap;
+    margin-bottom: 20px;
+    background: var(--white-f5f5f5);
+    padding: 5px;
+    border-radius: 8px;
+    width: fit-content;
 }
 
-label.reduction-label {
-    font-family: var(----bold-font);
-    color: var(--blue);
-    font-weight: 900;
+.commande-tabs a {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    color: var(--grey555);
+    font-family: var(--font-light-2);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
 }
 
-button#validate {
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: var(--blue);
+.commande-tabs a:hover {
+    background: var(--white);
+    color: var(--black);
+}
+
+.commande-tabs a.active {
+    background: var(--white);
+    color: var(--black);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* --- BADGES --- */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-family: var(--font-light-2);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+/* Payée (Vert) */
+.badge.payee {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.badge.payee::before { background-color: #059669; }
+
+/* En attente (Orange) */
+.badge.en_attente {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge.en_attente::before { background-color: #d97706; }
+
+/* Annulée (Rouge) */
+.badge.annulee {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge.annulee::before { background-color: #dc2626; }
+
+/* --- CUSTOM SELECT --- */
+.custom-select {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--white);
+    border: 1px solid var(--greyddd);
+    border-radius: 6px;
+    padding: 6px 32px 6px 12px;
+    font-family: var(--font-light-2);
+    font-size: 0.85rem;
+    color: var(--grey333);
     cursor: pointer;
-    color: var(--white);
-    font-size: 1.05rem;
-    font-family: var(--bold-font);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 130px;
 }
 
-input.border {
-    border: 2px solid var(--red) !important;
+
+.custom-select select:hover {
+    border-color: var(--greyaaa);
 }
 
-div.edit-div form input.border,
-div.edit-div form textarea.border,
-div.edit-div form select.border {
-    border: 1px solid var(--red) !important;
+.custom-select select:focus {
+    border-color: var(--grey555);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
 }
 
-div.edit-div form input.langue-produit {
-    text-transform: uppercase;
+/* Custom Arrow */
+.custom-select::after {
+    content: '\f078'; /* FontAwesome chevron-down */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 0.7rem;
+    color: var(--grey555);
 }

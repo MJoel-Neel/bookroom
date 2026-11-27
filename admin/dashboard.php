@@ -6,13 +6,13 @@ include_once("../config.php");
 require_once("../errors/flash.php");
 
 $active_section = $_GET['section'] ?? 'show-produits';
-$active_section = in_array($active_section, ['show-produits', 'show-clients', 'show-categories'], true)
+$active_section = in_array($active_section, ['show-produits', 'show-clients', 'show-categories', 'show-commandes'], true)
     ? $active_section : 'show-produits';
 
 // helper — dashboard.php redirection
 function dashboard_redirect()
 {
-    $allowed = ['show-produits', 'show-clients', 'show-categories'];
+    $allowed = ['show-produits', 'show-clients', 'show-categories', 'show-commandes'];
     $section = $_POST['current_section'] ?? 'show-produits';
     if (!in_array($section, $allowed, true))
         $section = 'show-produits';
@@ -50,6 +50,44 @@ try {
     $query3->execute();
     $clients = $query3->get_result();
     $query3->close();
+
+    // Commandes : on récupère toutes les commandes 
+    $status_filter = $_GET['status'] ?? 'all';
+    $sql_cmd = "SELECT c.*, cl.nom_prenom_client, COUNT(cp.id_livre) as nb_items
+            FROM commande c
+            JOIN client cl ON c.id_client_Effectuer = cl.id_client
+            LEFT JOIN commande_produit cp ON c.id_commande = cp.id_commande";
+
+    if ($status_filter !== 'all') {
+        $sql_cmd .= " WHERE c.statut = ?";
+    }
+    $sql_cmd .= " GROUP BY c.id_commande ORDER BY c.date_commande DESC";
+
+    $stmt_cmd = $conn->prepare($sql_cmd);
+    if ($status_filter !== 'all') {
+        $stmt_cmd->bind_param('s', $status_filter);
+    }
+    $stmt_cmd->execute();
+    $commandes = $stmt_cmd->get_result();
+    $stmt_cmd->close();
+
+    // 3. Handle Status Update (Add this near your other POST handlers)
+    if (isset($_POST['update_statut']) && isset($_POST['id_commande'])) {
+        try {
+            $new_statut = $_POST['new_statut'];
+            $id_cmd = (int) $_POST['id_commande'];
+            $upd = $conn->prepare("UPDATE commande SET statut = ? WHERE id_commande = ?");
+            $upd->bind_param('si', $new_statut, $id_cmd);
+            $upd->execute();
+            $upd->close();
+            flash_success("Statut de la commande mis à jour !");
+        } catch (mysqli_sql_exception $e) {
+            flash_error("Erreur lors de la mise à jour.");
+        }
+        header("Location: ?section=show-commandes&status=" . $status_filter);
+        exit;
+    }
+
 
     // On stocke le nombre de clients et de livres 
     // pour les statistiques
@@ -558,9 +596,14 @@ $e = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
                         </div>
                     </div>
 
+                    <div class="tool" onclick="showSection(event, 'show-commandes')" title="commandes">
+                        <div class="content">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                            <p class="tool-name">Commandes</p>
+                        </div>
+                    </div>
 
-
-                    <div class=" tool" onclick="showSection(event, 'show-statistiques')" title="statistiques">
+                    <div class="tool" onclick="showSection(event, 'show-statistiques')" title="statistiques">
                         <div class="content">
                             <i class="fa-solid fa-chart-pie"></i>
                             <p class="tool-name">Statistiques</p>
@@ -800,6 +843,76 @@ $e = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
                         </table>
                     </div>
 
+                    <!--Commandes-->
+                    <div id="show-commandes"
+                        class="container <?= $active_section === 'show-commandes' ? 'active' : '' ?>">
+                        <!-- Filter Tabs -->
+                        <div class="commande-tabs">
+                            <a href="?section=show-commandes&status=all"
+                                class="<?= $status_filter === 'all' ? 'active' : '' ?>">Tous</a>
+                            <a href="?section=show-commandes&status=en_attente"
+                                class="<?= $status_filter === 'en_attente' ? 'active' : '' ?>">En attente</a>
+                            <a href="?section=show-commandes&status=payee"
+                                class="<?= $status_filter === 'payee' ? 'active' : '' ?>">Payées</a>
+                            <a href="?section=show-commandes&status=annulee"
+                                class="<?= $status_filter === 'annulee' ? 'active' : '' ?>">Annulées</a>
+                        </div>
+
+                        <table class="commandes-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Commande</th>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Paiement</th>
+                                    <th>Total</th>
+                                    <th>Articles</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($commandes && $commandes->num_rows > 0): ?>
+                                    <?php while ($cmd = $commandes->fetch_assoc()):
+                                        $badge_class = strtolower($cmd['statut']);
+                                        $date = date('d M Y', strtotime($cmd['date_commande']));
+                                        ?>
+                                        <tr>
+                                            <td><strong>#<?= $cmd['id_commande'] ?></strong></td>
+                                            <td><?= $date ?></td>
+                                            <td><?= htmlspecialchars($cmd['nom_prenom_client']) ?></td>
+                                            <td>
+                                                <span class="badge <?= $badge_class ?>">
+                                                    <?= ucfirst(str_replace('_', ' ', $cmd['statut'])) ?>
+                                                </span>
+                                            </td>
+                                            <td><?= number_format($cmd['prix_total'], 2, ',', ' ') ?> €</td>
+                                            <td><?= $cmd['nb_items'] ?> article(s)</td>
+                                            <td>
+                                                <form action="" method="post" style="margin:0;">
+                                                    <input type="hidden" name="id_commande" value="<?= $cmd['id_commande'] ?>">
+
+                                                    <div class="custom-select">
+                                                        <select name="new_statut" onchange="this.form.submit()">
+                                                            <option value="en_attente" <?= $cmd['statut'] === 'en_attente' ? 'selected' : '' ?>>En attente</option>
+                                                            <option value="payee" <?= $cmd['statut'] === 'payee' ? 'selected' : '' ?>>Payée</option>
+                                                            <option value="annulee" <?= $cmd['statut'] === 'annulee' ? 'selected' : '' ?>>Annulée</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <input type="hidden" name="update_statut" value="1">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7" style="text-align:center; padding: 20px;">Aucune commande
+                                            trouvée pour ce filtre.</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <!--STATISTIQUES-->
                     <div class="container" id="show-statistiques">
