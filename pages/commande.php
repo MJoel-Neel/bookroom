@@ -120,7 +120,7 @@ $seo = [
                             <div class="address-box">
                                 <h3>ADRESSE DE LIVRAISON :</h3>
                                 <p><?= htmlspecialchars($_SESSION['user_name'] ?? 'Client') ?></p>
-                                <p><?= htmlspecialchars($_SESSION['adresse_client'] ?? 'Adresse non renseignée') ?></p>
+                                <p><?= htmlspecialchars($adresse_client ?? 'Adresse non renseignée') ?></p>
                             </div>
                         </div>
 

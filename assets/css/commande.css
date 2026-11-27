@@ -77,18 +77,18 @@ section h2#cart {
 }
 
 .badge.payee {
-    background: var(--darkgreen);
-    color: var(--grey333);
+    background-color: #059669dd; 
+    color: var(--eternal-white);
 }
 
 .badge.en_attente {
-    background: var(--orange);
-    color: var(--grey333);
+    background-color: #d97706dd; 
+    color: var(--eternal-white);
 }
 
 .badge.annulee {
-    background: var(--red);
-    color: var(--white);
+    background-color: #d90606dd;
+    color: var(--eternal-white);
 }
 
 /* Contenu caché (Accordéon) */
