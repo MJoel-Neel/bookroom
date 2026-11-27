@@ -220,7 +220,9 @@ $seo = [
 
                 <div class="checkout">
                     <div class="payer">
-                        <a href="./payer.php"><button>Payer</button></a>
+                        <form method="POST" action="./payer.php" style="margin:0;">
+                            <button type="submit">Payer</button>
+                        </form>
                     </div>
 
                     <div class="continuer">
