@@ -133,6 +133,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             flash_error("Erreur lors de la mise à jour de l'adresse.");
         }
     }
+
+        // SUPPRESSION DU COMPTE
+    if (isset($_POST['delete_account'])) {
+        try {
+            // Prevent admin from deleting themselves
+            if ($_SESSION["role_client"] === 'admin') {
+                flash_error("Les administrateurs ne peuvent pas supprimer leur compte.");
+            } else {
+                $stmt = $conn->prepare("DELETE FROM client WHERE id_client = ?");
+                $stmt->bind_param('i', $user_id);
+                $stmt->execute();
+                $stmt->close();
+
+                // Clear session & redirect
+                session_unset();
+                session_destroy();
+                header("Location: ../index.php");
+                exit();
+            }
+        } catch (mysqli_sql_exception $e) {
+            error_log("parametre.php delete account: " . $e->getMessage());
+            flash_error("Impossible de supprimer le compte (historique de commandes existant). Contactez le support.");
+        }
+    }
 }
 
 require_once __DIR__ . '/../includes/constants.php';
@@ -180,8 +204,8 @@ $seo = [
                 <i class="fa-solid fa-lock"></i> Confidentialité </button>
 
             <button class="param-sidebar-button">
-                <i class="fa-solid fa-cart-shopping" ></i> 
-            <a href="./commande.php" class="command-link" >Commandes</a> </button>
+                <i class="fa-solid fa-cart-shopping"></i>
+                <a href="./commande.php" class="command-link">Commandes</a> </button>
 
             <?php
             $is_admin = isset($_SESSION["role_client"]) && $_SESSION["role_client"] === 'admin';
@@ -252,7 +276,10 @@ $seo = [
             <form id="privacy" class="section" method="post">
                 <h2>Confidentialité</h2>
                 <p><em>NB: </em> Pas de retour possible ‼️❗</p><br>
-                <button class="danger" name="delete_account" disabled>Supprimer mon compte</button>
+                <button class="danger" name="delete_account"
+                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.');">
+                    Supprimer mon compte
+                </button>
             </form>
 
         </div>

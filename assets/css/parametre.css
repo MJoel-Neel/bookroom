@@ -152,7 +152,7 @@
       color: var(--eternal-white);
       padding: 10px 20px;
       border: none;
-      cursor: not-allowed;
+      cursor: pointer;
   }
 
   /*JS*/
