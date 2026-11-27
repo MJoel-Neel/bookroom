@@ -1,8 +1,6 @@
 /*CATEGORIE*/
-INSERT INTO categorie (nom_categorie)
-VALUES ('developpementpersonnel'), ('education'), ('fiction'), ('jeunesse'), ('loisir'), ('mangas');
-INSERT INTO categorie (prefixe_categorie)
-VALUES ('dp'), ('edu'), ('fic'), ('jeu'), ('loi'), ('man');
+INSERT INTO categorie (nom_categorie, prefixe_categorie)
+VALUES ('developpementpersonnel', 'dp'), ('education', 'edu'), ('fiction', 'fic'), ('jeunesse', 'jeu'), ('loisir', 'loi'), ('mangas', 'man');
 /*CLIENT*/
 /*PANIER*/
 /*LIVRE*/

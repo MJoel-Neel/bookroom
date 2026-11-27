@@ -220,7 +220,7 @@ $seo = [
 
                 <div class="checkout">
                     <div class="payer">
-                        <a href="../errors/404.php"><button>Payer</button></a>
+                        <a href="./payer.php"><button>Payer</button></a>
                     </div>
 
                     <div class="continuer">

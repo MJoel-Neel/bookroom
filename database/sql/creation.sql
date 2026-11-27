@@ -1,43 +1,47 @@
 -- ----------------------------------------------------------
 -- Script MYSQL pour mcd 
 -- ----------------------------------------------------------
+-- ----------------------------
+-- Database
+-- ----------------------------
+CREATE DATABASE IF NOT EXISTS bookroom
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
 
+USE bookroom;
 
 -- ----------------------------
 -- Table: CLIENT
 -- ----------------------------
-CREATE TABLE client (
-  id_client INT NOT NULL AUTO_INCREMENT ,
-  nom_prenom_client VARCHAR(60) NOT NULL,
-  adresse_client VARCHAR(100),
-  email_client VARCHAR(50) NOT NULL,
-  tel_client VARCHAR(20) DEFAULT NULL,
-  mot_de_passe TEXT NOT NULL,
-
-  `role_client` VARCHAR(20) NOT NULL DEFAULT 'user',
-  CONSTRAINT `chk_role_client` CHECK (`role_client` IN ('user', 'admin')),
+CREATE TABLE IF NOT EXISTS client (
+  id_client            INT NOT NULL AUTO_INCREMENT,
+  nom_prenom_client    VARCHAR(60) NOT NULL,
+  adresse_client       VARCHAR(100),
+  email_client         VARCHAR(50) NOT NULL,
+  tel_client           VARCHAR(20) DEFAULT NULL,
+  mot_de_passe         TEXT NOT NULL,
+  role_client          VARCHAR(20) NOT NULL DEFAULT 'user',
+  genre_client         CHAR(5) NOT NULL,
+  date_inscription     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT chk_role_client CHECK (role_client IN ('user','admin')),
   CONSTRAINT CLIENT_PK PRIMARY KEY (id_client),
   CONSTRAINT email_client_UNQ UNIQUE (email_client),
   CONSTRAINT tel_client_UNQ UNIQUE (tel_client)
-)ENGINE=InnoDB;
-ALTER TABLE CLIENT ADD (genre_client CHAR(5) NOT NULL);
+) ENGINE=InnoDB;
 
 
 -- ----------------------------
 -- Table: PANIER
 -- ----------------------------
-CREATE TABLE panier (
-    id_panier      INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    id_client      INT NOT NULL,
-    statut         ENUM('actif','valide','annule') NOT NULL DEFAULT 'actif',
-    date_creation  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    /* date_validation DATETIME NULL, */
-    
-    CONSTRAINT PANIER_CLIENT_FK
-        FOREIGN KEY (id_client) REFERENCES client (id_client)
-        ON DELETE CASCADE,
-    
-    INDEX idx_client_statut (id_client, statut)
+CREATE TABLE IF NOT EXISTS panier (
+  id_panier        INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  id_client        INT NOT NULL,
+  statut           ENUM('actif','valide','annule') NOT NULL DEFAULT 'actif',
+  date_creation    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  date_validation  DATETIME NULL,
+  CONSTRAINT PANIER_CLIENT_FK
+    FOREIGN KEY (id_client) REFERENCES client(id_client) ON DELETE CASCADE,
+  INDEX idx_client_statut (id_client, statut)
 ) ENGINE=InnoDB;
 
 
@@ -45,100 +49,109 @@ CREATE TABLE panier (
 -- ----------------------------
 -- Table: CATEGORIE
 -- ----------------------------
-CREATE TABLE categorie (
-  id_categorie INT NOT NULL AUTO_INCREMENT,
-  nom_categorie VARCHAR(50) NOT NULL,
-prefixe_categorie VARCHAR(50) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS categorie (
+  id_categorie      INT NOT NULL AUTO_INCREMENT,
+  nom_categorie     VARCHAR(50) NOT NULL,
+  prefixe_categorie VARCHAR(50) NOT NULL UNIQUE,
   CONSTRAINT CATEGORIE_PK PRIMARY KEY (id_categorie)
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 -- ----------------------------
 -- Table: LIVRE
 -- ----------------------------
-CREATE TABLE livre (
-  id_livre INT NOT NULL AUTO_INCREMENT,
-  titre_livre VARCHAR(100) NOT NULL,
-  resume_livre TEXT NOT NULL,
-  auteur_livre VARCHAR(50) NOT NULL,
-  prix DECIMAL NOT NULL,
-  stock INT NOT NULL,
-  image_livre VARCHAR(100) NOT NULL,
-  id_categorie INT ,
-reduction_livre INT NOT NULL DEFAULT 0,
+CREATE TABLE IF NOT EXISTS livre (
+  id_livre         INT NOT NULL AUTO_INCREMENT,
+  titre_livre      VARCHAR(100) NOT NULL,
+  resume_livre     TEXT NOT NULL,
+  auteur_livre     VARCHAR(50) NOT NULL,
+  prix             DECIMAL(10,2) NOT NULL,
+  stock            INT NOT NULL,
+  image_livre      VARCHAR(100) NOT NULL,
+  id_categorie     INT,
+  reduction_livre  INT NOT NULL DEFAULT 0,
+  langue           VARCHAR(5) NOT NULL DEFAULT 'FR',
+  public_legal     VARCHAR(30) NOT NULL,
+  date_ajout       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT LIVRE_PK PRIMARY KEY (id_livre),
   CONSTRAINT image_livre_UNQ UNIQUE (image_livre),
-  CONSTRAINT LIVRE_id_categorie_FK FOREIGN KEY (id_categorie) REFERENCES CATEGORIE (id_categorie)
-ON DELETE SET NULL 
-)ENGINE=InnoDB;
-
-ALTER TABLE LIVRE ADD (langue VARCHAR(5) NOT NULL DEFAULT "FR");
-ALTER TABLE LIVRE ADD (public_legal VARCHAR(30) NOT NULL);
-
+  CONSTRAINT LIVRE_id_categorie_FK
+    FOREIGN KEY (id_categorie) REFERENCES categorie(id_categorie) ON DELETE SET NULL
+) ENGINE=InnoDB;
 
 
 -- ----------------------------
 -- Table: PRODUIT_PANIER
 -- ----------------------------
-CREATE TABLE produit_panier (
-  id_livre INT NOT NULL,
+CREATE TABLE IF NOT EXISTS produit_panier (
+  id_livre  INT NOT NULL,
   id_panier INT NOT NULL,
-  quantite INT NOT NULL,
+  quantite  INT NOT NULL,
   CONSTRAINT PRODUIT_PANIER_PK PRIMARY KEY (id_livre, id_panier),
-  CONSTRAINT PRODUIT_PANIER_id_livre_FK FOREIGN KEY (id_livre) REFERENCES LIVRE (id_livre) ON DELETE CASCADE,
-  CONSTRAINT PRODUIT_PANIER_id_panier_FK FOREIGN KEY (id_panier) REFERENCES PANIER (id_panier)  ON DELETE  CASCADE
-)ENGINE=InnoDB;
+  CONSTRAINT PRODUIT_PANIER_id_livre_FK
+    FOREIGN KEY (id_livre) REFERENCES livre(id_livre) ON DELETE CASCADE,
+  CONSTRAINT PRODUIT_PANIER_id_panier_FK
+    FOREIGN KEY (id_panier) REFERENCES panier(id_panier) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 
 
 -- ----------------------------
 -- Table: AVIS
 -- ----------------------------
-CREATE TABLE avis (
-  id_avis INT NOT NULL AUTO_INCREMENT,
-  note INT NOT NULL,
-  commentaire TEXT NOT NULL,
-  date_avis TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
-  id_livre_concerner INT NOT NULL,
-  id_client_faire INT,
-  email_client VARCHAR(50),
-  pseudo_client VARCHAR(50) DEFAULT "Anonymous",
+CREATE TABLE IF NOT EXISTS avis (
+  id_avis              INT NOT NULL AUTO_INCREMENT,
+  note                 INT NOT NULL,
+  commentaire          TEXT NOT NULL,
+  date_avis            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id_livre_concerner   INT NOT NULL,
+  id_client_faire      INT,
+  email_client         VARCHAR(50),
+  pseudo_client        VARCHAR(50) DEFAULT 'Anonymous',
   CONSTRAINT AVIS_PK PRIMARY KEY (id_avis),
-  CONSTRAINT AVIS_id_livre_Concerner_FK FOREIGN KEY (id_livre_concerner) REFERENCES LIVRE (id_livre) ON DELETE CASCADE,
-  CONSTRAINT AVIS_id_client_FAIRE_FK FOREIGN KEY (id_client_faire) REFERENCES CLIENT (id_client) ON DELETE SET NULL 
-)ENGINE=InnoDB;
+  CONSTRAINT AVIS_id_livre_Concerner_FK
+    FOREIGN KEY (id_livre_concerner) REFERENCES livre(id_livre) ON DELETE CASCADE,
+  CONSTRAINT AVIS_id_client_FAIRE_FK
+    FOREIGN KEY (id_client_faire) REFERENCES client(id_client) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
 
 
 
 -- ----------------------------
 -- Table: COMMANDE
 -- ----------------------------
-CREATE TABLE commande (
-  id_commande INT NOT NULL AUTO_INCREMENT,
-  id_client_Effectuer INT NOT NULL,
-  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,
-  statut VARCHAR(20) NOT NULL,
-  prix_total INT NOT NULL,
+CREATE TABLE IF NOT EXISTS commande (
+  id_commande          INT NOT NULL AUTO_INCREMENT,
+  id_client_Effectuer  INT NOT NULL,
+  date_commande        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  date_paiement        DATETIME NULL,
+  statut               ENUM('en_attente','payee','annulee') NOT NULL DEFAULT 'en_attente',
+  prix_total           DECIMAL(10,2) NOT NULL,
   CONSTRAINT COMMANDE_PK PRIMARY KEY (id_commande),
-  CONSTRAINT COMMANDE_id_client_Effectuer_FK FOREIGN KEY (id_client_Effectuer) REFERENCES CLIENT (id_client)
-)ENGINE=InnoDB;
+  CONSTRAINT COMMANDE_id_client_Effectuer_FK
+    FOREIGN KEY (id_client_Effectuer) REFERENCES client(id_client) ON DELETE RESTRICT,
+  INDEX idx_client_date (id_client_Effectuer, date_commande)
+) ENGINE=InnoDB;
 
 
 -- ----------------------------
 -- Table: COMMANDE_PRODUIT
 -- ----------------------------
-CREATE TABLE commande_produit (
-  id_commande INT NOT NULL,
-  id_livre INT NOT NULL,
-actif BOOLEAN DEFAULT TRUE,
-  quantite_commander INT NOT NULL,
-  prix_unitaire INT NOT NULL,
+CREATE TABLE IF NOT EXISTS commande_produit (
+  id_commande         INT NOT NULL,
+  id_livre            INT NOT NULL,
+  quantite_commandee  INT NOT NULL,
+  prix_unitaire       DECIMAL(10,2) NOT NULL,
+  actif               BOOLEAN DEFAULT TRUE,
   CONSTRAINT COMMANDE_PRODUIT_PK PRIMARY KEY (id_commande, id_livre),
-  CONSTRAINT COMMANDE_PRODUIT_id_commande_FK FOREIGN KEY (id_commande) REFERENCES COMMANDE (id_commande)  ON DELETE CASCADE,
-  CONSTRAINT COMMANDE_PRODUIT_id_livre_FK FOREIGN KEY (id_livre) REFERENCES LIVRE (id_livre)  ON DELETE RESTRICT 
-)ENGINE=InnoDB;
+  CONSTRAINT COMMANDE_PRODUIT_id_commande_FK
+    FOREIGN KEY (id_commande) REFERENCES commande(id_commande) ON DELETE CASCADE,
+  CONSTRAINT COMMANDE_PRODUIT_id_livre_FK
+    FOREIGN KEY (id_livre) REFERENCES livre(id_livre) ON DELETE RESTRICT
+) ENGINE=InnoDB;
 
-
+/*
 -- ----------------------------
 -- Table: LIVRAISON
 -- ----------------------------
@@ -190,3 +203,5 @@ CREATE TABLE reduction (
   `taux_reduction` int NOT NULL,
   PRIMARY KEY (`id_reduction`)
 ) ENGINE=InnoDB;
+
+*/

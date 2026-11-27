@@ -238,8 +238,6 @@ $seo = [
 
                 <div class="ajouter-panier">
                     <button name="add" id="add">Ajouter au panier</button>
-                    <button name="buy" id="buy" type="button"><a href="../errors/404.php">Acheter
-                            directement</a></button>
                 </div>
             </form>
         </div>

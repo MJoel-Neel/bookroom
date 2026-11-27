@@ -23,6 +23,7 @@ desktop.ini
 #DOSSIERS SENSIBLES
 open_me/
 pass/
+database/
 
 robots.txt
 
@@ -31,7 +32,6 @@ reduction.brouillon.php
 payer.css
 payer.js
 essai.mcd
-payer.php
 reduction.sql
 
 sitemap.php
