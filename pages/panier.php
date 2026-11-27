@@ -135,9 +135,11 @@ $seo = [
                 if ($res && $res->num_rows):
                     while ($produit = $res->fetch_assoc()):
                         $qte = qteOf($produit["id_livre"], $list_articles);
+                        $prix_unit = $produit["prix"];
                         $prix = $produit["prix"] * $qte;
                         if ($produit["reduction_livre"] > 0) {
                             $prix = $prix * (1 - $produit["reduction_livre"] / 100);
+                            $prix_unit = $prix_unit * (1 - $produit["reduction_livre"] / 100);
                         }
                         if ($prix > 0) {
                             $total += $prix;
@@ -171,7 +173,7 @@ $seo = [
                                         <button class="more" name="more" value="<?= $produit["id_livre"] ?>">+</button>
                                     </div>
 
-                                    <p class="somme"><span class="sum"><?= $prix ?></span>€</p>
+                                    <p class="somme"><span class="sum"><?= $prix_unit ?></span>€</p>
                                 </div>
                             </div>
                         </form>
