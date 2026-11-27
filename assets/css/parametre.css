@@ -1,7 +1,6 @@
   /*header*/
   body {
       background-color: var(--body-back);
-
   }
 
 
@@ -9,7 +8,7 @@
       display: flex;
       height: fit-content;
       flex: 1;
-      min-height: 450px;
+      min-height: 500px;
       width: 95%;
       max-width: 1000px;
       margin: 150px auto 50px;
@@ -19,6 +18,7 @@
       box-shadow: var(--article-block-shadow);
       font-family: var(--font-light-2);
       position: relative !important;
+      padding-top: 10px;
   }
 
   /* Sidebar */
@@ -29,6 +29,7 @@
       padding: 20px;
       padding-bottom: 50px;
       position: relative;
+      padding-top: 40px;
       overflow-y: auto;
   }
 
@@ -170,14 +171,20 @@
 
 
   /*RESPONSIVE*/
-  svg#menubars {
-      display: none;
-      fill: var(--eternal-orange);
+  #menubars {
+      font-size: 30px;
+      color: var(--grey555);
       cursor: pointer;
+      margin: 10px 0 0 10px;
+      transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  #menubars:hover {
+      color: var(--blue);
   }
 
   @media (max-width:700px) {
-      svg#menubars {
+      #menubars {
           display: block !important;
           z-index: 1001;
           position: absolute;
