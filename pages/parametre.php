@@ -178,6 +178,11 @@ $seo = [
 
             <button class="param-sidebar-button" onclick="showSection(event,'privacy')">
                 <i class="fa-solid fa-lock"></i> Confidentialité </button>
+
+            <button class="param-sidebar-button">
+                <i class="fa-solid fa-cart-shopping" ></i> 
+            <a href="./commande.php" class="command-link" >Commandes</a> </button>
+
             <?php
             $is_admin = isset($_SESSION["role_client"]) && $_SESSION["role_client"] === 'admin';
             echo $is_admin ? "<button><a href='../admin/dashboard.php' class='administrer'>
