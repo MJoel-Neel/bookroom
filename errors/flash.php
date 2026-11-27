@@ -60,5 +60,3 @@ function flash_render(): void
 }
 
 ?>
-
-<link rel="stylesheet" href="../assets/css/base.css">
