@@ -32,8 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $errors["email"] = "Email invalide.";
         }
 
-        if (strlen($password) < 10) {
-            $errors["mdp"] = "Le mot de passe doit contenir au moins 10 caractères.";
+        $mdp_regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/';
+        if (!preg_match($mdp_regex, $password)) {
+            $errors["mdp"] = "Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.";
         }
 
         if ($password !== $confirmPassword) {
