@@ -86,7 +86,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         try {
             $old_mdp = $_POST['ancien_mdp'];
             $new_mdp = $_POST['Nouveau_mdp'];
-
+            $mdp_regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/';
+            if (!preg_match($mdp_regex, $new_mdp)) {
+                flash_error("Le nouveau mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
+                exit ;
+            }
             if (password_verify($old_mdp, $user["mot_de_passe"])) { // $user déjà chargé
                 $hashedPassword = password_hash($new_mdp, PASSWORD_DEFAULT);
                 $query3 = $conn->prepare("UPDATE client SET mot_de_passe = ? WHERE id_client = ?");
@@ -134,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-        // SUPPRESSION DU COMPTE
+    // SUPPRESSION DU COMPTE
     if (isset($_POST['delete_account'])) {
         try {
             // Prevent admin from deleting themselves
@@ -186,7 +190,7 @@ $seo = [
 
     <div class="param-container">
         <!-- Sidebar -->
-        <i class="fa-solid fa-book-open" id="menubars"></i>
+        <i class="fa-solid fa-book" id="menubars"></i>
 
         <div class="sidebar" data-aos="fade-right">
             <h2>Paramètres</h2>

@@ -88,8 +88,8 @@ buttonSaveMdp.addEventListener('click', (e) => {
     const newMdp = document.getElementById('nouveau_mdp')
 
     //old mdp verification
-
-    if (oldMdp.value.trim().length >= 10) {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/;
+    if (passwordRegex.test(oldMdp.value)) {
         oldMdp.classList.remove('border-red')
     }
     else {
@@ -97,7 +97,7 @@ buttonSaveMdp.addEventListener('click', (e) => {
     }
 
     //new mdp verification
-    if ((newMdp.value.trim().length >= 10) && (newMdp.value != oldMdp.value)) {
+    if (passwordRegex.test(newMdp.value) && (newMdp.value != oldMdp.value)) {
         newMdp.classList.remove('border-red')
     }
     else {
