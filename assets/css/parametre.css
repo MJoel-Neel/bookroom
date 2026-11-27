@@ -115,6 +115,27 @@
       font-size: 1.02rem;
   }
 
+  .password-field {
+      position: relative;
+      margin-bottom: 15px;
+      max-width: 300px;
+  }
+
+  .password-field input {
+      width: 100%;
+      padding-right: 40px;
+  }
+
+  .password-field .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--grey555);
+      transition: color 0.2s;
+  }
+
   button#save-profil,
   button#modif,
   button#annul {

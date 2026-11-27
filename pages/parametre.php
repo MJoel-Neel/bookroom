@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $mdp_regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$/';
             if (!preg_match($mdp_regex, $new_mdp)) {
                 flash_error("Le nouveau mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
-                exit ;
+                exit;
             }
             if (password_verify($old_mdp, $user["mot_de_passe"])) { // $user déjà chargé
                 $hashedPassword = password_hash($new_mdp, PASSWORD_DEFAULT);
@@ -250,8 +250,16 @@ $seo = [
             <!-- Sécurité -->
             <form id="security" class="section" method="post">
                 <h2>Changer mot de passe</h2>
-                <input type="password" placeholder="Ancien mot de passe" id="ancien_mdp" name="ancien_mdp">
-                <input type="password" placeholder="Nouveau mot de passe" id="nouveau_mdp" name="Nouveau_mdp">
+                <!-- Ancien mot de passe -->
+                <div class="password-field">
+                    <input type="password" placeholder="Ancien mot de passe" id="ancien_mdp" name="ancien_mdp">
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('ancien_mdp', this)"></i>
+                </div>
+                <!-- Nouveau mot de passe -->
+                <div class="password-field">
+                    <input type="password" placeholder="Nouveau mot de passe" id="nouveau_mdp" name="Nouveau_mdp">
+                    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('nouveau_mdp', this)"></i>
+                </div>
                 <button class="save" id="save_mdp">Modifier</button>
             </form>
 
