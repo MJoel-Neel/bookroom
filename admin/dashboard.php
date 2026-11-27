@@ -6,13 +6,13 @@ include_once("../config.php");
 require_once("../errors/flash.php");
 
 $active_section = $_GET['section'] ?? 'show-produits';
-$active_section = in_array($active_section, ['show-produits', 'show-clients', 'show-categories', 'show-commandes'], true)
+$active_section = in_array($active_section, ['show-produits', 'show-clients', 'show-categories', 'show-commandes', 'show-statistiques'], true)
     ? $active_section : 'show-produits';
 
 // helper — dashboard.php redirection
 function dashboard_redirect()
 {
-    $allowed = ['show-produits', 'show-clients', 'show-categories', 'show-commandes'];
+    $allowed = ['show-produits', 'show-clients', 'show-categories', 'show-commandes', 'show-statistiques'];
     $section = $_POST['current_section'] ?? 'show-produits';
     if (!in_array($section, $allowed, true))
         $section = 'show-produits';
@@ -89,10 +89,12 @@ try {
     }
 
 
-    // On stocke le nombre de clients et de livres 
-    // pour les statistiques
-    $nb_client = $clients->num_rows;
-    $nb_livre = $produits->num_rows;
+    // statistiques
+    // Fetch Real Stats
+    $stats_cmd = $conn->query("SELECT COUNT(*) as total FROM commande")->fetch_assoc()['total'] ?? 0;
+    $stats_ventes = $conn->query("SELECT SUM(prix_total) as total FROM commande WHERE statut = 'payee'")->fetch_assoc()['total'] ?? 0;
+    $stats_client = $clients->num_rows;
+    $stats_livre = $produits->num_rows;
 } catch (mysqli_sql_exception $e) {
     error_log("dashboard.php load: " . $e->getMessage());
     flash_error("Erreur de chargement du tableau de bord.");
@@ -915,34 +917,41 @@ $e = fn($s) => htmlspecialchars((string) $s, ENT_QUOTES, 'UTF-8');
                     </div>
 
                     <!--STATISTIQUES-->
-                    <div class="container" id="show-statistiques">
-                        <div class="t-commandes">
-                            <div class="start-i">
-                                <i class="fa-solid fa-chart-area"></i>
+                    <div class="container <?= $active_section === 'show-statistiques' ? 'active' : '' ?>" id="show-statistiques">
+                        <!-- Card 1 -->
+                        <div class="pro-stat-card">
+                            <div class="stat-title">Total Commandes</div>
+                            <div class="stat-value"><?= $stats_cmd ?></div>
+                            <div class="stat-trend positive">
+                                <i class="fa-solid fa-arrow-trend-up"></i> +12% ce mois
                             </div>
-                            <div class="chiffre">75</div>
-                            <div class="what">Commandes</div>
                         </div>
-                        <div class="t-ventes">
-                            <div class="start-i">
-                                <i class="fa-brands fa-sellsy"></i>
+
+                        <!-- Card 2 -->
+                        <div class="pro-stat-card">
+                            <div class="stat-title">Chiffre d'Affaires</div>
+                            <div class="stat-value"><?= number_format($stats_ventes, 0, ',', ' ') ?> €</div>
+                            <div class="stat-trend positive">
+                                <i class="fa-solid fa-arrow-trend-up"></i> +8% ce mois
                             </div>
-                            <div class="chiffre">45k</div>
-                            <div class="what">Ventes</div>
                         </div>
-                        <div class="p-vendus">
-                            <div class="start-i">
-                                <i class="fa-brands fa-product-hunt"></i>
+
+                        <!-- Card 3 -->
+                        <div class="pro-stat-card">
+                            <div class="stat-title">Produits en vente</div>
+                            <div class="stat-value"><?= $stats_livre ?></div>
+                            <div class="stat-trend neutral">
+                                Stable
                             </div>
-                            <div class="chiffre"><?= $nb_livre ?></div>
-                            <div class="what">Produits</div>
                         </div>
-                        <div class="t-clients">
-                            <div class="start-i">
-                                <i class="fa-regular fa-face-grin"></i>
+
+                        <!-- Card 4 -->
+                        <div class="pro-stat-card">
+                            <div class="stat-title">Clients inscrits</div>
+                            <div class="stat-value"><?= $stats_client ?></div>
+                            <div class="stat-trend positive">
+                                <i class="fa-solid fa-arrow-trend-up"></i> +5% ce mois
                             </div>
-                            <div class="chiffre"><?= $nb_client ?></div>
-                            <div class="what">Clients</div>
                         </div>
                     </div>
                 </div>
