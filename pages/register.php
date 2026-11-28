@@ -166,6 +166,13 @@ $seo = [
                     <span class="field-error"><?= htmlspecialchars($errors["conf"]) ?></span>
                 </div>
 
+                <div class="condition" >
+                    <p>En continuant, vous acceptez les 
+                        <a href="./cgu.php">conditions d’utilisation</a> et la 
+                        <a href="./confidentialite.php">politique de confidentialité</a> 
+                        de Bookroom.</p>
+                </div>
+
                 <div class="valider">
                     <div>
                         <input type="submit" value="S'inscrire">

@@ -145,6 +145,7 @@
  button#add {
      background-color: var(--eternal-orange);
      transition: background .3s ease-in, scale .3s ease-in;
+     color: var(--eternal-black);
 
      &:hover {
          scale: 1.05;
